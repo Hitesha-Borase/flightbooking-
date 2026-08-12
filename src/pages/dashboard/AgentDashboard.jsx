@@ -1,37 +1,428 @@
-import React, { useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import Box from '@mui/material/Box';
-import Chip from '@mui/material/Chip';
-import IconButton from '@mui/material/IconButton';
-import Paper from '@mui/material/Paper';
-import Tooltip from '@mui/material/Tooltip';
-import Typography from '@mui/material/Typography';
-import PhoneIcon from '@mui/icons-material/Phone';
-import ChatIcon from '@mui/icons-material/Chat';
-import EmailIcon from '@mui/icons-material/Email';
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import WbSunnyIcon from '@mui/icons-material/WbSunny';
-import NightlightIcon from '@mui/icons-material/Nightlight';
-import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
-import DualClock from '../../components/DualClock';
-import ClientPanel from '../../components/ClientPanel';
-import DialerPanel from '../../components/DialerPanel';
-import { useAlert } from '../../contexts/AlertContext';
+import React, { useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Box from "@mui/material/Box";
+import Chip from "@mui/material/Chip";
+import IconButton from "@mui/material/IconButton";
+import Paper from "@mui/material/Paper";
+import Tooltip from "@mui/material/Tooltip";
+import Typography from "@mui/material/Typography";
+import PhoneIcon from "@mui/icons-material/Phone";
+import ChatIcon from "@mui/icons-material/Chat";
+import EmailIcon from "@mui/icons-material/Email";
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import WbSunnyIcon from "@mui/icons-material/WbSunny";
+import NightlightIcon from "@mui/icons-material/Nightlight";
+import VerifiedUserIcon from "@mui/icons-material/VerifiedUser";
+import DualClock from "../../components/DualClock";
+import ClientPanel from "../../components/ClientPanel";
+import DialerPanel from "../../components/DialerPanel";
+import { useAlert } from "../../contexts/AlertContext";
 
 const leads = [
-  { id: 'LD1001', clientId: '463522372', firstName: 'Karan', lastName: 'Singh', phone: '+1 212 *** 78', fullPhone: '+1 212 555 0199', email: 'karan@example.com', labels: ['Hot Lead', 'VIP', 'Price Sensitive'], isDay: true, country: 'India', city: 'Columbus', timeZone: 'UTC-05:00 Eastern Time', timezone: 'America/New_York', origin: 'DEL (Delhi Indira Gandhi)', destination: 'LHR (London Heathrow)', travelDate: '15 Oct 2026', returnDate: '22 Oct 2026', cabinClass: 'Business', passengers: 2, source: 'Google Ads', activities: [{ time: '16:16:23', agent: 'agent1', status: 'New Dialed', comments: '—' }, { time: '16:36:01', agent: 'agent1', status: 'Call Back', comments: 'Interested, wants price' }, { time: '17:02:44', agent: 'me', status: 'Quote Sent', comments: 'Sent Option 1 & 2' }] },
-  { id: 'LD1002', clientId: '463522373', firstName: 'Ankit', lastName: 'Sharma', phone: '+1 212 *** 78', fullPhone: '+1 212 555 0200', email: 'ankit@example.com', labels: ['Hot Lead', 'VIP'], isDay: true, country: 'India', city: 'New Delhi', timeZone: 'UTC+05:30 India Standard Time', timezone: 'Asia/Kolkata', origin: 'DEL', destination: 'DXB', travelDate: '20 Nov 2026', cabinClass: 'Economy', passengers: 1, source: 'Google Ads', activities: [{ time: '14:20:12', agent: 'me', status: 'Quote Sent', comments: 'Sent 3 options' }] },
-  { id: 'LD1003', clientId: '463522374', firstName: 'Michael', lastName: 'Chen', phone: '+1 212 *** 01', fullPhone: '+1 212 555 0201', email: 'm.chen@example.com', labels: ['Corporate', 'Urgent'], isDay: false, country: 'USA', city: 'New York', timeZone: 'UTC-04:00 Eastern Time', timezone: 'America/New_York', origin: 'JFK', destination: 'LHR', travelDate: '05 Dec 2026', cabinClass: 'First', passengers: 1, source: 'Referral', activities: [] },
-  { id: 'LD1004', clientId: '463522375', firstName: 'Sarah', lastName: 'Williams', phone: '+44 20 *** 02', fullPhone: '+44 20 5555 0202', email: 's.williams@example.com', labels: ['Price Sensitive'], isDay: true, country: 'UK', city: 'London', timeZone: 'UTC+01:00 British Summer Time', timezone: 'Europe/London', origin: 'LHR', destination: 'SIN', travelDate: '12 Jan 2027', cabinClass: 'Economy', passengers: 4, source: 'Facebook', activities: [] },
-  { id: 'LD1005', clientId: '463522376', firstName: 'Rita', lastName: 'Verma', phone: '+91 98 *** 88', fullPhone: '+91 98765 0088', email: 'rita@example.com', labels: ['VIP'], isDay: true, country: 'India', city: 'Mumbai', timeZone: 'UTC+05:30 India Standard Time', timezone: 'Asia/Kolkata', origin: 'DEL', destination: 'SIN', travelDate: '05 Dec 2026', cabinClass: 'Economy', passengers: 2, source: 'Google Ads', activities: [] }
+  {
+    id: "LD1001",
+    clientId: "463522372",
+    firstName: "Karan",
+    lastName: "Singh",
+    phone: "+1 212 *** 78",
+    fullPhone: "+1 212 555 0199",
+    email: "karan@example.com",
+    labels: ["Hot Lead", "VIP", "Price Sensitive"],
+    isDay: true,
+    country: "India",
+    city: "Columbus",
+    timeZone: "UTC-05:00 Eastern Time",
+    timezone: "America/New_York",
+    origin: "DEL (Delhi Indira Gandhi)",
+    destination: "LHR (London Heathrow)",
+    travelDate: "15 Oct 2026",
+    returnDate: "22 Oct 2026",
+    cabinClass: "Business",
+    passengers: 2,
+    source: "Google Ads",
+    activities: [
+      {
+        time: "16:16:23",
+        agent: "agent1",
+        status: "New Dialed",
+        comments: "—",
+      },
+      {
+        time: "16:36:01",
+        agent: "agent1",
+        status: "Call Back",
+        comments: "Interested, wants price",
+      },
+      {
+        time: "17:02:44",
+        agent: "me",
+        status: "Quote Sent",
+        comments: "Sent Option 1 & 2",
+      },
+    ],
+  },
+  {
+    id: "LD1002",
+    clientId: "463522373",
+    firstName: "Ankit",
+    lastName: "Sharma",
+    phone: "+1 212 *** 78",
+    fullPhone: "+1 212 555 0200",
+    email: "ankit@example.com",
+    labels: ["Hot Lead", "VIP"],
+    isDay: true,
+    country: "India",
+    city: "New Delhi",
+    timeZone: "UTC+05:30 India Standard Time",
+    timezone: "Asia/Kolkata",
+    origin: "DEL",
+    destination: "DXB",
+    travelDate: "20 Nov 2026",
+    cabinClass: "Economy",
+    passengers: 1,
+    source: "Google Ads",
+    activities: [
+      {
+        time: "14:20:12",
+        agent: "me",
+        status: "Quote Sent",
+        comments: "Sent 3 options",
+      },
+    ],
+  },
+  {
+    id: "LD1003",
+    clientId: "463522374",
+    firstName: "Michael",
+    lastName: "Chen",
+    phone: "+1 212 *** 01",
+    fullPhone: "+1 212 555 0201",
+    email: "m.chen@example.com",
+    labels: ["Corporate", "Urgent"],
+    isDay: false,
+    country: "USA",
+    city: "New York",
+    timeZone: "UTC-04:00 Eastern Time",
+    timezone: "America/New_York",
+    origin: "JFK",
+    destination: "LHR",
+    travelDate: "05 Dec 2026",
+    cabinClass: "First",
+    passengers: 1,
+    source: "Referral",
+    activities: [],
+  },
+  {
+    id: "LD1004",
+    clientId: "463522375",
+    firstName: "Sarah",
+    lastName: "Williams",
+    phone: "+44 20 *** 02",
+    fullPhone: "+44 20 5555 0202",
+    email: "s.williams@example.com",
+    labels: ["Price Sensitive"],
+    isDay: true,
+    country: "UK",
+    city: "London",
+    timeZone: "UTC+01:00 British Summer Time",
+    timezone: "Europe/London",
+    origin: "LHR",
+    destination: "SIN",
+    travelDate: "12 Jan 2027",
+    cabinClass: "Economy",
+    passengers: 4,
+    source: "Facebook",
+    activities: [],
+  },
+  {
+    id: "LD1005",
+    clientId: "463522376",
+    firstName: "Rita",
+    lastName: "Verma",
+    phone: "+91 98 *** 88",
+    fullPhone: "+91 98765 0088",
+    email: "rita@example.com",
+    labels: ["VIP"],
+    isDay: true,
+    country: "India",
+    city: "Mumbai",
+    timeZone: "UTC+05:30 India Standard Time",
+    timezone: "Asia/Kolkata",
+    origin: "DEL",
+    destination: "SIN",
+    travelDate: "05 Dec 2026",
+    cabinClass: "Economy",
+    passengers: 2,
+    source: "Google Ads",
+    activities: [],
+  },
 ];
-const labelColors = { 'Hot Lead': ['#FFEDD5', '#C2410C', '🔥'], VIP: ['#DBEAFE', '#1D4ED8', '🇺🇸'], 'Price Sensitive': ['#FEF3C7', '#854D0E', '💲'], Corporate: ['#F3E8FF', '#7E22CE', '🏢'], Urgent: ['#FEE2E2', '#B91C1C', '🚨'] };
+const labelColors = {
+  "Hot Lead": ["#FFEDD5", "#C2410C", "🔥"],
+  VIP: ["#DBEAFE", "#1D4ED8", "🇺🇸"],
+  "Price Sensitive": ["#FEF3C7", "#854D0E", "💲"],
+  Corporate: ["#F3E8FF", "#7E22CE", "🏢"],
+  Urgent: ["#FEE2E2", "#B91C1C", "🚨"],
+};
 
 export default function AgentDashboard() {
-  const navigate = useNavigate(); const { showAlert } = useAlert(); const [selectedId, setSelectedId] = useState(leads[0].id); const [activity, setActivity] = useState({});
-  const lead = useMemo(() => ({ ...leads.find(x => x.id === selectedId), activities: [...(activity[selectedId] || []), ...leads.find(x => x.id === selectedId).activities] }), [selectedId, activity]);
-  const addComment = (comments) => { setActivity(prev => ({ ...prev, [selectedId]: [{ time: new Date().toLocaleTimeString(), agent: 'me', status: 'Comment', comments }, ...(prev[selectedId] || [])] })); showAlert('Comment added to activity history', 'success'); };
-  const quickAction = (action) => { const paths = { quote: '/agent/quotes', booking: '/agent/bookings' }; if (paths[action]) navigate(paths[action]); else showAlert('Payment link prepared for the customer', 'success'); };
-  return <Box sx={{ minHeight: '100vh', pb: 4 }}><Paper elevation={0} sx={{ p: 1.5, px: 2.5, mb: 2, border: '1px solid', borderColor: 'divider', borderRadius: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 2, flexWrap: 'wrap' }}><Typography variant="h6" sx={{ fontWeight: 900, color: 'primary.main' }}>WOW MY FLIGHT</Typography><DualClock client={{ timezone: lead.timezone, label: lead.timeZone.includes('Eastern') ? 'EST' : lead.city }} /></Paper>
-    <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', xl: '1.2fr 1fr 330px' }, gap: 2 }}><Paper elevation={0} sx={{ p: 2, border: '1px solid', borderColor: 'divider', borderRadius: 2.5, overflow: 'auto' }}><Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1.5, gap: 1 }}><Typography variant="subtitle2" sx={{ fontWeight: 900 }}>HIGH PRIORITY LEADS (5)</Typography><Chip icon={<VerifiedUserIcon />} label="Verified by OTP" size="small" color="success" variant="outlined" /></Box><table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12, minWidth: 720 }}><thead><tr>{['Is Day','Labels','First Name','Last Name','Verified Phone','Verified Email','Assigned','Actions'].map(h => <th key={h} style={{ textAlign: 'left', padding: 7, color: '#64748B' }}>{h}</th>)}</tr></thead><tbody>{leads.map(row => <tr key={row.id} onClick={() => setSelectedId(row.id)} style={{ cursor: 'pointer', background: row.id === selectedId ? '#F0F9FF' : 'transparent', borderTop: '1px solid #F1F5F9' }}><td style={{ padding: 7 }}>{row.isDay ? <WbSunnyIcon sx={{ fontSize: 17, color: '#F59E0B' }} /> : <NightlightIcon sx={{ fontSize: 17 }} />}</td><td style={{ padding: 7 }}>{row.labels.map(name => { const c = labelColors[name]; return <Chip key={name} label={`${c[2]} ${name}`} size="small" sx={{ mr: .3, mb: .3, bgcolor: c[0], color: c[1], fontWeight: 700, fontSize: 10 }} />; })}</td><td style={{ padding: 7, fontWeight: 700 }}>{row.firstName}</td><td style={{ padding: 7, fontWeight: 700 }}>{row.lastName}</td><td style={{ padding: 7 }}>{row.phone}</td><td style={{ padding: 7 }}>{row.email}</td><td style={{ padding: 7 }}>me</td><td style={{ padding: 7, whiteSpace: 'nowrap' }}><Tooltip title="Call"><IconButton onClick={e => { e.stopPropagation(); setSelectedId(row.id); showAlert(`Calling ${row.firstName}…`, 'success'); }} size="small"><PhoneIcon fontSize="small" color="success" /></IconButton></Tooltip><Tooltip title="WhatsApp / SMS"><IconButton onClick={e => { e.stopPropagation(); navigate('/social-inbox?channel=whatsapp'); }} size="small"><ChatIcon fontSize="small" color="success" /></IconButton></Tooltip><Tooltip title="Email"><IconButton onClick={e => { e.stopPropagation(); showAlert(`Email composer opened for ${row.email}`, 'info'); }} size="small"><EmailIcon fontSize="small" color="primary" /></IconButton></Tooltip><IconButton size="small"><MoreHorizIcon fontSize="small" /></IconButton></td></tr>)}</tbody></table></Paper><ClientPanel lead={lead} onComment={addComment} onAction={quickAction} /><Box><DialerPanel lead={lead} onCall={state => showAlert(state === 'ON CALL' ? `Connected to ${lead.firstName}` : 'Call ended', 'info')} /><Paper elevation={0} sx={{ p: 2, mt: 2, border: '1px solid', borderColor: 'divider', borderRadius: 2.5 }}><Typography variant="subtitle2" sx={{ fontWeight: 800, mb: 1 }}>PERSONAL DAILY STATS</Typography><Typography variant="body2">Calls: <b>15</b> | SMS: <b>4</b> | Emails: <b>2</b></Typography><Typography variant="body2">Lead Reaction Time: <b>2:30 min</b></Typography><Typography variant="body2">Leads Taken: <b>8</b> | Closed: <b>2</b> | Wasted: <b>1</b></Typography></Paper></Box></Box></Box>;
+  const navigate = useNavigate();
+  const { showAlert } = useAlert();
+  const [selectedId, setSelectedId] = useState(leads[0].id);
+  const [activity, setActivity] = useState({});
+  const lead = useMemo(
+    () => ({
+      ...leads.find((x) => x.id === selectedId),
+      activities: [
+        ...(activity[selectedId] || []),
+        ...leads.find((x) => x.id === selectedId).activities,
+      ],
+    }),
+    [selectedId, activity],
+  );
+  const addComment = (comments) => {
+    setActivity((prev) => ({
+      ...prev,
+      [selectedId]: [
+        {
+          time: new Date().toLocaleTimeString(),
+          agent: "me",
+          status: "Comment",
+          comments,
+        },
+        ...(prev[selectedId] || []),
+      ],
+    }));
+    showAlert("Comment added to activity history", "success");
+  };
+  const quickAction = (action) => {
+    const paths = { quote: "/agent/quotes", booking: "/agent/bookings" };
+    if (paths[action]) navigate(paths[action]);
+    else showAlert("Payment link prepared for the customer", "success");
+  };
+  return (
+    <Box sx={{ minHeight: "100vh", pb: 4 }}>
+      <Paper
+        elevation={0}
+        sx={{
+          p: 1.5,
+          px: 2.5,
+          mb: 2,
+          border: "1px solid",
+          borderColor: "divider",
+          borderRadius: 2,
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          gap: 2,
+          flexWrap: "wrap",
+        }}
+      >
+        <Box />
+        <DualClock
+          client={{
+            timezone: lead.timezone,
+            label: lead.timeZone.includes("Eastern") ? "EST" : lead.city,
+          }}
+        />
+      </Paper>
+      <Box
+        sx={{
+          display: "grid",
+          gridTemplateColumns: { xs: "1fr", lg: "1.1fr 1fr 300px", xl: "1.3fr 1fr 320px" },
+          gap: 2,
+        }}
+      >
+        <Paper
+          elevation={0}
+          sx={{
+            p: 2,
+            border: "1px solid",
+            borderColor: "divider",
+            borderRadius: 2.5,
+            overflow: "auto",
+          }}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              mb: 1.5,
+              gap: 1,
+            }}
+          >
+            <Typography variant="subtitle2" sx={{ fontWeight: 900 }}>
+              HIGH PRIORITY LEADS (5)
+            </Typography>
+            <Chip
+              icon={<VerifiedUserIcon />}
+              label="Verified by OTP"
+              size="small"
+              color="success"
+              variant="outlined"
+            />
+          </Box>
+          <table
+              width: "100%",
+              borderCollapse: "collapse",
+              fontSize: "0.8rem",
+              minWidth: 450,
+            }}
+          >
+            <thead>
+              <tr>
+                {[
+                  "Time",
+                  "Client",
+                  "Labels",
+                  "Contact",
+                  "Actions",
+                ].map((h) => (
+                  <th
+                    key={h}
+                    style={{ textAlign: "left", padding: "10px 8px", color: "#64748B", fontWeight: 600 }}
+                  >
+                    {h}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {leads.map((row) => (
+                <tr
+                  key={row.id}
+                  onClick={() => setSelectedId(row.id)}
+                  style={{
+                    cursor: "pointer",
+                    background:
+                      row.id === selectedId ? "#F0F9FF" : "transparent",
+                    borderTop: "1px solid #F1F5F9",
+                  }}
+                >
+                  <td style={{ padding: "10px 8px" }}>
+                    {row.isDay ? (
+                      <WbSunnyIcon sx={{ fontSize: 18, color: "#F59E0B" }} />
+                    ) : (
+                      <NightlightIcon sx={{ fontSize: 18, color: "#475569" }} />
+                    )}
+                  </td>
+                  <td style={{ padding: "10px 8px", fontWeight: 700, color: 'primary.main' }}>
+                    {row.firstName} {row.lastName}
+                  </td>
+                  <td style={{ padding: "10px 8px" }}>
+                    {row.labels.map((name) => {
+                      const c = labelColors[name];
+                      return (
+                        <Chip
+                          key={name}
+                          label={`${c[2]} ${name}`}
+                          size="small"
+                          sx={{
+                            mr: 0.5,
+                            mb: 0.5,
+                            bgcolor: c[0],
+                            color: c[1],
+                            fontWeight: 700,
+                            fontSize: '0.65rem',
+                            height: 20
+                          }}
+                        />
+                      );
+                    })}
+                  </td>
+                  <td style={{ padding: "10px 8px" }}>
+                    <Typography variant="body2" sx={{ fontSize: '0.75rem', fontWeight: 600 }}>{row.phone}</Typography>
+                    <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block' }}>{row.email}</Typography>
+                  </td>
+                  <td style={{ padding: "10px 8px", whiteSpace: "nowrap" }}>
+                    <Tooltip title="Call">
+                      <IconButton
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedId(row.id);
+                          showAlert(`Calling ${row.firstName}…`, "success");
+                        }}
+                        size="small"
+                      >
+                        <PhoneIcon fontSize="small" color="success" />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title="WhatsApp / SMS">
+                      <IconButton
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigate("/social-inbox?channel=whatsapp");
+                        }}
+                        size="small"
+                      >
+                        <ChatIcon fontSize="small" color="success" />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Email">
+                      <IconButton
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          showAlert(
+                            `Email composer opened for ${row.email}`,
+                            "info",
+                          );
+                        }}
+                        size="small"
+                      >
+                        <EmailIcon fontSize="small" color="primary" />
+                      </IconButton>
+                    </Tooltip>
+                    <IconButton size="small">
+                      <MoreHorizIcon fontSize="small" />
+                    </IconButton>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </Paper>
+        <ClientPanel
+          lead={lead}
+          onComment={addComment}
+          onAction={quickAction}
+        />
+        <Box>
+          <DialerPanel
+            lead={lead}
+            onCall={(state) =>
+              showAlert(
+                state === "ON CALL"
+                  ? `Connected to ${lead.firstName}`
+                  : "Call ended",
+                "info",
+              )
+            }
+          />
+          <Paper
+            elevation={0}
+            sx={{
+              p: 2,
+              mt: 2,
+              border: "1px solid",
+              borderColor: "divider",
+              borderRadius: 2.5,
+            }}
+          >
+            <Typography variant="subtitle2" sx={{ fontWeight: 800, mb: 1 }}>
+              PERSONAL DAILY STATS
+            </Typography>
+            <Typography variant="body2">
+              Calls: <b>15</b> | SMS: <b>4</b> | Emails: <b>2</b>
+            </Typography>
+            <Typography variant="body2">
+              Lead Reaction Time: <b>2:30 min</b>
+            </Typography>
+            <Typography variant="body2">
+              Leads Taken: <b>8</b> | Closed: <b>2</b> | Wasted: <b>1</b>
+            </Typography>
+          </Paper>
+        </Box>
+      </Box>
+    </Box>
+  );
 }

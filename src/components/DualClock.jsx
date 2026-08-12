@@ -1,21 +1,73 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
-import Chip from '@mui/material/Chip';
 import Typography from '@mui/material/Typography';
 import WbSunnyIcon from '@mui/icons-material/WbSunny';
-import NightlightIcon from '@mui/icons-material/Nightlight';
+import NightlightRoundIcon from '@mui/icons-material/NightlightRound';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import PublicIcon from '@mui/icons-material/Public';
 
-const timeFor = (zone) => new Intl.DateTimeFormat([], { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: zone }).format(new Date());
+export default function DualClock({ client }) {
+  const [time, setTime] = useState(new Date());
+  useEffect(() => {
+    const timer = setInterval(() => setTime(new Date()), 1000);
+    return () => clearInterval(timer);
+  }, []);
 
-export default function DualClock({ client = { timezone: 'America/New_York', label: 'EST' }, compact = false }) {
-  const agentZone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'Asia/Kolkata';
-  const [now, setNow] = useState(Date.now());
-  useEffect(() => { const timer = setInterval(() => setNow(Date.now()), 30000); return () => clearInterval(timer); }, []);
-  const hour = Number(new Intl.DateTimeFormat('en-US', { hour: 'numeric', hour12: false, timeZone: client.timezone }).format(new Date(now)));
+  const formatTime = (timezone) => {
+    try {
+      return time.toLocaleTimeString('en-US', { timeZone: timezone, hour: '2-digit', minute: '2-digit', hour12: false });
+    } catch {
+      return '00:00';
+    }
+  };
+
+  const getClientHour = (timezone) => {
+    try {
+      const parts = new Intl.DateTimeFormat('en-US', { timeZone: timezone, hour: 'numeric', hourCycle: 'h23' }).formatToParts(time);
+      const hr = parts.find(p => p.type === 'hour')?.value;
+      return parseInt(hr || '0', 10);
+    } catch {
+      return 12;
+    }
+  };
+
+  const agentTime = formatTime(Intl.DateTimeFormat().resolvedOptions().timeZone);
+  const clientTime = formatTime(client.timezone);
+  const hour = getClientHour(client.timezone);
   const isDay = hour >= 6 && hour < 18;
-  return <Box sx={{ display: 'flex', alignItems: 'center', gap: compact ? 1.5 : 2.5, flexWrap: 'wrap' }}>
-    <Box><Typography variant="caption" color="text.secondary" sx={{ fontWeight: 700 }}>AGENT ({agentZone.split('/').pop().replace('_', ' ')})</Typography><Typography sx={{ fontFamily: 'monospace', fontWeight: 800 }}>{timeFor(agentZone)}</Typography></Box>
-    <Box><Typography variant="caption" color="text.secondary" sx={{ fontWeight: 700 }}>CLIENT ({client.label})</Typography><Typography sx={{ fontFamily: 'monospace', fontWeight: 800 }}>{timeFor(client.timezone)}</Typography></Box>
-    <Chip size="small" icon={isDay ? <WbSunnyIcon /> : <NightlightIcon />} label={isDay ? 'DAYTIME' : 'NIGHTTIME'} sx={{ fontWeight: 800, bgcolor: isDay ? '#FEF3C7' : '#E0E7FF', color: isDay ? '#92400E' : '#3730A3' }} />
-  </Box>;
+
+  return (
+    <Box sx={{ 
+      display: 'flex', 
+      alignItems: 'center', 
+      gap: 3, 
+      bgcolor: 'background.paper',
+      p: 1.5,
+      px: 3,
+      borderRadius: 4,
+      boxShadow: '0 4px 15px rgba(0,0,0,0.03)',
+      border: '1px solid',
+      borderColor: 'divider',
+      transition: 'all 0.3s ease',
+      '&:hover': { transform: 'translateY(-2px)', boxShadow: '0 8px 25px rgba(0,0,0,0.06)' }
+    }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+        <AccessTimeIcon sx={{ color: 'text.secondary', fontSize: 18 }} />
+        <Typography variant="body2" sx={{ fontWeight: 600, color: 'text.secondary' }}>Agent (Local):</Typography>
+        <Typography variant="body1" sx={{ fontWeight: 800, color: 'primary.main', fontFamily: 'monospace', fontSize: '1.1rem' }}>{agentTime}</Typography>
+      </Box>
+      <Box sx={{ width: '1px', height: 24, bgcolor: 'divider' }} />
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+        <PublicIcon sx={{ color: 'text.secondary', fontSize: 18 }} />
+        <Typography variant="body2" sx={{ fontWeight: 600, color: 'text.secondary' }}>Client ({client.label}):</Typography>
+        <Typography variant="body1" sx={{ fontWeight: 800, color: 'secondary.main', fontFamily: 'monospace', fontSize: '1.1rem' }}>{clientTime}</Typography>
+      </Box>
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, ml: 1, px: 1.5, py: 0.5, borderRadius: 2, bgcolor: isDay ? '#FFFBEB' : '#F1F5F9' }}>
+        {isDay ? <WbSunnyIcon sx={{ color: '#F59E0B', fontSize: 16 }} /> : <NightlightRoundIcon sx={{ color: '#475569', fontSize: 16 }} />}
+        <Typography variant="caption" sx={{ fontWeight: 800, color: isDay ? '#D97706' : '#334155' }}>
+          {isDay ? 'DAYTIME' : 'NIGHTTIME'}
+        </Typography>
+      </Box>
+    </Box>
+  );
 }

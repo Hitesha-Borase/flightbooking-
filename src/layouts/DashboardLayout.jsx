@@ -658,7 +658,11 @@ export const DashboardLayout = () => {
         </ListItemIcon>
         {sidebarOpen && (
           <ListItemText
-            primary={item.label === 'Leads' && (currentUser?.role === 'consultant' || currentUser?.role === 'agent') ? 'Consultations' : item.label}
+            primary={
+              currentUser?.role === 'consultant' && item.label === 'Leads' ? 'My Leads' : 
+              currentUser?.role === 'consultant' && item.label === 'Customers' ? 'My Customers' : 
+              item.label
+            }
             sx={{ m: 0 }}
             primaryTypographyProps={{
               fontSize: '0.875rem',
