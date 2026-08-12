@@ -1,7 +1,40 @@
 import React from 'react';
 import Box from '@mui/material/Box';
-import Chip from '@mui/material/Chip';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
-const rows = [['Maria S.','On Call',33,'$138.65k','22min'],['John D.','Idle · 12m',26,'$138.20k','13min'],['Ken T.','Away · Break',21,'$134.15k','23min'],['Sara K.','On Call',7,'$123.20k','23min'],['Han R.','On Break',10,'$134.10k','33min']];
-export default function Leaderboard() { return <Paper elevation={0} sx={{ p: 2, border: '1px solid', borderColor: 'divider', borderRadius: 2.5 }}><Typography variant="subtitle2" sx={{ fontWeight: 900, mb: 1 }}>TOP AGENTS LEADERBOARD</Typography><Box component="table" sx={{ width: '100%', borderCollapse: 'collapse', fontSize: 12 }}><thead><tr><th># Agent</th><th>Closed Sales</th><th>Revenue</th><th>Lead Turnaround Time</th></tr></thead><tbody>{rows.map((r, i) => <tr key={r[0]}><td style={{ padding: 7 }}><b>{i + 1} {r[0]}</b><br /><Chip label={r[1]} size="small" color={r[1].includes('On Call') ? 'success' : 'default'} /></td><td>{r[2]}</td><td style={{ color: '#059669', fontWeight: 700 }}>{r[3]}</td><td>{r[4]}</td></tr>)}</tbody></Box></Paper>; }
+import Avatar from '@mui/material/Avatar';
+import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
+
+const leaders = [
+  { name: 'Maria S.', sales: '$42,500', deals: 12, rank: 1, avatarColor: '#fbbf24' },
+  { name: 'Sofia R.', sales: '$38,200', deals: 10, rank: 2, avatarColor: '#94a3b8' },
+  { name: 'John D.', sales: '$24,100', deals: 6, rank: 3, avatarColor: '#b45309' },
+  { name: 'Ken T.', sales: '$18,000', deals: 4, rank: 4, avatarColor: 'divider' },
+];
+
+export default function Leaderboard() {
+  return (
+    <Paper elevation={0} sx={{ p: 2.5, border: '1px solid', borderColor: 'divider', borderRadius: 4, mt: 2 }}>
+      <Typography variant="subtitle2" sx={{ fontWeight: 900, display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
+        <EmojiEventsIcon sx={{ color: '#f59e0b' }} />
+        LIVE LEADERBOARD (TODAY)
+      </Typography>
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+        {leaders.map((agent) => (
+          <Box key={agent.name} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', p: 1.5, borderRadius: 3, bgcolor: agent.rank === 1 ? '#fffbeb' : '#fafafa', border: '1px solid', borderColor: agent.rank === 1 ? '#fde68a' : 'divider' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+              <Avatar sx={{ width: 32, height: 32, bgcolor: agent.avatarColor, fontSize: '0.8rem', fontWeight: 800, color: agent.rank <= 3 ? '#fff' : '#64748b' }}>
+                #{agent.rank}
+              </Avatar>
+              <Typography variant="body2" sx={{ fontWeight: 800 }}>{agent.name}</Typography>
+            </Box>
+            <Box sx={{ textAlign: 'right' }}>
+              <Typography variant="body2" sx={{ fontWeight: 800, color: 'success.main' }}>{agent.sales}</Typography>
+              <Typography variant="caption" sx={{ fontWeight: 600, color: 'text.secondary' }}>{agent.deals} Deals</Typography>
+            </Box>
+          </Box>
+        ))}
+      </Box>
+    </Paper>
+  );
+}

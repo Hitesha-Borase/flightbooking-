@@ -229,7 +229,11 @@ export default function AgentDashboard() {
       <Box
         sx={{
           display: "grid",
-          gridTemplateColumns: { xs: "1fr", lg: "1.1fr 1fr 300px", xl: "1.3fr 1fr 320px" },
+          gridTemplateColumns: {
+            xs: "1fr",
+            lg: "1.1fr 1fr 300px",
+            xl: "1.3fr 1fr 320px",
+          },
           gap: 2,
         }}
       >
@@ -263,6 +267,7 @@ export default function AgentDashboard() {
             />
           </Box>
           <table
+            style={{
               width: "100%",
               borderCollapse: "collapse",
               fontSize: "0.8rem",
@@ -271,16 +276,15 @@ export default function AgentDashboard() {
           >
             <thead>
               <tr>
-                {[
-                  "Time",
-                  "Client",
-                  "Labels",
-                  "Contact",
-                  "Actions",
-                ].map((h) => (
+                {["Time", "Client", "Labels", "Contact", "Actions"].map((h) => (
                   <th
                     key={h}
-                    style={{ textAlign: "left", padding: "10px 8px", color: "#64748B", fontWeight: 600 }}
+                    style={{
+                      textAlign: "left",
+                      padding: "10px 8px",
+                      color: "#64748B",
+                      fontWeight: 600,
+                    }}
                   >
                     {h}
                   </th>
@@ -306,7 +310,13 @@ export default function AgentDashboard() {
                       <NightlightIcon sx={{ fontSize: 18, color: "#475569" }} />
                     )}
                   </td>
-                  <td style={{ padding: "10px 8px", fontWeight: 700, color: 'primary.main' }}>
+                  <td
+                    style={{
+                      padding: "10px 8px",
+                      fontWeight: 700,
+                      color: "primary.main",
+                    }}
+                  >
                     {row.firstName} {row.lastName}
                   </td>
                   <td style={{ padding: "10px 8px" }}>
@@ -323,16 +333,26 @@ export default function AgentDashboard() {
                             bgcolor: c[0],
                             color: c[1],
                             fontWeight: 700,
-                            fontSize: '0.65rem',
-                            height: 20
+                            fontSize: "0.65rem",
+                            height: 20,
                           }}
                         />
                       );
                     })}
                   </td>
                   <td style={{ padding: "10px 8px" }}>
-                    <Typography variant="body2" sx={{ fontSize: '0.75rem', fontWeight: 600 }}>{row.phone}</Typography>
-                    <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block' }}>{row.email}</Typography>
+                    <Typography
+                      variant="body2"
+                      sx={{ fontSize: "0.75rem", fontWeight: 600 }}
+                    >
+                      {row.phone}
+                    </Typography>
+                    <Typography
+                      variant="caption"
+                      sx={{ color: "text.secondary", display: "block" }}
+                    >
+                      {row.email}
+                    </Typography>
                   </td>
                   <td style={{ padding: "10px 8px", whiteSpace: "nowrap" }}>
                     <Tooltip title="Call">

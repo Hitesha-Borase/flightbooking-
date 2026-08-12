@@ -387,13 +387,16 @@ export const AppRoutes = () => {
         
         <Route path="/:role/quotes" element={<ProtectedRoute><QuotesPage /></ProtectedRoute>} />
         <Route path="/:role/bookings" element={<ProtectedRoute><BookingsPage /></ProtectedRoute>} />
-        <Route path="/quotes" element={<ProtectedRoute allowedRoles={['team_leader', 'super_admin']}><QuotesPage /></ProtectedRoute>} />
-        <Route path="/bookings" element={<ProtectedRoute allowedRoles={['team_leader', 'super_admin']}><BookingsPage /></ProtectedRoute>} />
+        <Route path="/quotes" element={<ProtectedRoute><QuotesPage /></ProtectedRoute>} />
+        <Route path="/flights" element={<ProtectedRoute><FlightRequestsPage /></ProtectedRoute>} />
+        <Route path="/bookings" element={<ProtectedRoute><BookingsPage /></ProtectedRoute>} />
         <Route path="/:role/bookings/:id" element={<ProtectedRoute><BookingDetailsPage /></ProtectedRoute>} />
         <Route path="/:role/suppliers" element={<ProtectedRoute><SuppliersPage /></ProtectedRoute>} />
         <Route path="/:role/flights" element={<ProtectedRoute><FlightRequestsPage /></ProtectedRoute>} />
         <Route path="/:role/ticketing" element={<ProtectedRoute><TicketingIssuance /></ProtectedRoute>} />
+        <Route path="/ticketing" element={<ProtectedRoute><TicketingIssuance /></ProtectedRoute>} />
         <Route path="/:role/flight-alerts" element={<ProtectedRoute><FlightAlertsPage /></ProtectedRoute>} />
+        <Route path="/flight-alerts" element={<ProtectedRoute><FlightAlertsPage /></ProtectedRoute>} />
         <Route path="/:role/payments" element={<ProtectedRoute><PaymentsPage /></ProtectedRoute>} />
         <Route path="/:role/payments/invoices" element={<ProtectedRoute><InvoiceList /></ProtectedRoute>} />
         <Route path="/:role/payments/refund-commission" element={<ProtectedRoute><SuperAdminRefundCommissionHub /></ProtectedRoute>} />

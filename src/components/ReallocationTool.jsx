@@ -1,13 +1,47 @@
 import React, { useState } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
-import MenuItem from '@mui/material/MenuItem';
 import Paper from '@mui/material/Paper';
-import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-const leads = [['Need read','Alex R.','Hot Lead'],['Need read','Alex R.','Hot Lead'],['Lead Lead','Alex R.','Hot Lead'],['Need Lead','Alex R.','VIP'],['Lead Lead','Alex T.','Hot Lead'],['Need Lead','Hen T.','VIP']];
-export default function ReallocationTool({ onReassign }) { const [open, setOpen] = useState(false); const [agent, setAgent] = useState(''); const [reason, setReason] = useState(''); return <Paper elevation={0} sx={{ p: 2, border: '1px solid', borderColor: 'divider', borderRadius: 2.5 }}><Typography variant="subtitle2" sx={{ fontWeight: 900, mb: 1 }}>LEAD REALLOCATION TOOL</Typography><table style={{ width: '100%', fontSize: 12 }}><thead><tr><th>Lead Attention</th><th>Current Agent</th><th>Lead Importance</th><th /></tr></thead><tbody>{leads.map((lead, i) => <tr key={i}><td>{lead[0]}</td><td>{lead[1]}</td><td>{lead[2]}</td><td><Button size="small" onClick={() => setOpen(true)}>Reassign</Button></td></tr>)}</tbody></table><Dialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="xs"><DialogTitle>Reassign Lead to</DialogTitle><DialogContent><TextField select fullWidth value={agent} onChange={e => setAgent(e.target.value)} label="Active agent" sx={{ mt: 1 }}>{['Maria S.','John D.','Sara K.'].map(x => <MenuItem key={x} value={x}>{x}</MenuItem>)}</TextField><TextField fullWidth multiline rows={3} value={reason} onChange={e => setReason(e.target.value)} label="Reason (optional)" sx={{ mt: 2 }} /></DialogContent><DialogActions><Button onClick={() => setOpen(false)}>Cancel</Button><Button variant="contained" disabled={!agent} onClick={() => { onReassign(agent); setOpen(false); setAgent(''); setReason(''); }}>Confirm Reassign</Button></DialogActions></Dialog></Paper>; }
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
+
+export default function ReallocationTool({ onReassign }) {
+  const [agent, setAgent] = useState('');
+  
+  return (
+    <Paper elevation={0} sx={{ p: 2.5, border: '1px solid', borderColor: 'divider', borderRadius: 4, mt: 2, bgcolor: '#f8fafc' }}>
+      <Typography variant="subtitle2" sx={{ fontWeight: 900, mb: 1, display: 'flex', alignItems: 'center', gap: 1 }}>
+        <SwapHorizIcon color="primary" />
+        REALLOCATION TOOL
+      </Typography>
+      <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 2, fontWeight: 600 }}>
+        Force transfer wasted or unattended leads to an active agent.
+      </Typography>
+      
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+        <Select 
+          displayEmpty 
+          size="small" 
+          value={agent} 
+          onChange={e => setAgent(e.target.value)} 
+          sx={{ bgcolor: 'background.paper', borderRadius: 2 }}
+        >
+          <MenuItem value="" disabled>Select Target Agent</MenuItem>
+          <MenuItem value="Maria S.">Maria S. (Online)</MenuItem>
+          <MenuItem value="Sara K.">Sara K. (Online)</MenuItem>
+          <MenuItem value="Sofia R.">Sofia R. (Online)</MenuItem>
+        </Select>
+        <Button 
+          variant="contained" 
+          onClick={() => { if (agent) onReassign(agent); }}
+          disabled={!agent}
+          sx={{ borderRadius: 2, fontWeight: 800, py: 1 }}
+        >
+          Transfer 5 Neglected Leads
+        </Button>
+      </Box>
+    </Paper>
+  );
+}
