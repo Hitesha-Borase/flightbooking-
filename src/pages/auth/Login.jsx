@@ -54,13 +54,11 @@ export const Login = () => {
   });
 
   const onSubmit = async (data) => {
-    // Simulate API login
     await new Promise((resolve) => setTimeout(resolve, 800));
 
     const enteredEmail = data.email.toLowerCase().trim();
     const enteredPassword = data.password;
 
-    // 1. Check Super Admin
     if (enteredEmail === 'admin@aaa.com' || enteredEmail === 'admin@wowmyflight.com') {
       login({
         id: 'super-admin',
@@ -74,7 +72,6 @@ export const Login = () => {
       return;
     }
 
-    // 2. Check dynamic consultants
     const matchedConsultant = consultants.find(
       (c) => c.email && c.email.toLowerCase().trim() === enteredEmail
     );
@@ -96,7 +93,6 @@ export const Login = () => {
       }
     }
 
-    // 3. Fallback / error case
     showAlert('Invalid login credentials. Please check email/password.', 'error');
   };
 
@@ -178,7 +174,6 @@ export const Login = () => {
     login(mockUser);
     showAlert(`Logged in as Demo ${role.toUpperCase().replace('_', ' ')}`, 'success');
 
-    // Route directly to role dashboard
     if (role === 'super_admin') navigate('/super_admin/dashboard');
     else if (role === 'admin') navigate('/admin/dashboard');
     else if (role === 'team_leader') navigate('/team_leader/dashboard');
@@ -190,10 +185,22 @@ export const Login = () => {
     else navigate('/agent/dashboard');
   };
 
+  const quickRoles = [
+    { role: 'super_admin', label: 'Super Admin', icon: <AdminPanelSettingsIcon sx={{ fontSize: 16 }} /> },
+    { role: 'admin', label: 'Admin', icon: <SupervisorAccountIcon sx={{ fontSize: 16 }} /> },
+    { role: 'team_leader', label: 'Team Leader', icon: <GroupsIcon sx={{ fontSize: 16 }} /> },
+    { role: 'consultant', label: 'Sales Exec', icon: <SupportAgentIcon sx={{ fontSize: 16 }} /> },
+    { role: 'flight_expert', label: 'Flight Expert', icon: <FlightTakeoffIcon sx={{ fontSize: 16 }} /> },
+    { role: 'ticketing_agent', label: 'Ticketing', icon: <ConfirmationNumberIcon sx={{ fontSize: 16 }} /> },
+    { role: 'finance', label: 'Finance', icon: <AccountBalanceWalletIcon sx={{ fontSize: 16 }} /> },
+    { role: 'operations', label: 'Operations', icon: <SettingsSuggestIcon sx={{ fontSize: 16 }} /> },
+    { role: 'marketing', label: 'Marketing', icon: <CampaignIcon sx={{ fontSize: 16 }} /> },
+  ];
+
   return (
     <Box>
       <Box sx={{ mb: 3, textAlign: 'center' }}>
-        <Typography variant="h4" sx={{ fontWeight: 700, mb: 1 }}>
+        <Typography variant="h4" sx={{ fontWeight: 800, mb: 0.8 }}>
           Welcome back
         </Typography>
         <Typography variant="body2" color="text.secondary">
@@ -202,12 +209,13 @@ export const Login = () => {
       </Box>
 
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.5 }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
           <TextField
             {...register('email')}
             label="Email Address"
             variant="outlined"
             fullWidth
+            size="medium"
             error={!!errors.email}
             helperText={errors.email?.message}
           />
@@ -218,59 +226,63 @@ export const Login = () => {
             type="password"
             variant="outlined"
             fullWidth
+            size="medium"
             error={!!errors.password}
             helperText={errors.password?.message}
           />
 
-          <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: -0.5 }}>
             <Link component={RouterLink} to="/forgot-password" variant="body2" color="secondary" underline="hover">
               Forgot password?
             </Link>
           </Box>
 
-          <Button type="submit" variant="contained" color="secondary" size="large" fullWidth disabled={isSubmitting}>
+          <Button type="submit" variant="contained" color="secondary" size="large" fullWidth disabled={isSubmitting} sx={{ py: 1.2, fontWeight: 800 }}>
             {isSubmitting ? 'Logging in...' : 'Log In'}
           </Button>
         </Box>
       </form>
 
-      <Divider sx={{ my: 3 }}>
-        <Chip label="DEMO QUICK LOGIN (ALL ROLES)" size="small" sx={{ fontSize: '0.65rem', fontWeight: 700 }} />
+      <Divider sx={{ my: 2.5 }}>
+        <Chip label="DEMO QUICK LOGIN (ALL 9 ROLES)" size="small" sx={{ fontSize: '0.64rem', fontWeight: 800 }} />
       </Divider>
 
-      {/* Grid of All 9 Quick Login Role Buttons */}
+      {/* Grid of All 9 Quick Login Role Buttons with Uniform Height & Single Line Styling */}
       <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 1 }}>
-        <Button variant="outlined" size="small" sx={{ py: 0.6, fontSize: '0.68rem', fontWeight: 700 }} startIcon={<AdminPanelSettingsIcon />} fullWidth onClick={() => handleQuickLogin('super_admin')}>
-          Super Admin
-        </Button>
-        <Button variant="outlined" size="small" sx={{ py: 0.6, fontSize: '0.68rem', fontWeight: 700 }} startIcon={<SupervisorAccountIcon />} fullWidth onClick={() => handleQuickLogin('admin')}>
-          Admin
-        </Button>
-        <Button variant="outlined" size="small" sx={{ py: 0.6, fontSize: '0.68rem', fontWeight: 700 }} startIcon={<GroupsIcon />} fullWidth onClick={() => handleQuickLogin('team_leader')}>
-          Team Leader
-        </Button>
-        <Button variant="outlined" size="small" sx={{ py: 0.6, fontSize: '0.68rem', fontWeight: 700 }} startIcon={<SupportAgentIcon />} fullWidth onClick={() => handleQuickLogin('consultant')}>
-          Sales Executive
-        </Button>
-        <Button variant="outlined" size="small" sx={{ py: 0.6, fontSize: '0.68rem', fontWeight: 700 }} startIcon={<FlightTakeoffIcon />} fullWidth onClick={() => handleQuickLogin('flight_expert')}>
-          Flight Expert (GDS)
-        </Button>
-        <Button variant="outlined" size="small" sx={{ py: 0.6, fontSize: '0.68rem', fontWeight: 700 }} startIcon={<ConfirmationNumberIcon />} fullWidth onClick={() => handleQuickLogin('ticketing_agent')}>
-          Ticketing Agent
-        </Button>
-        <Button variant="outlined" size="small" sx={{ py: 0.6, fontSize: '0.68rem', fontWeight: 700 }} startIcon={<AccountBalanceWalletIcon />} fullWidth onClick={() => handleQuickLogin('finance')}>
-          Finance
-        </Button>
-        <Button variant="outlined" size="small" sx={{ py: 0.6, fontSize: '0.68rem', fontWeight: 700 }} startIcon={<SettingsSuggestIcon />} fullWidth onClick={() => handleQuickLogin('operations')}>
-          Operations
-        </Button>
-        <Button variant="outlined" size="small" sx={{ py: 0.6, fontSize: '0.68rem', fontWeight: 700 }} startIcon={<CampaignIcon />} fullWidth onClick={() => handleQuickLogin('marketing')}>
-          Marketing
-        </Button>
+        {quickRoles.map((r) => (
+          <Button
+            key={r.role}
+            variant="outlined"
+            size="small"
+            startIcon={r.icon}
+            fullWidth
+            onClick={() => handleQuickLogin(r.role)}
+            sx={{
+              height: 38,
+              py: 0,
+              px: 0.8,
+              fontSize: '0.66rem',
+              fontWeight: 800,
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              justifyContent: 'center',
+              borderRadius: 1.8,
+              borderColor: 'divider',
+              color: 'text.primary',
+              '&:hover': {
+                borderColor: 'secondary.main',
+                bgcolor: '#FFFBEB',
+              },
+            }}
+          >
+            {r.label}
+          </Button>
+        ))}
       </Box>
 
       <Box sx={{ mt: 3, textAlign: 'center' }}>
-        <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5 }}>
+        <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5, fontSize: '0.8rem' }}>
           Are you a client looking for your portal?
         </Typography>
         <Button 
@@ -278,7 +290,7 @@ export const Login = () => {
           to="/portal/login" 
           variant="text" 
           color="primary"
-          sx={{ fontWeight: 'bold' }}
+          sx={{ fontWeight: 'bold', fontSize: '0.82rem' }}
         >
           Go to Client Portal Login
         </Button>
