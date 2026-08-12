@@ -24,7 +24,7 @@ export const AuthLayout = () => {
       <Box
         sx={{
           display: { xs: 'none', md: 'flex' },
-          width: '55%',
+          width: { md: '50%', lg: '55%' },
           height: '100%',
           position: 'relative',
           backgroundImage: 'url("https://images.unsplash.com/photo-1436491865332-7a61a109cc05?q=80&w=1200")',
@@ -32,7 +32,7 @@ export const AuthLayout = () => {
           backgroundPosition: 'center',
           flexDirection: 'column',
           justify: 'space-between',
-          p: 6,
+          p: { md: 5, lg: 6 },
           color: '#FFFFFF',
           '&::before': {
             content: '""',
@@ -90,12 +90,13 @@ export const AuthLayout = () => {
       {/* Right Pane: Login Card */}
       <Box
         sx={{
-          width: { xs: '100%', md: '45%' },
+          flex: 1,
+          width: { xs: '100%', md: '50%', lg: '45%' },
           height: '100%',
           display: 'flex',
           justify: 'center',
           alignItems: 'center',
-          px: 3,
+          px: { xs: 2, sm: 4, md: 5 },
           py: 4,
           position: 'relative',
           overflowY: 'auto',
@@ -109,20 +110,20 @@ export const AuthLayout = () => {
           elevation={0}
           sx={{
             width: '100%',
-            maxWidth: 460,
+            maxWidth: 500,
             borderRadius: 4,
             border: '1px solid',
-            borderColor: theme.palette.mode === 'light' ? 'rgba(255, 255, 255, 0.7)' : 'rgba(255, 255, 255, 0.05)',
+            borderColor: theme.palette.mode === 'light' ? 'rgba(226, 232, 240, 0.9)' : 'rgba(255, 255, 255, 0.05)',
             background:
               theme.palette.mode === 'light'
-                ? 'rgba(255, 255, 255, 0.85)'
+                ? 'rgba(255, 255, 255, 0.95)'
                 : 'rgba(11, 20, 38, 0.75)',
             backdropFilter: 'blur(20px)',
             boxShadow:
               theme.palette.mode === 'light'
-                ? '0px 25px 50px -12px rgba(15, 23, 42, 0.1)'
+                ? '0px 20px 40px -15px rgba(15, 23, 42, 0.08)'
                 : '0px 25px 50px -12px rgba(0, 0, 0, 0.5)',
-            p: { xs: 3.5, sm: 4.5 },
+            p: { xs: 3, sm: 4.5 },
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'stretch',
