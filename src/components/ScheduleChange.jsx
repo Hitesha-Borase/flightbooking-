@@ -46,21 +46,21 @@ export default function ScheduleChange({ event, onClose, onSave }) {
   const newText = event.updated || 'AA 100 | 16OCT | 09:00 → 22:00';
 
   const handleAcceptChange = () => {
-    showAlert(`✓ Accepted schedule change for PNR ${event.pnr}. Customer notified via Email & WhatsApp.`, 'success');
+    showAlert(`✓ Change Accepted for PNR ${event.pnr}. Customer notified via Email & WhatsApp.`, 'success');
     if (onSave) {
       onSave('Accept Change — Change Accepted', internalNote);
     }
   };
 
   const handleRequestRefund = () => {
-    showAlert(`💰 Refund request logged for PNR ${event.pnr}. Sent to Finance Team.`, 'info');
+    showAlert(`💰 Refund request logged for PNR ${event.pnr}. Refund process initiated.`, 'info');
     if (onSave) {
       onSave('Request Refund — Refund Requested', internalNote);
     }
   };
 
   const handleContactAirline = () => {
-    showAlert(`📞 Airline desk contact logged for PNR ${event.pnr}. Note saved.`, 'info');
+    showAlert(`📞 Contact Airline Directly action confirmed for PNR ${event.pnr}.`, 'info');
     if (onSave) {
       onSave('Contact Airline Directly', internalNote);
     }
@@ -72,7 +72,7 @@ export default function ScheduleChange({ event, onClose, onSave }) {
       return;
     }
     showAlert(
-      `📅 Reschedule request submitted successfully for PNR ${event.pnr}! New date: ${rescheduleData.newDate} at ${rescheduleData.preferredTime}.`,
+      `📅 Reschedule request submitted successfully for PNR ${event.pnr}! New date: ${rescheduleData.newDate}.`,
       'success'
     );
     if (onSave) {
@@ -199,13 +199,13 @@ export default function ScheduleChange({ event, onClose, onSave }) {
               />
               <TextField
                 size="small"
-                label="Original Date"
+                label="Current Date"
                 value={event.date || '15 Oct 2026'}
                 InputProps={{ readOnly: true }}
               />
               <TextField
                 size="small"
-                label="New Date Input *"
+                label="New Date *"
                 type="date"
                 value={rescheduleData.newDate}
                 onChange={(e) => setRescheduleData({ ...rescheduleData, newDate: e.target.value })}
@@ -226,7 +226,8 @@ export default function ScheduleChange({ event, onClose, onSave }) {
               size="small"
               multiline
               rows={2}
-              label="Reschedule Request Notes"
+              label="Note"
+              placeholder="Add details for reschedule request..."
               value={rescheduleData.notes}
               onChange={(e) => setRescheduleData({ ...rescheduleData, notes: e.target.value })}
               sx={{ mb: 1.5 }}

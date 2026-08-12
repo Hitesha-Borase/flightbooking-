@@ -629,15 +629,24 @@ export default function Quotes() {
         maxWidth="md"
         actions={
           selectedQuote && (
-            <Box sx={{ display: 'flex', gap: 1.5, width: '100%', justifyContent: 'flex-end' }}>
+            <Box sx={{ display: 'flex', gap: 1.5, width: '100%', justifyContent: 'flex-end', flexWrap: 'wrap' }}>
               <Button
                 variant="outlined"
-                color="primary"
-                startIcon={<SendIcon />}
+                color="secondary"
+                startIcon={<EditIcon />}
+                onClick={() => { handleEdit(selectedQuote); setDrawerOpen(false); }}
+                sx={{ fontWeight: 800 }}
+              >
+                Edit Quote
+              </Button>
+              <Button
+                variant="contained"
+                color="info"
+                startIcon={<PublishIcon />}
                 onClick={() => { handleResend(selectedQuote); setDrawerOpen(false); }}
                 sx={{ fontWeight: 800 }}
               >
-                Resend to Customer
+                Republish Quote
               </Button>
               <Button
                 variant="contained"
@@ -767,6 +776,31 @@ export default function Quotes() {
                 ))}
               </Box>
             </Box>
+
+            {/* Fare Rules Summary */}
+            <Paper elevation={0} sx={{ p: 2, border: '1px solid #BAE6FD', bgcolor: '#F0F9FF', borderRadius: 2 }}>
+              <Typography variant="subtitle2" sx={{ fontWeight: 800, color: 'info.main', mb: 1 }}>
+                📜 FARE RULES & CANCELLATION PENALTIES
+              </Typography>
+              <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.5 }}>
+                • <b>Refund Rules:</b> Permitted within 24h of issuance; non-refundable thereafter.<br />
+                • <b>Change Fee:</b> $200 change fee + fare difference prior to departure.<br />
+                • <b>Advance Purchase:</b> Fare basis JOWUS requires booking 7 days in advance.
+              </Typography>
+            </Paper>
+
+            {/* Upsell Suggestions */}
+            <Paper elevation={0} sx={{ p: 2, border: '1px solid #FEF08A', bgcolor: '#FFFBEB', borderRadius: 2 }}>
+              <Typography variant="subtitle2" sx={{ fontWeight: 800, color: '#92400E', mb: 1 }}>
+                💡 RECOMMENDED ANCILLARY UPSELLS
+              </Typography>
+              <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+                <Chip size="small" label="💺 Lie-flat Seat Upgrade (+$120)" color="warning" variant="outlined" sx={{ fontWeight: 700 }} />
+                <Chip size="small" label="🧳 Extra 32kg Baggage (+$80)" color="warning" variant="outlined" sx={{ fontWeight: 700 }} />
+                <Chip size="small" label="🛡️ Trip Insurance (+$45)" color="warning" variant="outlined" sx={{ fontWeight: 700 }} />
+                <Chip size="small" label="🚌 Airport Luxury Transfer (+$60)" color="warning" variant="outlined" sx={{ fontWeight: 700 }} />
+              </Box>
+            </Paper>
           </Box>
         )}
       </AppModal>

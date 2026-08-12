@@ -213,6 +213,15 @@ export default function FlightRequests() {
       )
     },
     {
+      id: 'customer',
+      label: 'Customer',
+      render: (row) => (
+        <Typography variant="body2" sx={{ fontWeight: 700 }}>
+          {row.customerName || 'Karan Singh'}
+        </Typography>
+      )
+    },
+    {
       id: 'route',
       label: 'Route',
       render: (row) => (
@@ -431,7 +440,7 @@ export default function FlightRequests() {
           data={filteredData}
           onRowClick={(row) => handleOpenRequest(row)}
           actions={(row) => (
-            <Box sx={{ display: 'flex', gap: 1 }}>
+            <Box sx={{ display: 'flex', gap: 0.8, whiteSpace: 'nowrap' }}>
               <Tooltip title="View Request Details">
                 <Button
                   size="small"
@@ -452,7 +461,19 @@ export default function FlightRequests() {
                   onClick={() => handleOpenInDesk(row)}
                   sx={{ py: 0.3, px: 1, fontSize: '0.72rem', fontWeight: 700 }}
                 >
-                  Parse GDS
+                  Parse
+                </Button>
+              </Tooltip>
+
+              <Tooltip title="Continue Processing Request">
+                <Button
+                  size="small"
+                  variant="outlined"
+                  color="warning"
+                  onClick={() => handleOpenInDesk(row)}
+                  sx={{ py: 0.3, px: 1, fontSize: '0.72rem', fontWeight: 700 }}
+                >
+                  Continue Processing
                 </Button>
               </Tooltip>
             </Box>

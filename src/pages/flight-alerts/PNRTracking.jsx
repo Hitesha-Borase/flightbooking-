@@ -216,7 +216,7 @@ export default function PNRTracking() {
   const alertCount = pnrList.filter(r => r.needsAction || r.category === 'alerts').length;
 
   const handleDispatchOfficialItinerary = (row) => {
-    showAlert(`📤 Official itinerary dispatched successfully for PNR ${row.pnr} (${row.customer})! Client notification simulated.`, 'success');
+    showAlert(`📤 Official itinerary dispatched successfully. (PNR: ${row.pnr}, Customer: ${row.customer})`, 'success');
   };
 
   const handleSaveDiscussNote = () => {

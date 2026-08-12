@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
@@ -7,10 +7,10 @@ import Button from '@mui/material/Button';
 import Slider from '@mui/material/Slider';
 import Divider from '@mui/material/Divider';
 import Chip from '@mui/material/Chip';
-import Tooltip from '@mui/material/Tooltip';
+import Alert from '@mui/material/Alert';
 import CalculateIcon from '@mui/icons-material/Calculate';
 import PublishIcon from '@mui/icons-material/Publish';
-import FlightTakeoffIcon from '@mui/icons-material/FlightTakeoff';
+import RefreshIcon from '@mui/icons-material/Refresh';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { useAlert } from '../contexts/AlertContext';
 
@@ -20,11 +20,13 @@ export default function MarginCalculator({ activeRequest, onPublishQuote }) {
   const [netFare, setNetFare] = useState(activeRequest?.netFare || 4500);
   const [markupPct, setMarkupPct] = useState(15);
   const [fixedMarkup, setFixedMarkup] = useState(0);
+  const [publishSuccess, setPublishSuccess] = useState(false);
 
   // Synchronize when active request changes
-  React.useEffect(() => {
+  useEffect(() => {
     if (activeRequest?.netFare) {
       setNetFare(activeRequest.netFare);
+      setPublishSuccess(false);
     }
   }, [activeRequest]);
 
@@ -39,16 +41,29 @@ export default function MarginCalculator({ activeRequest, onPublishQuote }) {
   const profit = sellingPrice - numNet;
   const profitPct = numNet > 0 ? ((profit / numNet) * 100).toFixed(1) : '0.0';
 
+  const handleReset = () => {
+    setNetFare(activeRequest?.netFare || 4500);
+    setMarkupPct(15);
+    setFixedMarkup(0);
+    setPublishSuccess(false);
+    showAlert('Calculator reset to default values', 'info');
+  };
+
+  const handleCalculate = () => {
+    showAlert(
+      `Calculated: Selling Price = $${sellingPrice.toFixed(2)}, Net Profit = $${profit.toFixed(2)} (${profitPct}%)`,
+      'info'
+    );
+  };
+
   const handlePublish = () => {
     if (numNet <= 0) {
       showAlert('Please enter a valid Net Fare before publishing', 'warning');
       return;
     }
 
-    showAlert(
-      `🚀 Quote generated & published to client profile! Selling Price: $${sellingPrice.toFixed(2)} (Net Profit: $${profit.toFixed(2)} / ${profitPct}%). Net fare remains hidden from Sales Agent view.`,
-      'success'
-    );
+    setPublishSuccess(true);
+    showAlert('Quote generated successfully. Status updated to Ready for Agent.', 'success');
 
     if (onPublishQuote) {
       onPublishQuote({
@@ -57,7 +72,7 @@ export default function MarginCalculator({ activeRequest, onPublishQuote }) {
         sellingPrice: sellingPrice,
         profit: profit,
         profitPct: profitPct,
-        status: 'Quote Ready'
+        status: 'Ready for Agent'
       });
     }
   };
@@ -78,6 +93,13 @@ export default function MarginCalculator({ activeRequest, onPublishQuote }) {
           sx={{ fontWeight: 700, fontSize: '0.68rem', ml: 'auto' }}
         />
       </Box>
+
+      {/* Success Alert Banner */}
+      {publishSuccess && (
+        <Alert severity="success" icon={<CheckCircleIcon />} onClose={() => setPublishSuccess(false)} sx={{ mb: 2, borderRadius: 2 }}>
+          Quote generated successfully. Status updated to: <b>Ready for Agent</b>.
+        </Alert>
+      )}
 
       {/* Grid Layout: Left Parsed Summary, Right Inputs & Output */}
       <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', lg: '1fr 1fr' }, gap: 2.5 }}>
@@ -165,7 +187,7 @@ export default function MarginCalculator({ activeRequest, onPublishQuote }) {
               step={1}
               onChange={(_, val) => {
                 setMarkupPct(val);
-                setFixedMarkup(0); // reset fixed when slider is moved
+                setFixedMarkup(0);
               }}
               disabled={numFixed > 0}
               color="primary"
@@ -184,6 +206,30 @@ export default function MarginCalculator({ activeRequest, onPublishQuote }) {
             placeholder="e.g. 500"
             helperText="Set a lump-sum dollar markup instead of %"
           />
+
+          {/* Reset & Calculate Actions */}
+          <Box sx={{ display: 'flex', gap: 1 }}>
+            <Button
+              size="small"
+              variant="outlined"
+              color="inherit"
+              startIcon={<RefreshIcon />}
+              onClick={handleReset}
+              sx={{ fontWeight: 700, flex: 1 }}
+            >
+              Reset
+            </Button>
+            <Button
+              size="small"
+              variant="outlined"
+              color="primary"
+              startIcon={<CalculateIcon />}
+              onClick={handleCalculate}
+              sx={{ fontWeight: 700, flex: 1 }}
+            >
+              Calculate
+            </Button>
+          </Box>
 
           {/* Real-time Calculation Result Box */}
           <Paper
