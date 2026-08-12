@@ -446,24 +446,25 @@ export default function PNRTracking() {
       </Paper>
 
       {/* ─── 4. PNR DETAIL MODAL/DRAWER ─── */}
-      <Drawer
-        anchor="right"
+      <Dialog
         open={!!detailRow}
         onClose={() => setDetailRow(null)}
-        PaperProps={{ sx: { width: { xs: '100%', sm: 480 }, p: 3 } }}
+        maxWidth="sm"
+        fullWidth
+        PaperProps={{ sx: { borderRadius: 3 } }}
       >
         {detailRow && (
-          <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%', gap: 2 }}>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <>
+            <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', pb: 1 }}>
               <Typography variant="h6" sx={{ fontWeight: 900 }}>
                 PNR Detail: {detailRow.pnr}
               </Typography>
               <IconButton onClick={() => setDetailRow(null)} size="small">
                 <CloseIcon />
               </IconButton>
-            </Box>
-
-            <Divider />
+            </DialogTitle>
+            
+            <DialogContent dividers sx={{ display: 'flex', flexDirection: 'column', gap: 2, p: 3 }}>
 
             <Paper elevation={0} sx={{ p: 2, bgcolor: '#F8FAFC', borderRadius: 2, border: '1px solid', borderColor: 'divider' }}>
               <Box sx={{ display: 'grid', gridTemplateColumns: '130px 1fr', rowGap: 1, fontSize: '0.85rem' }}>
@@ -516,7 +517,8 @@ export default function PNRTracking() {
               ))}
             </Box>
 
-            <Box sx={{ mt: 'auto', pt: 2, display: 'flex', gap: 1 }}>
+            </DialogContent>
+            <DialogActions sx={{ p: 2 }}>
               <Button
                 variant="contained"
                 color="success"
@@ -529,10 +531,10 @@ export default function PNRTracking() {
               >
                 Dispatch Official Itinerary
               </Button>
-            </Box>
-          </Box>
+            </DialogActions>
+          </>
         )}
-      </Drawer>
+      </Dialog>
 
       {/* ─── 5. DISCUSS TRACKER EVENT MODAL ─── */}
       <AppModal

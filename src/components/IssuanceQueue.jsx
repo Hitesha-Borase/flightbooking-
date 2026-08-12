@@ -48,30 +48,6 @@ export const DEMO_ISSUANCE_QUEUE = [
     passengers: 3,
     paymentStatus: 'Payment Confirmed',
     ticketingStatus: 'Pending Issuance'
-  },
-  {
-    id: 'TK-454',
-    name: 'S. Williams',
-    route: 'LHR → JFK',
-    pnr: 'XYZ34E',
-    amount: '$980.00',
-    date: '22 Oct 2026',
-    cabinClass: 'Economy',
-    passengers: 4,
-    paymentStatus: 'Payment Confirmed',
-    ticketingStatus: 'Pending Issuance'
-  },
-  {
-    id: 'TK-455',
-    name: 'R. Verma',
-    route: 'BOM → DXB',
-    pnr: 'DEF56H',
-    amount: '$740.00',
-    date: '28 Oct 2026',
-    cabinClass: 'Business',
-    passengers: 2,
-    paymentStatus: 'Payment Confirmed',
-    ticketingStatus: 'Pending Issuance'
   }
 ];
 
@@ -114,7 +90,16 @@ export default function IssuanceQueue({
       )}
 
       {/* Queue Cards */}
-      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.2 }}>
+      <Box sx={{ 
+        display: 'flex', 
+        flexDirection: 'row', 
+        gap: 1.5, 
+        overflowX: 'auto', 
+        pb: 1.5,
+        pt: 0.5,
+        '&::-webkit-scrollbar': { height: 6 },
+        '&::-webkit-scrollbar-thumb': { bgcolor: 'rgba(0,0,0,0.15)', borderRadius: 3 }
+      }}>
         {items.map((item) => {
           const isSelected = selectedId === item.id;
           return (
@@ -122,11 +107,13 @@ export default function IssuanceQueue({
               key={item.id}
               variant="outlined"
               sx={{
-                p: 1.5,
+                p: 1.8,
                 borderColor: isSelected ? 'primary.main' : 'divider',
                 bgcolor: isSelected ? '#EFF6FF' : 'background.paper',
                 boxShadow: isSelected ? '0 0 0 2px rgba(37,99,235,0.2)' : 'none',
                 transition: 'all 0.2s ease',
+                minWidth: 265,
+                flexShrink: 0,
                 '&:hover': {
                   borderColor: 'primary.main',
                   bgcolor: isSelected ? '#EFF6FF' : '#F8FAFC'
@@ -171,27 +158,27 @@ export default function IssuanceQueue({
               </Typography>
 
               {/* Action Buttons */}
-              <Box sx={{ display: 'flex', gap: 1 }}>
+              <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1 }}>
                 <Button
                   size="small"
-                  variant={isSelected ? 'contained' : 'contained'}
+                  variant="contained"
                   color="primary"
-                  startIcon={<ConfirmationNumberIcon sx={{ fontSize: 14 }} />}
-                  sx={{ fontSize: '0.72rem', fontWeight: 800, py: 0.4, px: 1.2 }}
+                  startIcon={<ConfirmationNumberIcon sx={{ fontSize: 13 }} />}
+                  sx={{ fontSize: '0.7rem', fontWeight: 800, py: 0.4, px: 0.5 }}
                   onClick={() => onSelectIssue(item)}
                 >
-                  Issue E-Ticket
+                  Issue Ticket
                 </Button>
 
                 <Button
                   size="small"
                   variant="outlined"
                   color="inherit"
-                  startIcon={<VisibilityIcon sx={{ fontSize: 14 }} />}
-                  sx={{ fontSize: '0.72rem', fontWeight: 700, py: 0.4, px: 1 }}
+                  startIcon={<VisibilityIcon sx={{ fontSize: 13 }} />}
+                  sx={{ fontSize: '0.7rem', fontWeight: 700, py: 0.4, px: 0.5 }}
                   onClick={() => setReviewItem(item)}
                 >
-                  Review Details
+                  Review
                 </Button>
               </Box>
             </Paper>

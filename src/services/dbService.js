@@ -127,7 +127,15 @@ export const dbService = {
   // LEADS
   getLeads: async () => {
     await delay();
-    return loadState('crm-leads', MOCK_LEADS);
+    const leads = loadState('crm-leads', MOCK_LEADS);
+    const c1Leads = leads.filter(l => l && l.assignedConsultantId === 'c1');
+    if (c1Leads.length < 3 && leads.length >= 3) {
+      if (leads[0]) leads[0].assignedConsultantId = 'c1';
+      if (leads[1]) leads[1].assignedConsultantId = 'c1';
+      if (leads[2]) leads[2].assignedConsultantId = 'c1';
+      localStorage.setItem('crm-leads', JSON.stringify(leads));
+    }
+    return leads;
   },
   getLeadById: async (id) => {
     await delay();

@@ -31,7 +31,7 @@ export const AuthLayout = () => {
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           flexDirection: 'column',
-          justify: 'space-between',
+          justifyContent: 'space-between',
           p: { md: 5, lg: 6 },
           color: '#FFFFFF',
           '&::before': {

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
@@ -33,6 +34,7 @@ const MAIN_MODULES = [
 ];
 
 export default function FinanceDashboard() {
+  const navigate = useNavigate();
   const { showAlert } = useAlert();
   const [tab, setTab] = useState(0);
   const [linkOpen, setLinkOpen] = useState(false);
@@ -116,7 +118,7 @@ export default function FinanceDashboard() {
 
       {/* ─── Tab 0: Dashboard ─── */}
       {tab === 0 && (
-        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', lg: '25% 45% 30%' }, gap: 2 }}>
+        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', lg: '2.5fr 4.5fr 3fr' }, gap: 2 }}>
           <PaymentPipeline />
           <Box sx={{ display: 'grid', gap: 2 }}>
             <ChargebackRadar />
@@ -162,7 +164,11 @@ export default function FinanceDashboard() {
               <Typography variant="body2" color="text.secondary" sx={{ mb: 2, minHeight: 48 }}>{desc}</Typography>
               <Button
                 variant="outlined" fullWidth
-                onClick={() => showAlert(`${title} module opened`, 'info')}
+                onClick={() => {
+                  if (title === 'Payments') navigate('/payments');
+                  else if (title === 'Invoices') navigate('/payments/invoices');
+                  else if (title === 'Refunds & Commissions') navigate('/payments/refund-commission');
+                }}
                 sx={{ borderRadius: 2 }}
               >
                 Open {title}

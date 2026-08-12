@@ -7,6 +7,10 @@ import { AlertProvider } from './contexts/AlertContext';
 import AppRoutes from './routes/AppRoutes';
 
 if (typeof window !== 'undefined') {
+  // Clear cached mock data to force UI to use truncated 5-item lists
+  const mockKeys = ['crm-leads', 'crm-clients', 'crm-consultations', 'crm-payments', 'crm-flights', 'crm-quotes', 'crm-bookings'];
+  mockKeys.forEach(k => window.localStorage.removeItem(k));
+
   window.onerror = function(message, source, lineno, colno, error) {
     alert("React Runtime Error: " + message + "\nSource: " + source + "\nLine: " + lineno + ":" + colno);
     return false;

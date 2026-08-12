@@ -231,19 +231,19 @@ export default function AgentDashboard() {
           display: "grid",
           gridTemplateColumns: {
             xs: "1fr",
-            lg: "1.1fr 1fr 300px",
-            xl: "1.3fr 1fr 320px",
+            lg: "1.4fr 1.1fr 280px",
+            xl: "1.6fr 1.2fr 300px",
           },
-          gap: 2,
+          gap: 3,
         }}
       >
         <Paper
           elevation={0}
           sx={{
-            p: 2,
+            p: 2.5,
             border: "1px solid",
             borderColor: "divider",
-            borderRadius: 2.5,
+            borderRadius: 3,
             overflow: "auto",
           }}
         >

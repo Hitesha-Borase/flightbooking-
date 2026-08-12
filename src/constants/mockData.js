@@ -241,7 +241,7 @@ export const MOCK_LEADS = [
     tripType: 'One Way',
     leadTemperature: 'HOT',
     priority: 'High',
-    assignedConsultantId: 'c5',
+    assignedConsultantId: 'c1',
     source: 'Google Ads',
     createdDate: '2026-06-17T09:30:00Z',
     qualificationData: {
@@ -274,7 +274,7 @@ export const MOCK_LEADS = [
     tripType: 'Round Trip',
     leadTemperature: 'WARM',
     priority: 'Medium',
-    assignedConsultantId: 'c2',
+    assignedConsultantId: 'c1',
     source: 'Facebook Ads',
     createdDate: '2026-06-16T11:20:00Z',
     qualificationData: {
@@ -308,7 +308,7 @@ export const MOCK_LEADS = [
     tripType: 'Round Trip',
     leadTemperature: 'COLD',
     priority: 'Low',
-    assignedConsultantId: 'c4',
+    assignedConsultantId: 'c1',
     source: 'Website Traffic',
     createdDate: '2026-06-15T15:40:00Z',
     qualificationData: {
@@ -1678,3 +1678,23 @@ export const MOCK_PAYMENT_LINKS_PHASE5 = [
     createdAt: '2026-08-02 11:30'
   }
 ];
+
+
+// Truncate table data to 5 records for better UI visibility as requested
+[
+  MOCK_LEADS,
+  MOCK_CLIENTS,
+  MOCK_CONSULTATIONS,
+  MOCK_PAYMENTS,
+  MOCK_FLIGHT_REQUESTS,
+  MOCK_QUOTES,
+  MOCK_BOOKINGS,
+  MOCK_PAYMENTS_PHASE5,
+  MOCK_REFUNDS_PHASE5,
+  MOCK_PAYMENT_LINKS_PHASE5,
+  NOTIFICATIONS
+].forEach(arr => {
+  if (Array.isArray(arr) && arr.length > 5) {
+    arr.length = 5;
+  }
+});

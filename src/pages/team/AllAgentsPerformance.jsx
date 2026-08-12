@@ -186,7 +186,7 @@ export const AllAgentsPerformance = () => {
   return (
     <Box sx={{ pb: 4 }}>
       <PageHeader
-        title="Executive Performance & Travel Intelligence Reports (/agents/performance)"
+        title="Executive Performance & Travel Intelligence Reports"
         subtitle="Complete travel CRM analytics: Gross sales, lead funnels, agent leaderboards, airline volume & financial metrics."
         action={
           <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>

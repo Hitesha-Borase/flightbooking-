@@ -5,6 +5,7 @@ import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import Chip from '@mui/material/Chip';
 import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
 import TextField from '@mui/material/TextField';
 import Tooltip from '@mui/material/Tooltip';
 import TrackChangesIcon from '@mui/icons-material/TrackChanges';
@@ -55,19 +56,6 @@ export const DEMO_PNR_FEED = [
     original: 'EK 073 | 05DEC | 08:00 → 13:30',
     updated: 'EK 073 | 05DEC | 10:00 → 15:30',
     needsAction: true
-  },
-  {
-    pnr: 'ABC12D',
-    customer: 'M. Chen',
-    route: 'JFK → LHR',
-    date: '15 Oct 2026',
-    status: 'Being tracked / No issue',
-    category: 'GREY',
-    tone: 'default',
-    ago: 'Live',
-    original: 'AA 100 | 15OCT | 18:30 → 07:30+1',
-    updated: null,
-    needsAction: false
   }
 ];
 
@@ -145,7 +133,16 @@ export default function PNRTracker({ feed = DEMO_PNR_FEED, onFeedUpdate }) {
       </Typography>
 
       {/* Tracker Items List */}
-      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+      <Box sx={{ 
+        display: 'flex', 
+        flexDirection: 'row', 
+        gap: 1.5, 
+        overflowX: 'auto', 
+        pb: 1.5,
+        pt: 0.5,
+        '&::-webkit-scrollbar': { height: 6 },
+        '&::-webkit-scrollbar-thumb': { bgcolor: 'rgba(0,0,0,0.15)', borderRadius: 3 }
+      }}>
         {feed.map((row) => {
           const cfg = CATEGORY_STYLES[row.category] || CATEGORY_STYLES['GREY'];
           return (
@@ -158,6 +155,8 @@ export default function PNRTracker({ feed = DEMO_PNR_FEED, onFeedUpdate }) {
                 bgcolor: cfg.bg,
                 borderColor: cfg.border,
                 transition: 'all 0.2s ease',
+                minWidth: 265,
+                flexShrink: 0,
                 '&:hover': {
                   boxShadow: '0 2px 8px rgba(0,0,0,0.05)'
                 }
@@ -195,43 +194,56 @@ export default function PNRTracker({ feed = DEMO_PNR_FEED, onFeedUpdate }) {
               </Box>
 
               {/* Action Buttons */}
-              <Box sx={{ display: 'flex', gap: 0.8, flexWrap: 'wrap', pt: 0.5, borderTop: '1px dashed', borderColor: cfg.border }}>
+              <Box sx={{ display: 'flex', gap: 1, pt: 0.8, borderTop: '1px dashed', borderColor: cfg.border, alignItems: 'center' }}>
                 {/* 1. Discuss Tracker Event */}
-                <Button
-                  size="small"
-                  variant="outlined"
-                  color="inherit"
-                  startIcon={<CommentIcon sx={{ fontSize: 13 }} />}
-                  sx={{ fontSize: '0.68rem', fontWeight: 700, py: 0.3, px: 1, borderRadius: 1.5 }}
-                  onClick={() => setDiscussItem(row)}
-                >
-                  Discuss Event
-                </Button>
+                <Tooltip title="Discuss Event">
+                  <IconButton
+                    size="small"
+                    sx={{ 
+                      bgcolor: 'background.paper', 
+                      border: '1px solid', 
+                      borderColor: 'divider',
+                      color: 'text.secondary',
+                      '&:hover': { bgcolor: 'primary.50', color: 'primary.main' }
+                    }}
+                    onClick={() => setDiscussItem(row)}
+                  >
+                    <CommentIcon sx={{ fontSize: 16 }} />
+                  </IconButton>
+                </Tooltip>
 
                 {/* 2. Dispatch Official Itinerary */}
-                <Button
-                  size="small"
-                  variant="contained"
-                  color="success"
-                  startIcon={<SendIcon sx={{ fontSize: 13 }} />}
-                  sx={{ fontSize: '0.68rem', fontWeight: 700, py: 0.3, px: 1, borderRadius: 1.5 }}
-                  onClick={() => handleDispatchItinerary(row)}
-                >
-                  Dispatch Itinerary
-                </Button>
+                <Tooltip title="Dispatch Itinerary">
+                  <IconButton
+                    size="small"
+                    sx={{ 
+                      bgcolor: '#22C55E', 
+                      color: '#fff',
+                      border: '1px solid #16A34A',
+                      '&:hover': { bgcolor: '#16A34A' }
+                    }}
+                    onClick={() => handleDispatchItinerary(row)}
+                  >
+                    <SendIcon sx={{ fontSize: 16 }} />
+                  </IconButton>
+                </Tooltip>
 
                 {/* 3. Process Schedule Change */}
                 {row.needsAction && (
-                  <Button
-                    size="small"
-                    variant="contained"
-                    color={row.category === 'RED' ? 'error' : 'warning'}
-                    startIcon={<EditNotificationsIcon sx={{ fontSize: 13 }} />}
-                    sx={{ fontSize: '0.68rem', fontWeight: 800, py: 0.3, px: 1, borderRadius: 1.5 }}
-                    onClick={() => setSchedEvent(row)}
-                  >
-                    Process Schedule Change
-                  </Button>
+                  <Tooltip title="Process Schedule Change">
+                    <IconButton
+                      size="small"
+                      sx={{ 
+                        bgcolor: row.category === 'RED' ? '#EF4444' : '#F59E0B', 
+                        color: '#fff',
+                        border: row.category === 'RED' ? '1px solid #DC2626' : '1px solid #D97706',
+                        '&:hover': { bgcolor: row.category === 'RED' ? '#DC2626' : '#D97706' }
+                      }}
+                      onClick={() => setSchedEvent(row)}
+                    >
+                      <EditNotificationsIcon sx={{ fontSize: 16 }} />
+                    </IconButton>
+                  </Tooltip>
                 )}
               </Box>
             </Paper>

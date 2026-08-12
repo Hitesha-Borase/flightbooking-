@@ -52,37 +52,37 @@ export default function DialerPanel({ lead, onCall }) {
 
   return (
     <Paper elevation={0} sx={{ 
-      p: 3, 
-      border: '2px solid', 
+      p: 2.2, 
+      border: '1px solid', 
       borderColor: getBorderColor(), 
-      borderRadius: 4,
+      borderRadius: 3,
       bgcolor: getBgColor(),
-      boxShadow: status === 'ON CALL' ? '0 10px 30px rgba(34, 197, 94, 0.15)' : '0 4px 20px rgba(0,0,0,0.03)',
+      boxShadow: status === 'ON CALL' ? '0 10px 25px rgba(34, 197, 94, 0.12)' : '0 4px 15px rgba(0,0,0,0.02)',
       transition: 'all 0.3s ease'
     }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1.5 }}>
         <Typography variant="subtitle2" sx={{ fontWeight: 900, color: 'text.primary', display: 'flex', alignItems: 'center', gap: 1 }}>
-          <GraphicEqIcon sx={{ color: status === 'ON CALL' ? '#22c55e' : 'text.disabled' }} />
+          <GraphicEqIcon sx={{ color: status === 'ON CALL' ? '#22c55e' : 'text.disabled', fontSize: 18 }} />
           TELNYX DIALER
         </Typography>
         <Chip 
           size="small" 
           color={status === 'ON CALL' ? 'success' : status === 'HOLD' ? 'warning' : status === 'DIALING' ? 'primary' : 'default'} 
           label={status === 'ON CALL' ? `ON CALL — ${timer}` : status} 
-          sx={{ fontWeight: 800, borderRadius: 1.5 }} 
+          sx={{ fontWeight: 800, borderRadius: 1.5, fontSize: '0.7rem', height: 20 }} 
         />
       </Box>
 
-      <Box sx={{ my: 3, textAlign: 'center', p: 2, bgcolor: 'background.default', borderRadius: 3, border: '1px solid', borderColor: 'divider' }}>
-        <Typography variant="h6" sx={{ fontWeight: 800, color: 'primary.main' }}>
+      <Box sx={{ my: 1.8, textAlign: 'center', p: 1.2, bgcolor: 'background.default', borderRadius: 2.5, border: '1px solid', borderColor: 'divider' }}>
+        <Typography variant="body2" sx={{ fontWeight: 800, color: 'primary.main', fontSize: '0.85rem' }}>
           {lead.firstName} {lead.lastName}
         </Typography>
-        <Typography variant="body1" sx={{ fontWeight: 700, color: 'text.secondary', letterSpacing: 1, mt: 0.5 }}>
+        <Typography variant="body2" sx={{ fontWeight: 700, color: 'text.secondary', letterSpacing: 0.5, mt: 0.2, fontSize: '0.8rem' }}>
           {number}
         </Typography>
       </Box>
 
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
         {[
           { icon: MicOffIcon, label: 'Mute' },
           { icon: PauseCircleIcon, label: 'Hold' },
@@ -91,6 +91,7 @@ export default function DialerPanel({ lead, onCall }) {
         ].map(({ icon: Icon, label }) => (
           <Tooltip title={label} key={label}>
             <IconButton 
+              size="small"
               sx={{ 
                 bgcolor: 'background.default', 
                 border: '1px solid', 
@@ -105,7 +106,7 @@ export default function DialerPanel({ lead, onCall }) {
         ))}
       </Box>
 
-      <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 1.5, mb: 3 }}>
+      <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 1, mb: 2 }}>
         {keys.map(key => (
           <Button 
             key={key} 
@@ -113,18 +114,19 @@ export default function DialerPanel({ lead, onCall }) {
             variant="outlined" 
             color="inherit"
             sx={{ 
-              py: 1.5, 
-              borderRadius: 3,
+              py: 0.8, 
+              borderRadius: 2,
               borderColor: 'divider',
               color: 'text.secondary',
               display: 'flex',
               flexDirection: 'column',
               lineHeight: 1,
+              minWidth: 0,
               '&:hover': { bgcolor: 'background.default', borderColor: 'text.primary', color: 'text.primary' }
             }}
           >
-            <span style={{ fontSize: '1.1rem', fontWeight: 700 }}>{key[0]}</span>
-            {key.length > 1 && <span style={{ fontSize: '0.55rem', fontWeight: 600, marginTop: '2px', opacity: 0.7 }}>{key.slice(2)}</span>}
+            <span style={{ fontSize: '0.95rem', fontWeight: 700 }}>{key[0]}</span>
+            {key.length > 1 && <span style={{ fontSize: '0.5rem', fontWeight: 600, marginTop: '1px', opacity: 0.7 }}>{key.slice(2)}</span>}
           </Button>
         ))}
       </Box>
@@ -134,16 +136,16 @@ export default function DialerPanel({ lead, onCall }) {
         fullWidth 
         variant="contained" 
         color={status === 'ON CALL' ? 'error' : 'success'}
-        startIcon={status === 'ON CALL' ? <PhoneDisabledIcon /> : <PhoneIcon />}
+        startIcon={status === 'ON CALL' ? <PhoneDisabledIcon sx={{ fontSize: 16 }} /> : <PhoneIcon sx={{ fontSize: 16 }} />}
         sx={{ 
-          py: 1.5, 
-          borderRadius: 3, 
+          py: 1, 
+          borderRadius: 2, 
           fontWeight: 800, 
-          fontSize: '1rem',
-          boxShadow: status === 'ON CALL' ? '0 8px 20px rgba(239, 68, 68, 0.3)' : '0 8px 20px rgba(34, 197, 94, 0.3)',
+          fontSize: '0.85rem',
+          boxShadow: status === 'ON CALL' ? '0 5px 12px rgba(239, 68, 68, 0.2)' : '0 5px 12px rgba(34, 197, 94, 0.2)',
           transition: 'all 0.2s',
           '&:hover': {
-            transform: 'translateY(-2px)'
+            transform: 'translateY(-1px)'
           }
         }}
       >

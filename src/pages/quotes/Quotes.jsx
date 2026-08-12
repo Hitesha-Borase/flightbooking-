@@ -510,7 +510,7 @@ export default function Quotes() {
   return (
     <Box sx={{ pb: 4 }}>
       <PageHeader
-        title="Flight Quotes Management (/quotes)"
+        title="Flight Quotes Management"
         subtitle="Manage custom multi-option flight quotes, markup margin calculation & instant booking conversions."
         action={
           <Button

@@ -103,54 +103,6 @@ export const DEMO_ALL_FLIGHT_REQUESTS = [
     status: 'Completed',
     priority: 'Normal',
     notes: 'Air France non-stop ticketing complete.'
-  },
-  {
-    id: 'FE-4596',
-    route: 'LAX → HND',
-    origin: 'LAX',
-    destination: 'HND',
-    region: 'Asia Pacific',
-    travelDate: '2026-10-20',
-    returnDate: '2026-11-03',
-    dateDisplay: '20OCT - 03NOV',
-    cabinClass: 'Premium Economy',
-    passengers: 2,
-    salesAgent: 'Sofia Rodriguez',
-    status: 'New',
-    priority: 'High',
-    notes: 'ANA or JAL premium economy options required.'
-  },
-  {
-    id: 'FE-4597',
-    route: 'MIA → GRU',
-    origin: 'MIA',
-    destination: 'GRU',
-    region: 'Latin America',
-    travelDate: '2026-11-15',
-    returnDate: '2026-11-28',
-    dateDisplay: '15NOV - 28NOV',
-    cabinClass: 'Business',
-    passengers: 1,
-    salesAgent: 'Alex Morgan',
-    status: 'In Progress',
-    priority: 'Normal',
-    notes: 'LATAM non-stop flight option requested.'
-  },
-  {
-    id: 'FE-4598',
-    route: 'JFK → FRA',
-    origin: 'JFK',
-    destination: 'FRA',
-    region: 'Europe',
-    travelDate: '2026-12-01',
-    returnDate: '2026-12-10',
-    dateDisplay: '01DEC - 10DEC',
-    cabinClass: 'Business',
-    passengers: 2,
-    salesAgent: 'David Ray',
-    status: 'Quote Ready',
-    priority: 'Urgent',
-    notes: 'Lufthansa First/Business class quote pending.'
   }
 ];
 
@@ -303,7 +255,7 @@ export default function FlightRequests() {
   return (
     <Box sx={{ pb: 4 }}>
       <PageHeader
-        title="Flight Requests (/flights)"
+        title="Flight Requests"
         subtitle="Manage incoming GDS flight requests, priority queues and GDS desk routing."
         action={
           <Button

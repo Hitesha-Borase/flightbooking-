@@ -95,16 +95,9 @@ export default function TicketingIssuance() {
         <DualClock compact client={{ timezone: 'America/New_York', label: 'Client EST' }} />
       </Paper>
 
-      {/* ─── 2. THREE-COLUMN DASHBOARD LAYOUT (Desktop 30% / 40% / 30%) ─── */}
-      <Box
-        sx={{
-          display: 'grid',
-          gridTemplateColumns: { xs: '1fr', md: '1fr 1fr', lg: '30% 40% 30%' },
-          gap: 2.5,
-          alignItems: 'start'
-        }}
-      >
-        {/* ══ LEFT COLUMN: Ready-for-Issuance Queue (~30%) ══ */}
+      {/* ─── 2. TWO-ROW LAYOUT: Top (Full Width Queue) & Bottom (Controls & Tracker side-by-side) ─── */}
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+        {/* Top Row: Ready-for-Issuance Queue (Full Width) */}
         <Box>
           <IssuanceQueue
             items={queueItems}
@@ -113,19 +106,27 @@ export default function TicketingIssuance() {
           />
         </Box>
 
-        {/* ══ CENTER COLUMN: Ticket Issuance Controls (~40%) ══ */}
-        <Box>
-          <TicketControls
-            selectedItem={selectedItem}
-            onIssueTicketSuccess={handleIssueTicketSuccess}
-          />
-        </Box>
+        {/* Bottom Row: Controls & Tracker side-by-side */}
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: { xs: '1fr', lg: '1.2fr 1fr' },
+            gap: 3,
+            alignItems: 'start'
+          }}
+        >
+          <Box>
+            <TicketControls
+              selectedItem={selectedItem}
+              onIssueTicketSuccess={handleIssueTicketSuccess}
+            />
+          </Box>
 
-        {/* ══ RIGHT COLUMN: Flight PNR Auto-Tracker (~30%) ══ */}
-        <Box>
-          <PNRTracker
-            feed={pnrFeed}
-          />
+          <Box>
+            <PNRTracker
+              feed={pnrFeed}
+            />
+          </Box>
         </Box>
       </Box>
     </Box>

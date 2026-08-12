@@ -89,27 +89,43 @@ export default function ClientPanel({ lead, onComment, onAction }) {
       )}
 
       {section('ACTIVITY HISTORY', 
-        <Paper variant="outlined" sx={{ flexGrow: 1, overflow: 'auto', borderRadius: 2, minHeight: 120 }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.75rem' }}>
-            <thead style={{ position: 'sticky', top: 0, backgroundColor: '#f8fafc', zIndex: 1 }}>
-              <tr>
-                <th style={{ padding: '8px 10px', textAlign: 'left', borderBottom: '1px solid #e2e8f0', color: '#64748b' }}>Time</th>
-                <th style={{ padding: '8px 10px', textAlign: 'left', borderBottom: '1px solid #e2e8f0', color: '#64748b' }}>Agent</th>
-                <th style={{ padding: '8px 10px', textAlign: 'left', borderBottom: '1px solid #e2e8f0', color: '#64748b' }}>Status</th>
-                <th style={{ padding: '8px 10px', textAlign: 'left', borderBottom: '1px solid #e2e8f0', color: '#64748b' }}>Comments</th>
-              </tr>
-            </thead>
-            <tbody>
-              {lead.activities.map((a, i) => (
-                <tr key={`${a.time}-${i}`} style={{ borderBottom: '1px solid #f1f5f9' }}>
-                  <td style={{ padding: '8px 10px', color: '#64748b' }}>{a.time}</td>
-                  <td style={{ padding: '8px 10px', fontWeight: 600 }}>{a.agent}</td>
-                  <td style={{ padding: '8px 10px' }}><Chip label={a.status} size="small" sx={{ height: 20, fontSize: '0.65rem', fontWeight: 700 }} /></td>
-                  <td style={{ padding: '8px 10px', color: '#475569' }}>{a.comments || '—'}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <Paper variant="outlined" sx={{ flexGrow: 1, overflow: 'auto', borderRadius: 2.5, minHeight: 130, p: 1.5, bgcolor: '#F8FAFC' }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+            {lead.activities.map((a, i) => (
+              <Box key={`${a.time}-${i}`} sx={{ display: 'flex', gap: 2, alignItems: 'flex-start' }}>
+                <Typography variant="caption" sx={{ color: 'text.secondary', fontWeight: 800, minWidth: 55, fontSize: '0.7rem' }}>
+                  {a.time}
+                </Typography>
+                <Box sx={{ flex: 1 }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap' }}>
+                    <Typography variant="body2" sx={{ fontWeight: 800, color: 'text.primary' }}>{a.agent}</Typography>
+                    <Chip 
+                      label={a.status} 
+                      size="small" 
+                      sx={{ 
+                        height: 18, 
+                        fontSize: '0.62rem', 
+                        fontWeight: 800, 
+                        bgcolor: a.status === 'Quote Sent' ? '#DCFCE7' : '#EFF6FF', 
+                        color: a.status === 'Quote Sent' ? '#15803D' : '#1D4ED8',
+                        border: 'none'
+                      }} 
+                    />
+                  </Box>
+                  {a.comments && (
+                    <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 0.2, fontSize: '0.72rem' }}>
+                      {a.comments}
+                    </Typography>
+                  )}
+                </Box>
+              </Box>
+            ))}
+            {lead.activities.length === 0 && (
+              <Typography variant="caption" color="text.disabled" sx={{ textAlign: 'center', display: 'block', py: 2 }}>
+                No recent activity logs.
+              </Typography>
+            )}
+          </Box>
         </Paper>
       )}
       
@@ -123,14 +139,14 @@ export default function ClientPanel({ lead, onComment, onAction }) {
           onKeyDown={e => e.key === 'Enter' && add()} 
           sx={{ '& .MuiInputBase-root': { borderRadius: 2, fontSize: '0.85rem' } }}
         />
-        <Button onClick={add} variant="contained" size="small" sx={{ borderRadius: 2, px: 3, fontWeight: 700 }}>Add</Button>
+        <Button onClick={add} variant="contained" size="small" sx={{ borderRadius: 2, px: 3, fontWeight: 800 }}>Add</Button>
       </Box>
       
       <Divider sx={{ my: 2, borderStyle: 'dashed' }} />
-      <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-        <Button onClick={() => onAction('quote')} size="small" variant="contained" sx={{ borderRadius: 2, fontWeight: 700, flex: 1, minWidth: '140px' }}>Request Quote</Button>
-        <Button onClick={() => onAction('booking')} size="small" variant="outlined" sx={{ borderRadius: 2, fontWeight: 700, flex: 1, minWidth: '140px' }}>Create Booking</Button>
-        <Button onClick={() => onAction('payment')} size="small" variant="outlined" sx={{ borderRadius: 2, fontWeight: 700, flex: 1, minWidth: '140px' }}>Send Link</Button>
+      <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 1 }}>
+        <Button onClick={() => onAction('quote')} size="small" variant="contained" sx={{ borderRadius: 2, fontWeight: 800, py: 1, fontSize: '0.75rem' }}>Req Quote</Button>
+        <Button onClick={() => onAction('booking')} size="small" variant="outlined" sx={{ borderRadius: 2, fontWeight: 800, py: 1, fontSize: '0.75rem' }}>Book Flight</Button>
+        <Button onClick={() => onAction('payment')} size="small" variant="outlined" sx={{ borderRadius: 2, fontWeight: 800, py: 1, fontSize: '0.75rem' }}>Send Link</Button>
       </Box>
     </Paper>
   );

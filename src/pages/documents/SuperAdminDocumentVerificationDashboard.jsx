@@ -141,36 +141,6 @@ const INITIAL_DOCUMENTS = [
     verifiedBy: 'Agent Alex',
     status: 'Uploaded',
     notes: 'Generated trip itinerary with baggage guidelines.'
-  },
-  {
-    id: 'DOC-106',
-    type: 'Travel Insurance',
-    customerName: 'Michael Chen',
-    customerEmail: 'mchen@example.com',
-    bookingRef: 'BK-004',
-    pnr: 'SIN22M',
-    fileName: 'Allianz_Global_Travel_Insurance.pdf',
-    fileSize: '3.1 MB',
-    uploadDate: '2026-06-15',
-    expiryDate: '2026-11-05',
-    verifiedBy: 'Pending',
-    status: 'Pending Upload',
-    notes: 'Awaiting customer upload of policy certificate.'
-  },
-  {
-    id: 'DOC-107',
-    type: 'Hotel Voucher',
-    customerName: 'David Hume',
-    customerEmail: 'd.hume@example.co.uk',
-    bookingRef: 'BK-005',
-    pnr: 'LHR11H',
-    fileName: 'Hilton_London_Heathrow_Voucher.pdf',
-    fileSize: '620 KB',
-    uploadDate: '2026-05-10',
-    expiryDate: '2026-05-15',
-    verifiedBy: 'Admin',
-    status: 'Expired',
-    notes: 'Past check-out date voucher.'
   }
 ];
 

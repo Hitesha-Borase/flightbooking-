@@ -23,7 +23,8 @@ import MarketingDashboard from '../pages/dashboard/MarketingDashboard';
 import TeamLeaderDashboard from '../pages/dashboard/TeamLeaderDashboard';
 import FlightExpertDesk from '../pages/dashboard/FlightExpertDesk';
 import TicketingIssuance from '../pages/dashboard/TicketingIssuance';
-import { QuotesPage, BookingsPage, BookingDetailsPage, SuppliersPage, FlightAlertsPage, FlightRequestsPage, PaymentsPage, PaymentDetailsPage } from '../pages/dashboard/PlaceholderPages';
+import TicketingAgentDashboard from '../pages/dashboard/TicketingAgentDashboard';
+import { QuotesPage, BookingsPage, BookingDetailsPage, FlightAlertsPage, FlightRequestsPage, PaymentsPage, PaymentDetailsPage } from '../pages/dashboard/PlaceholderPages';
 
 
 import AdminLeadList from '../pages/leads/AdminLeadList';
@@ -64,6 +65,7 @@ import FinancePaymentDashboard from '../pages/payments/FinancePaymentDashboard';
 import InvoiceList from '../pages/payments/InvoiceList';
 import InvoiceDetails from '../pages/payments/InvoiceDetails';
 import Settings from '../pages/settings/Settings';
+import Suppliers from '../pages/suppliers/Suppliers';
 import AdminSocialInbox from '../pages/social/AdminSocialInbox';
 import OperationsSocialInbox from '../pages/social/OperationsSocialInbox';
 import AgentSocialInbox from '../pages/social/AgentSocialInbox';
@@ -380,7 +382,7 @@ export const AppRoutes = () => {
           path="/ticketing_agent/dashboard"
           element={
             <ProtectedRoute allowedRoles={['ticketing_agent', 'super_admin']}>
-              <TicketingIssuance />
+              <TicketingAgentDashboard />
             </ProtectedRoute>
           }
         />
@@ -391,7 +393,7 @@ export const AppRoutes = () => {
         <Route path="/flights" element={<ProtectedRoute><FlightRequestsPage /></ProtectedRoute>} />
         <Route path="/bookings" element={<ProtectedRoute><BookingsPage /></ProtectedRoute>} />
         <Route path="/:role/bookings/:id" element={<ProtectedRoute><BookingDetailsPage /></ProtectedRoute>} />
-        <Route path="/:role/suppliers" element={<ProtectedRoute><SuppliersPage /></ProtectedRoute>} />
+        <Route path="/:role/suppliers" element={<ProtectedRoute><Suppliers /></ProtectedRoute>} />
         <Route path="/:role/flights" element={<ProtectedRoute><FlightRequestsPage /></ProtectedRoute>} />
         <Route path="/:role/ticketing" element={<ProtectedRoute><TicketingIssuance /></ProtectedRoute>} />
         <Route path="/ticketing" element={<ProtectedRoute><TicketingIssuance /></ProtectedRoute>} />

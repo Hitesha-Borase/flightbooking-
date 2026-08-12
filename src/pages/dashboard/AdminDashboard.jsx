@@ -96,78 +96,66 @@ export const AdminDashboard = () => {
       />
 
       {/* ─── TOP ROW: STAT CARDS ─── */}
-      <Grid container spacing={2} sx={{ mb: 3 }}>
-        <Grid item xs={12} sm={6} md={4} lg={2}>
-          <Paper elevation={0} sx={{ p: 2, border: '1px solid', borderColor: 'divider', borderRadius: 2.5, bgcolor: '#EFF6FF' }}>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-              <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 700 }}>TODAY'S NEW LEADS</Typography>
-              <PeopleIcon sx={{ color: '#2563EB', fontSize: 20 }} />
-            </Box>
-            <Typography variant="h4" sx={{ fontWeight: 900, color: '#1E3A8A' }}>18</Typography>
-            <Typography variant="caption" sx={{ color: '#16A34A', fontWeight: 700 }}>↑ +12% vs yesterday</Typography>
-          </Paper>
-        </Grid>
+      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', md: 'repeat(3, 1fr)', lg: 'repeat(6, 1fr)' }, gap: 2, mb: 3 }}>
+        <Paper elevation={0} sx={{ p: 2, border: '1px solid', borderColor: 'divider', borderRadius: 2.5, bgcolor: '#EFF6FF' }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+            <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 700 }}>TODAY'S NEW LEADS</Typography>
+            <PeopleIcon sx={{ color: '#2563EB', fontSize: 20 }} />
+          </Box>
+          <Typography variant="h4" sx={{ fontWeight: 900, color: '#1E3A8A' }}>18</Typography>
+          <Typography variant="caption" sx={{ color: '#16A34A', fontWeight: 700 }}>↑ +12% vs yesterday</Typography>
+        </Paper>
 
-        <Grid item xs={12} sm={6} md={4} lg={2}>
-          <Paper elevation={0} sx={{ p: 2, border: '1px solid', borderColor: 'divider', borderRadius: 2.5, bgcolor: '#ECFDF5' }}>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-              <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 700 }}>BOOKINGS THIS MONTH</Typography>
-              <AirplaneTicketIcon sx={{ color: '#059669', fontSize: 20 }} />
-            </Box>
-            <Typography variant="h4" sx={{ fontWeight: 900, color: '#064E3B' }}>42</Typography>
-            <Typography variant="caption" sx={{ color: 'text.secondary', fontWeight: 600 }}>Target: 50 bookings</Typography>
-          </Paper>
-        </Grid>
+        <Paper elevation={0} sx={{ p: 2, border: '1px solid', borderColor: 'divider', borderRadius: 2.5, bgcolor: '#ECFDF5' }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+            <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 700 }}>BOOKINGS THIS MONTH</Typography>
+            <AirplaneTicketIcon sx={{ color: '#059669', fontSize: 20 }} />
+          </Box>
+          <Typography variant="h4" sx={{ fontWeight: 900, color: '#064E3B' }}>42</Typography>
+          <Typography variant="caption" sx={{ color: 'text.secondary', fontWeight: 600 }}>Target: 50 bookings</Typography>
+        </Paper>
 
-        <Grid item xs={12} sm={6} md={4} lg={2}>
-          <Paper elevation={0} sx={{ p: 2, border: '1px solid', borderColor: 'divider', borderRadius: 2.5, bgcolor: '#EEF2FF' }}>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-              <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 700 }}>REVENUE THIS MONTH</Typography>
-              <MonetizationOnIcon sx={{ color: '#4F46E5', fontSize: 20 }} />
-            </Box>
-            <Typography variant="h4" sx={{ fontWeight: 900, color: '#312E81' }}>$88,200</Typography>
-            <Typography variant="caption" sx={{ color: '#16A34A', fontWeight: 700 }}>↑ +8% vs last month</Typography>
-          </Paper>
-        </Grid>
+        <Paper elevation={0} sx={{ p: 2, border: '1px solid', borderColor: 'divider', borderRadius: 2.5, bgcolor: '#EEF2FF' }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+            <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 700 }}>REVENUE THIS MONTH</Typography>
+            <MonetizationOnIcon sx={{ color: '#4F46E5', fontSize: 20 }} />
+          </Box>
+          <Typography variant="h4" sx={{ fontWeight: 900, color: '#312E81' }}>$88,200</Typography>
+          <Typography variant="caption" sx={{ color: '#16A34A', fontWeight: 700 }}>↑ +8% vs last month</Typography>
+        </Paper>
 
-        <Grid item xs={12} sm={6} md={4} lg={2}>
-          <Paper elevation={0} sx={{ p: 2, border: '1px solid', borderColor: 'divider', borderRadius: 2.5, bgcolor: '#FEF3C7' }}>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-              <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 700 }}>PENDING PAYMENTS</Typography>
-              <HourglassEmptyIcon sx={{ color: '#D97706', fontSize: 20 }} />
-            </Box>
-            <Typography variant="h4" sx={{ fontWeight: 900, color: '#78350F' }}>5</Typography>
-            <Typography variant="caption" sx={{ color: '#D97706', fontWeight: 800 }}>$14,500 pending</Typography>
-          </Paper>
-        </Grid>
+        <Paper elevation={0} sx={{ p: 2, border: '1px solid', borderColor: 'divider', borderRadius: 2.5, bgcolor: '#FEF3C7' }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+            <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 700 }}>PENDING PAYMENTS</Typography>
+            <HourglassEmptyIcon sx={{ color: '#D97706', fontSize: 20 }} />
+          </Box>
+          <Typography variant="h4" sx={{ fontWeight: 900, color: '#78350F' }}>5</Typography>
+          <Typography variant="caption" sx={{ color: '#D97706', fontWeight: 800 }}>$14,500 pending</Typography>
+        </Paper>
 
-        <Grid item xs={12} sm={6} md={4} lg={2}>
-          <Paper elevation={0} sx={{ p: 2, border: '1px solid', borderColor: 'divider', borderRadius: 2.5, bgcolor: '#FFF1F2' }}>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-              <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 700 }}>OPEN QUOTES</Typography>
-              <RequestQuoteIcon sx={{ color: '#E11D48', fontSize: 20 }} />
-            </Box>
-            <Typography variant="h4" sx={{ fontWeight: 900, color: '#9F1239' }}>14</Typography>
-            <Typography variant="caption" sx={{ color: '#E11D48', fontWeight: 900 }}>⚠️ 3 expiring soon</Typography>
-          </Paper>
-        </Grid>
+        <Paper elevation={0} sx={{ p: 2, border: '1px solid', borderColor: 'divider', borderRadius: 2.5, bgcolor: '#FFF1F2' }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+            <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 700 }}>OPEN QUOTES</Typography>
+            <RequestQuoteIcon sx={{ color: '#E11D48', fontSize: 20 }} />
+          </Box>
+          <Typography variant="h4" sx={{ fontWeight: 900, color: '#9F1239' }}>14</Typography>
+          <Typography variant="caption" sx={{ color: '#E11D48', fontWeight: 900 }}>⚠️ 3 expiring soon</Typography>
+        </Paper>
 
-        <Grid item xs={12} sm={6} md={4} lg={2}>
-          <Paper elevation={0} sx={{ p: 2, border: '1px solid', borderColor: 'divider', borderRadius: 2.5, bgcolor: '#F5F3FF' }}>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-              <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 700 }}>TEAM ACTIVE NOW</Typography>
-              <BadgeIcon sx={{ color: '#7C3AED', fontSize: 20 }} />
-            </Box>
-            <Typography variant="h4" sx={{ fontWeight: 900, color: '#5B21B6' }}>8</Typography>
-            <Typography variant="caption" sx={{ color: '#7C3AED', fontWeight: 700 }}>Agents online</Typography>
-          </Paper>
-        </Grid>
-      </Grid>
+        <Paper elevation={0} sx={{ p: 2, border: '1px solid', borderColor: 'divider', borderRadius: 2.5, bgcolor: '#F5F3FF' }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+            <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 700 }}>TEAM ACTIVE NOW</Typography>
+            <BadgeIcon sx={{ color: '#7C3AED', fontSize: 20 }} />
+          </Box>
+          <Typography variant="h4" sx={{ fontWeight: 900, color: '#5B21B6' }}>8</Typography>
+          <Typography variant="caption" sx={{ color: '#7C3AED', fontWeight: 700 }}>Agents online</Typography>
+        </Paper>
+      </Box>
 
       {/* ─── MIDDLE ROW: PIPELINE & CHARTS ─── */}
-      <Grid container spacing={2.5} sx={{ mb: 3 }}>
+      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', lg: '4fr 5fr 3fr' }, gap: 2.5, mb: 3 }}>
         {/* Left Card: Booking Pipeline */}
-        <Grid item xs={12} md={4}>
+        <Box>
           <Paper elevation={0} sx={{ p: 2.5, border: '1px solid', borderColor: 'divider', borderRadius: 2.5, height: '100%' }}>
             <Typography variant="subtitle1" sx={{ fontWeight: 900, mb: 2 }}>
               ⚡ FLIGHT BOOKING PIPELINE
@@ -183,10 +171,10 @@ export const AdminDashboard = () => {
               hidePagination
             />
           </Paper>
-        </Grid>
+        </Box>
 
         {/* Center Card: Weekly Booking Volume Chart */}
-        <Grid item xs={12} md={5}>
+        <Box>
           <Paper elevation={0} sx={{ p: 2.5, border: '1px solid', borderColor: 'divider', borderRadius: 2.5, height: '100%' }}>
             <Typography variant="subtitle1" sx={{ fontWeight: 900, mb: 2 }}>
               📊 WEEKLY BOOKING VOLUME
@@ -205,10 +193,10 @@ export const AdminDashboard = () => {
               </ResponsiveContainer>
             </Box>
           </Paper>
-        </Grid>
+        </Box>
 
         {/* Right Card: Cabin Class Distribution Pie Chart */}
-        <Grid item xs={12} md={3}>
+        <Box>
           <Paper elevation={0} sx={{ p: 2.5, border: '1px solid', borderColor: 'divider', borderRadius: 2.5, height: '100%', display: 'flex', flexDirection: 'column' }}>
             <Typography variant="subtitle1" sx={{ fontWeight: 900, mb: 1 }}>
               💺 CABIN CLASS SHARE
@@ -237,8 +225,8 @@ export const AdminDashboard = () => {
               ))}
             </Box>
           </Paper>
-        </Grid>
-      </Grid>
+        </Box>
+      </Box>
 
       {/* ─── BOTTOM ROW: ACTIVITY FEED ─── */}
       <Paper elevation={0} sx={{ p: 2.5, border: '1px solid', borderColor: 'divider', borderRadius: 2.5 }}>

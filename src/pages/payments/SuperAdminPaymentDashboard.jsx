@@ -278,7 +278,7 @@ export const SuperAdminPaymentDashboard = () => {
   return (
     <Box sx={{ pb: 4 }}>
       <PageHeader
-        title="Payment & Financial Transactions (/payments)"
+        title="Payment & Financial Transactions"
         subtitle="Manage end-to-end payment links, credit card fraud radar, e-sign authorization forms & refund pipelines."
         action={
           <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
@@ -432,16 +432,17 @@ export const SuperAdminPaymentDashboard = () => {
         />
       </Paper>
 
-      {/* ─── SLIDE-OVER REVIEW & RISK RADAR DRAWER ─── */}
-      <Drawer
-        anchor="right"
+      {/* ─── MODAL REVIEW & RISK RADAR ─── */}
+      <Dialog
         open={drawerOpen}
         onClose={() => setDrawerOpen(false)}
-        PaperProps={{ sx: { width: { xs: '100%', sm: 500 }, p: 3, bgcolor: '#FFFFFF' } }}
+        maxWidth="md"
+        fullWidth
+        PaperProps={{ sx: { borderRadius: 3 } }}
       >
         {selectedTxn && (
-          <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%', gap: 2.5 }}>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+          <>
+            <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', pb: 1 }}>
               <Box>
                 <Typography variant="h6" sx={{ fontWeight: 900 }}>
                   Transaction {selectedTxn.id}
@@ -453,63 +454,63 @@ export const SuperAdminPaymentDashboard = () => {
               <IconButton onClick={() => setDrawerOpen(false)} size="small">
                 <CloseIcon />
               </IconButton>
-            </Box>
+            </DialogTitle>
 
-            <Divider />
+            <DialogContent dividers sx={{ display: 'flex', flexDirection: 'column', gap: 2.5, p: 3 }}>
+              {/* Risk Radar Card */}
+              <Paper elevation={0} sx={{ p: 2.5, bgcolor: selectedTxn.riskScore === 'HIGH' ? '#FEF2F2' : '#F0FDF4', border: '1px solid', borderColor: selectedTxn.riskScore === 'HIGH' ? '#FCA5A5' : '#86EFAC', borderRadius: 2 }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1.5 }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <SecurityIcon sx={{ color: selectedTxn.riskScore === 'HIGH' ? '#DC2626' : '#16A34A' }} />
+                    <Typography variant="subtitle2" sx={{ fontWeight: 900, color: selectedTxn.riskScore === 'HIGH' ? '#DC2626' : '#16A34A' }}>
+                      ANTI-FRAUD & 3D SECURE RADAR
+                    </Typography>
+                  </Box>
+                  <Chip size="small" label={selectedTxn.riskTag} sx={{ fontWeight: 900, fontSize: '0.7rem' }} />
+                </Box>
 
-            {/* Risk Radar Card */}
-            <Paper elevation={0} sx={{ p: 2.5, bgcolor: selectedTxn.riskScore === 'HIGH' ? '#FEF2F2' : '#F0FDF4', border: '1px solid', borderColor: selectedTxn.riskScore === 'HIGH' ? '#FCA5A5' : '#86EFAC', borderRadius: 2 }}>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1.5 }}>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                  <SecurityIcon sx={{ color: selectedTxn.riskScore === 'HIGH' ? '#DC2626' : '#16A34A' }} />
-                  <Typography variant="subtitle2" sx={{ fontWeight: 900, color: selectedTxn.riskScore === 'HIGH' ? '#DC2626' : '#16A34A' }}>
-                    ANTI-FRAUD & 3D SECURE RADAR
+                <Box sx={{ display: 'grid', gridTemplateColumns: '130px 1fr', rowGap: 0.8, fontSize: 13 }}>
+                  <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 700 }}>AVS Address Check:</Typography>
+                  <Typography variant="caption" sx={{ fontWeight: 800 }}>{selectedTxn.avsMatch}</Typography>
+
+                  <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 700 }}>Customer IP Country:</Typography>
+                  <Typography variant="caption" sx={{ fontWeight: 700 }}>{selectedTxn.ipCountry}</Typography>
+
+                  <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 700 }}>Card BIN Country:</Typography>
+                  <Typography variant="caption" sx={{ fontWeight: 700 }}>{selectedTxn.cardCountry}</Typography>
+
+                  <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 700 }}>CVV / CVC2 Result:</Typography>
+                  <Typography variant="caption" sx={{ fontWeight: 800, color: 'success.main' }}>{selectedTxn.cvvResult}</Typography>
+
+                  <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 700 }}>E-Sign Auth Form:</Typography>
+                  <Typography variant="caption" sx={{ fontWeight: 800, color: selectedTxn.authFormSigned ? 'success.main' : 'error.main' }}>
+                    {selectedTxn.authFormSigned ? '✅ Signed & Verified' : '⚠️ Missing E-Sign Authorization'}
                   </Typography>
                 </Box>
-                <Chip size="small" label={selectedTxn.riskTag} sx={{ fontWeight: 900, fontSize: '0.7rem' }} />
-              </Box>
+              </Paper>
 
-              <Box sx={{ display: 'grid', gridTemplateColumns: '130px 1fr', rowGap: 0.8, fontSize: 13 }}>
-                <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 700 }}>AVS Address Check:</Typography>
-                <Typography variant="caption" sx={{ fontWeight: 800 }}>{selectedTxn.avsMatch}</Typography>
-
-                <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 700 }}>Customer IP Country:</Typography>
-                <Typography variant="caption" sx={{ fontWeight: 700 }}>{selectedTxn.ipCountry}</Typography>
-
-                <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 700 }}>Card BIN Country:</Typography>
-                <Typography variant="caption" sx={{ fontWeight: 700 }}>{selectedTxn.cardCountry}</Typography>
-
-                <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 700 }}>CVV / CVC2 Result:</Typography>
-                <Typography variant="caption" sx={{ fontWeight: 800, color: 'success.main' }}>{selectedTxn.cvvResult}</Typography>
-
-                <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 700 }}>E-Sign Auth Form:</Typography>
-                <Typography variant="caption" sx={{ fontWeight: 800, color: selectedTxn.authFormSigned ? 'success.main' : 'error.main' }}>
-                  {selectedTxn.authFormSigned ? '✅ Signed & Verified' : '⚠️ Missing E-Sign Authorization'}
+              {/* Financial Details */}
+              <Paper elevation={0} sx={{ p: 2.5, bgcolor: '#F8FAFC', border: '1px solid', borderColor: 'divider', borderRadius: 2 }}>
+                <Typography variant="subtitle2" sx={{ fontWeight: 800, mb: 1.5 }}>
+                  💵 TRANSACTION DETAILS
                 </Typography>
-              </Box>
-            </Paper>
+                <Box sx={{ display: 'grid', gridTemplateColumns: '130px 1fr', rowGap: 0.8, fontSize: 13 }}>
+                  <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 700 }}>Total Amount:</Typography>
+                  <Typography variant="subtitle2" sx={{ fontWeight: 900, color: 'success.main' }}>${Number(selectedTxn.amount).toLocaleString()}</Typography>
 
-            {/* Financial Details */}
-            <Paper elevation={0} sx={{ p: 2.5, bgcolor: '#F8FAFC', border: '1px solid', borderColor: 'divider', borderRadius: 2 }}>
-              <Typography variant="subtitle2" sx={{ fontWeight: 800, mb: 1.5 }}>
-                💵 TRANSACTION DETAILS
-              </Typography>
-              <Box sx={{ display: 'grid', gridTemplateColumns: '130px 1fr', rowGap: 0.8, fontSize: 13 }}>
-                <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 700 }}>Total Amount:</Typography>
-                <Typography variant="subtitle2" sx={{ fontWeight: 900, color: 'success.main' }}>${Number(selectedTxn.amount).toLocaleString()}</Typography>
+                  <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 700 }}>Payment Method:</Typography>
+                  <Typography variant="caption" sx={{ fontWeight: 700 }}>{selectedTxn.method}</Typography>
 
-                <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 700 }}>Payment Method:</Typography>
-                <Typography variant="caption" sx={{ fontWeight: 700 }}>{selectedTxn.method}</Typography>
+                  <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 700 }}>Payment Gateway:</Typography>
+                  <Typography variant="caption" sx={{ fontWeight: 600 }}>{selectedTxn.gateway}</Typography>
 
-                <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 700 }}>Payment Gateway:</Typography>
-                <Typography variant="caption" sx={{ fontWeight: 600 }}>{selectedTxn.gateway}</Typography>
+                  <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 700 }}>Timestamp:</Typography>
+                  <Typography variant="caption" sx={{ fontWeight: 600 }}>{selectedTxn.date}</Typography>
+                </Box>
+              </Paper>
+            </DialogContent>
 
-                <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 700 }}>Timestamp:</Typography>
-                <Typography variant="caption" sx={{ fontWeight: 600 }}>{selectedTxn.date}</Typography>
-              </Box>
-            </Paper>
-
-            <Box sx={{ mt: 'auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1.5 }}>
+            <DialogActions sx={{ p: 2, display: 'flex', gap: 1.5, justifyContent: 'flex-end' }}>
               <Button
                 variant="outlined"
                 color="warning"
@@ -528,10 +529,10 @@ export const SuperAdminPaymentDashboard = () => {
               >
                 E-Sign Auth Form
               </Button>
-            </Box>
-          </Box>
+            </DialogActions>
+          </>
         )}
-      </Drawer>
+      </Dialog>
 
       {/* ─── REFUND WORKFLOW MODAL ─── */}
       <Dialog open={refundModalOpen} onClose={() => setRefundModalOpen(false)} maxWidth="sm" fullWidth>
