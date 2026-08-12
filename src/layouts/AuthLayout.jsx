@@ -3,6 +3,7 @@ import { Outlet } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
+import FlightTakeoffIcon from '@mui/icons-material/FlightTakeoff';
 import { useTheme } from '@mui/material/styles';
 
 export const AuthLayout = () => {
@@ -26,11 +27,11 @@ export const AuthLayout = () => {
           width: '55%',
           height: '100%',
           position: 'relative',
-          backgroundImage: 'url("https://images.unsplash.com/photo-1543783207-ec64e4d95325?q=80&w=1200")',
+          backgroundImage: 'url("https://images.unsplash.com/photo-1436491865332-7a61a109cc05?q=80&w=1200")',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           flexDirection: 'column',
-          justifyContent: 'space-between',
+          justify: 'space-between',
           p: 6,
           color: '#FFFFFF',
           '&::before': {
@@ -40,7 +41,7 @@ export const AuthLayout = () => {
             left: 0,
             width: '100%',
             height: '100%',
-            backgroundColor: 'rgba(11, 27, 61, 0.75)', // Overlay brand Royal Navy
+            backgroundColor: 'rgba(15, 23, 42, 0.78)', // Overlay Royal Navy
             zIndex: 1,
           },
         }}
@@ -49,47 +50,50 @@ export const AuthLayout = () => {
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
             <Box
               sx={{
-                width: 38,
-                height: 38,
-                borderRadius: 1.5,
-                backgroundColor: 'secondary.main',
+                width: 42,
+                height: 42,
+                borderRadius: 2,
+                backgroundColor: 'primary.main',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                color: 'primary.main',
-                fontWeight: 800,
-                fontSize: '1.25rem',
+                color: 'white',
               }}
             >
-              A³
+              <FlightTakeoffIcon sx={{ fontSize: 26 }} />
             </Box>
-            <Typography variant="h5" sx={{ fontWeight: 800, letterSpacing: '-0.02em', color: 'white' }}>
-              AAA Business Consultancy
-            </Typography>
+            <Box>
+              <Typography variant="h5" sx={{ fontWeight: 900, letterSpacing: '-0.02em', color: 'white', lineHeight: 1 }}>
+                WOW MY FLIGHT
+              </Typography>
+              <Typography variant="caption" sx={{ color: 'primary.light', fontWeight: 800, letterSpacing: 0.8 }}>
+                TRAVEL AGENCY CRM
+              </Typography>
+            </Box>
           </Box>
         </Box>
 
         <Box sx={{ zIndex: 2, mb: 4, textAlign: 'left' }}>
-          <Typography variant="h2" sx={{ fontWeight: 800, color: 'white', mb: 2, lineHeight: 1.2 }}>
-            Your Trusted Partner for a Better Future in Spain.
+          <Typography variant="h3" sx={{ fontWeight: 900, color: 'white', mb: 2, lineHeight: 1.25 }}>
+            Your Global Partner for Seamless Flight Bookings.
           </Typography>
-          <Typography variant="body1" sx={{ color: 'rgba(255, 255, 255, 0.85)', maxWidth: 520 }}>
-            Specializing in Digital Nomad Visas (DNV), Non-Lucrative Residency, Study Visas, and complete relocation administrative assistance in Madrid, Barcelona, and Valencia.
+          <Typography variant="body1" sx={{ color: 'rgba(255, 255, 255, 0.85)', maxWidth: 540, fontSize: '1rem', lineHeight: 1.6 }}>
+            Specializing in International Flight Reservations, GDS Pricing & Margin Optimization, PNR Tracking, Corporate Travel Management, and Automated E-Ticket Issuance.
           </Typography>
         </Box>
 
-        <Typography variant="caption" sx={{ zIndex: 2, color: 'rgba(255,255,255,0.5)', textAlign: 'left' }}>
-          © {new Date().getFullYear()} AAA Business Consultancy LLC. Advise • Assist • Achieve.
+        <Typography variant="caption" sx={{ zIndex: 2, color: 'rgba(255,255,255,0.6)', textAlign: 'left', fontWeight: 600 }}>
+          © {new Date().getFullYear()} WOW MY FLIGHT. Travel Agency CRM Portal.
         </Typography>
       </Box>
 
-      {/* Right Pane: Login Card (Spans full width on mobile) */}
+      {/* Right Pane: Login Card */}
       <Box
         sx={{
           width: { xs: '100%', md: '45%' },
           height: '100%',
           display: 'flex',
-          justifyContent: 'center',
+          justify: 'center',
           alignItems: 'center',
           px: 3,
           py: 4,
@@ -105,49 +109,47 @@ export const AuthLayout = () => {
           elevation={0}
           sx={{
             width: '100%',
-            maxWidth: 450,
+            maxWidth: 460,
             borderRadius: 4,
             border: '1px solid',
             borderColor: theme.palette.mode === 'light' ? 'rgba(255, 255, 255, 0.7)' : 'rgba(255, 255, 255, 0.05)',
             background:
               theme.palette.mode === 'light'
-                ? 'rgba(255, 255, 255, 0.65)'
+                ? 'rgba(255, 255, 255, 0.85)'
                 : 'rgba(11, 20, 38, 0.75)',
             backdropFilter: 'blur(20px)',
             boxShadow:
               theme.palette.mode === 'light'
                 ? '0px 25px 50px -12px rgba(15, 23, 42, 0.1)'
                 : '0px 25px 50px -12px rgba(0, 0, 0, 0.5)',
-            p: { xs: 4, sm: 5 },
+            p: { xs: 3.5, sm: 4.5 },
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'stretch',
           }}
         >
-          {/* Brand Header (Only visible on mobile/tablet screens) */}
-          <Box sx={{ display: { xs: 'flex', md: 'none' }, alignItems: 'center', justifyContent: 'center', gap: 1.5, mb: 4 }}>
+          {/* Brand Header (Visible on mobile/tablet) */}
+          <Box sx={{ display: { xs: 'flex', md: 'none' }, alignItems: 'center', justifyContent: 'center', gap: 1.5, mb: 3 }}>
             <Box
               sx={{
                 width: 38,
                 height: 38,
                 borderRadius: 1.5,
-                background: 'linear-gradient(135deg, #3F51B5 0%, #C59B27 100%)',
+                backgroundColor: 'primary.main',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 color: 'white',
-                fontWeight: 800,
-                fontSize: '1.25rem',
               }}
             >
-              A³
+              <FlightTakeoffIcon sx={{ fontSize: 22 }} />
             </Box>
             <Box sx={{ textAlign: 'left' }}>
-              <Typography variant="h5" sx={{ fontWeight: 800, lineHeight: 1.1, letterSpacing: '-0.02em', color: theme.palette.mode === 'light' ? 'primary.main' : 'white' }}>
-                AAA Business Consultancy
+              <Typography variant="h6" sx={{ fontWeight: 900, lineHeight: 1.1, color: 'primary.main' }}>
+                WOW MY FLIGHT
               </Typography>
-              <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600 }}>
-                Spain Visa, Residency & Relocation Portal
+              <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 700 }}>
+                Travel Agency CRM Portal
               </Typography>
             </Box>
           </Box>

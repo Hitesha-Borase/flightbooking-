@@ -1001,31 +1001,6 @@ export const DashboardLayout = () => {
                 </Typography>
               </Box>
               <Divider />
-              <Box sx={{ px: 2, py: 1 }}>
-                <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 700, textTransform: 'uppercase', fontSize: '0.65rem', display: 'block', mb: 0.5 }}>
-                  Switch Role
-                </Typography>
-                {[
-                  { value: 'super_admin', label: '👑 Super Admin (CEO)' },
-                  { value: 'admin', label: '🛡️ Admin' },
-                  { value: 'team_leader', label: '🎯 Team Leader' },
-                  { value: 'consultant', label: '📞 Sales Executive' },
-                  { value: 'flight_expert', label: '✈️ Flight Expert (GDS)' },
-                  { value: 'ticketing_agent', label: '🎫 Ticketing Agent' },
-                  { value: 'finance', label: '💰 Finance' },
-                  { value: 'operations', label: '⚙️ Operations' },
-                ].map(r => (
-                  <MenuItem
-                    key={r.value}
-                    selected={currentUser?.role === r.value}
-                    onClick={() => { handleRoleChange({ target: { value: r.value } }); handleProfileMenuClose(); }}
-                    sx={{ borderRadius: 1, py: 0.5, fontSize: '0.8rem', fontWeight: currentUser?.role === r.value ? 700 : 500 }}
-                  >
-                    {r.label}
-                  </MenuItem>
-                ))}
-              </Box>
-              <Divider />
               <MenuItem onClick={() => navigateTo('/settings')}>
                 <ListItemIcon><SettingsIcon fontSize="small" /></ListItemIcon>
                 General Settings
