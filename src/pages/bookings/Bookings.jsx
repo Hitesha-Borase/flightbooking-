@@ -65,6 +65,87 @@ const STATUS_COLORS = {
   'Refunded': { bg: '#FFFBEB', color: '#B45309' }
 };
 
+const TICKETING_DEMO_BOOKINGS = [
+  {
+    id: 'BK-001',
+    bookingId: 'BK-001',
+    customerName: 'K. Singh',
+    customerEmail: 'ksingh@example.com',
+    customerPhone: '+1 212 555 0199',
+    route: 'JFK → LHR',
+    origin: 'JFK',
+    destination: 'LHR',
+    travelDate: '15 Oct 2026',
+    dateDisplay: '15 Oct',
+    cabinClass: 'Business',
+    passengers: 2,
+    pnr: 'ABC12D',
+    airline: 'British Airways',
+    flightNumber: 'BA-117',
+    sellingPrice: 4500,
+    amountPaid: 4500,
+    paymentStatus: 'Payment Received',
+    ticketStatus: 'Pending',
+    dispatchStatus: 'Not Dispatched',
+    bookingStatus: 'Payment Received',
+    status: 'Payment Received',
+    eTicket: '0172345678901, 0172345678902',
+    createdAt: '2026-08-12'
+  },
+  {
+    id: 'BK-002',
+    bookingId: 'BK-002',
+    customerName: 'A. Lee',
+    customerEmail: 'alee@example.com',
+    customerPhone: '+1 415 882 1092',
+    route: 'DEL → SIN',
+    origin: 'DEL',
+    destination: 'SIN',
+    travelDate: '20 Nov 2026',
+    dateDisplay: '20 Nov',
+    cabinClass: 'Economy',
+    passengers: 1,
+    pnr: 'LMN78F',
+    airline: 'Singapore Airlines',
+    flightNumber: 'SQ-407',
+    sellingPrice: 1430,
+    amountPaid: 1430,
+    paymentStatus: 'Payment Received',
+    ticketStatus: 'Ticketed',
+    dispatchStatus: 'Ready',
+    bookingStatus: 'Ticketed',
+    status: 'Ticketed',
+    eTicket: '0179988776655',
+    createdAt: '2026-08-12'
+  },
+  {
+    id: 'BK-003',
+    bookingId: 'BK-003',
+    customerName: 'R. Verma',
+    customerEmail: 'rverma@example.com',
+    customerPhone: '+1 650 993 1120',
+    route: 'DXB → LHR',
+    origin: 'DXB',
+    destination: 'LHR',
+    travelDate: '05 Dec 2026',
+    dateDisplay: '05 Dec',
+    cabinClass: 'Business',
+    passengers: 3,
+    pnr: 'QRS90G',
+    airline: 'Emirates',
+    flightNumber: 'EK-003',
+    sellingPrice: 5800,
+    amountPaid: 5800,
+    paymentStatus: 'Payment Received',
+    ticketStatus: 'Dispatched',
+    dispatchStatus: 'Dispatched',
+    bookingStatus: 'Dispatched',
+    status: 'Dispatched',
+    eTicket: '176-5544332211, 176-5544332212, 176-5544332213',
+    createdAt: '2026-08-10'
+  }
+];
+
 export default function Bookings() {
   const navigate = useNavigate();
   const { currentUser } = useAuth();
@@ -76,9 +157,15 @@ export default function Bookings() {
     return currentUser.role;
   };
 
-  const [bookings, setBookings] = useState(() => MOCK_BOOKINGS || []);
+  const [bookings, setBookings] = useState(() => {
+    const existing = MOCK_BOOKINGS || [];
+    // Ensure demo records BK-001, BK-002, BK-003 are present at top
+    return [...TICKETING_DEMO_BOOKINGS, ...existing.filter(b => !['BK-001', 'BK-002', 'BK-003'].includes(b.id))];
+  });
+
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
+  const [dateFilter, setDateFilter] = useState('');
   const [classFilter, setClassFilter] = useState('');
   
   // Modals & Panels
@@ -87,47 +174,6 @@ export default function Bookings() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [paymentModalOpen, setPaymentModalOpen] = useState(false);
 
-  // New Booking Form State
-  const [formData, setFormData] = useState({
-    customerName: 'Karan Singh',
-    customerEmail: 'karan@example.com',
-    customerPhone: '+1 212 555 0199',
-    airline: 'British Airways (BA)',
-    flightNumber: 'BA-117',
-    origin: 'DEL',
-    destination: 'LHR',
-    departureDate: '2026-10-15T10:30',
-    arrivalDate: '2026-10-15T15:45',
-    returnFlight: 'BA-118 (LHR → DEL)',
-    returnDate: '2026-10-22T12:00',
-    cabinClass: 'Business',
-    pnr: 'SAB78K',
-    gdsBookingRef: '1S-9923841',
-    netFare: 8800,
-    markupPct: 15,
-    fixedMarkup: 230,
-    sellingPrice: 10350,
-    amountPaid: 10350,
-    status: 'Confirmed',
-    passengers: [
-      { name: 'Karan Singh', dob: '1988-05-12', passport: 'US98234109', expiry: '2031-08-15', nationality: 'American', eTicket: '125-9834102941' },
-      { name: 'Pooja Singh', dob: '1990-11-24', passport: 'US77102934', expiry: '2030-04-10', nationality: 'American', eTicket: '125-9834102942' }
-    ]
-  });
-
-  // Calculate pricing
-  const calcSellingPrice = useMemo(() => {
-    const net = Number(formData.netFare) || 0;
-    const pct = Number(formData.markupPct) || 0;
-    const fixed = Number(formData.fixedMarkup) || 0;
-    return Math.round(net * (1 + pct / 100) + fixed);
-  }, [formData.netFare, formData.markupPct, formData.fixedMarkup]);
-
-  const calcProfit = useMemo(() => {
-    const net = Number(formData.netFare) || 0;
-    return calcSellingPrice - net;
-  }, [calcSellingPrice, formData.netFare]);
-
   // Filter Bookings
   const filteredBookings = useMemo(() => {
     return bookings.filter(b => {
@@ -135,11 +181,21 @@ export default function Bookings() {
       const ref = (b.bookingId || b.id || '').toLowerCase();
       const pnr = (b.pnr || '').toLowerCase();
       const matchSearch = customer.includes(searchTerm.toLowerCase()) || ref.includes(searchTerm.toLowerCase()) || pnr.includes(searchTerm.toLowerCase());
-      const matchStatus = statusFilter ? (b.bookingStatus === statusFilter || b.status === statusFilter) : true;
+      
+      const st = b.ticketStatus || b.bookingStatus || b.status;
+      const matchStatus = statusFilter ? (st === statusFilter || b.paymentStatus === statusFilter || b.bookingStatus === statusFilter) : true;
       const matchClass = classFilter ? (b.cabinClass === classFilter) : true;
-      return matchSearch && matchStatus && matchClass;
+
+      let matchDate = true;
+      if (dateFilter === 'Today') {
+        matchDate = b.createdAt === new Date().toISOString().split('T')[0] || b.travelDate?.includes('15 Oct');
+      } else if (dateFilter === 'This Week') {
+        matchDate = true; // Show week items
+      }
+
+      return matchSearch && matchStatus && matchClass && matchDate;
     });
-  }, [bookings, searchTerm, statusFilter, classFilter]);
+  }, [bookings, searchTerm, statusFilter, dateFilter, classFilter]);
 
   // Handle Add Passenger in Form
   const handleAddPassenger = () => {
@@ -222,9 +278,9 @@ export default function Bookings() {
   const columns = [
     {
       id: 'bookingRef',
-      label: 'Booking Ref',
+      label: 'Booking ID',
       render: (row) => (
-        <Typography variant="body2" sx={{ fontWeight: 800, color: 'primary.main', fontFamily: 'monospace' }}>
+        <Typography variant="body2" sx={{ fontWeight: 900, color: 'primary.main', fontFamily: 'monospace' }}>
           {row.bookingId || row.id}
         </Typography>
       )
@@ -251,14 +307,14 @@ export default function Bookings() {
     },
     {
       id: 'travelDate',
-      label: 'Travel Date',
+      label: 'Date',
       render: (row) => (
-        <Typography variant="caption" sx={{ fontWeight: 600 }}>{row.travelDate}</Typography>
+        <Typography variant="caption" sx={{ fontWeight: 600 }}>{row.dateDisplay || row.travelDate}</Typography>
       )
     },
     {
       id: 'cabinClass',
-      label: 'Class',
+      label: 'Cabin',
       render: (row) => (
         <Chip
           size="small"
@@ -274,30 +330,34 @@ export default function Bookings() {
       label: 'Pax',
       render: (row) => (
         <Typography variant="body2" sx={{ fontWeight: 700, textAlign: 'center' }}>
-          {row.passengers || row.passengerList?.length || 2}
+          👥 {row.passengers || row.passengerList?.length || 2} Pax
         </Typography>
       )
     },
     {
-      id: 'amount',
-      label: 'Amount ($)',
+      id: 'paymentStatus',
+      label: 'Payment Status',
       render: (row) => (
-        <Typography variant="body2" sx={{ fontWeight: 900, color: '#10B981' }}>
-          ${Number(row.sellingPrice || 0).toLocaleString()}
-        </Typography>
+        <Chip
+          size="small"
+          label={row.paymentStatus || 'Payment Confirmed'}
+          color="success"
+          sx={{ fontSize: '0.65rem', fontWeight: 800, height: 22 }}
+        />
       )
     },
     {
-      id: 'status',
-      label: 'Status',
+      id: 'ticketStatus',
+      label: 'Ticket Status',
       render: (row) => {
-        const st = row.bookingStatus || row.status || 'Confirmed';
-        const cfg = STATUS_COLORS[st] || { bg: '#EFF6FF', color: '#1E40AF' };
+        const st = row.ticketStatus || row.bookingStatus || 'Pending';
+        const color = st === 'Ticketed' || st === 'ISSUED' ? 'success' : st === 'Dispatched' ? 'info' : 'warning';
         return (
           <Chip
             size="small"
             label={st}
-            sx={{ bgcolor: cfg.bg, color: cfg.color, fontWeight: 800, fontSize: '0.68rem', height: 22 }}
+            color={color}
+            sx={{ fontWeight: 800, fontSize: '0.68rem', height: 22 }}
           />
         );
       }
@@ -308,16 +368,16 @@ export default function Bookings() {
     <Box sx={{ pb: 4 }}>
       <PageHeader
         title="Flight Bookings Management (/bookings)"
-        subtitle="Manage end-to-end flight booking lifecycle, PNR tracking, passenger manifests & e-tickets."
+        subtitle="Manage confirmed bookings, payment statuses, e-ticket issuance queue & PNR tracking."
         action={
           <Button
             variant="contained"
             color="primary"
-            startIcon={<AddIcon />}
-            onClick={() => setAddModalOpen(true)}
+            startIcon={<ConfirmationNumberIcon />}
+            onClick={() => navigate('/ticketing')}
             sx={{ fontWeight: 700 }}
           >
-            + Create New Booking
+            Open Ticketing Issuance Desk
           </Button>
         }
       />
@@ -325,9 +385,9 @@ export default function Bookings() {
       {/* KPI Summary Cards */}
       <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr 1fr', md: 'repeat(4, 1fr)' }, gap: 1.5, mb: 3 }}>
         {[
-          { label: 'Total Bookings', value: bookings.length, icon: <EventSeatIcon />, color: '#6366F1', bg: '#EEF2FF' },
-          { label: 'Confirmed / Quoted', value: bookings.filter(b => b.bookingStatus === 'Confirmed' || b.bookingStatus === 'Quoted' || b.bookingStatus === 'CONFIRMED').length, icon: <PendingActionsIcon />, color: '#F59E0B', bg: '#FFFBEB' },
-          { label: 'Fully Ticketed', value: bookings.filter(b => b.bookingStatus === 'Ticketed' || b.bookingStatus === 'TICKETED' || b.ticketStatus === 'ISSUED').length, icon: <ConfirmationNumberIcon />, color: '#10B981', bg: '#ECFDF5' },
+          { label: 'Total Confirmed Bookings', value: bookings.length, icon: <EventSeatIcon />, color: '#6366F1', bg: '#EEF2FF' },
+          { label: 'Payment Received', value: bookings.filter(b => b.paymentStatus === 'Payment Received' || b.paymentStatus === 'PAID').length, icon: <PaidIcon />, color: '#10B981', bg: '#ECFDF5' },
+          { label: 'Fully Ticketed', value: bookings.filter(b => b.ticketStatus === 'Ticketed' || b.ticketStatus === 'ISSUED').length, icon: <ConfirmationNumberIcon />, color: '#0284C7', bg: '#E0F2FE' },
           { label: 'Gross Volume', value: `$${bookings.reduce((sum, b) => sum + (Number(b.sellingPrice) || 0), 0).toLocaleString()}`, icon: <PaidIcon />, color: '#2563EB', bg: '#EFF6FF' },
         ].map((s, i) => (
           <Paper key={i} elevation={0} sx={{ p: 2, border: '1px solid', borderColor: 'divider', borderRadius: 2.5, bgcolor: s.bg }}>
@@ -344,22 +404,34 @@ export default function Bookings() {
       <Box sx={{ display: 'flex', gap: 2, mb: 2, flexWrap: 'wrap', alignItems: 'center' }}>
         <TextField
           size="small"
-          placeholder="Search booking ref, customer, PNR..."
+          placeholder="Search booking ID, customer, PNR..."
           value={searchTerm}
           onChange={e => setSearchTerm(e.target.value)}
-          sx={{ width: { xs: '100%', md: 320 }, bgcolor: 'background.paper' }}
+          sx={{ width: { xs: '100%', md: 300 }, bgcolor: 'background.paper' }}
         />
-        <FormControl size="small" sx={{ minWidth: 170 }}>
-          <InputLabel>Booking Status</InputLabel>
+        <FormControl size="small" sx={{ minWidth: 180 }}>
+          <InputLabel>Status</InputLabel>
           <Select
             value={statusFilter}
-            label="Booking Status"
+            label="Status"
             onChange={e => setStatusFilter(e.target.value)}
           >
             <MenuItem value="">All Statuses</MenuItem>
-            {STATUS_STEPS.concat(['Cancelled', 'Refunded']).map(s => (
-              <MenuItem key={s} value={s}>{s}</MenuItem>
-            ))}
+            <MenuItem value="Payment Received">Payment Received</MenuItem>
+            <MenuItem value="Ticketed">Ticketed</MenuItem>
+            <MenuItem value="Dispatched">Dispatched</MenuItem>
+          </Select>
+        </FormControl>
+        <FormControl size="small" sx={{ minWidth: 150 }}>
+          <InputLabel>Date</InputLabel>
+          <Select
+            value={dateFilter}
+            label="Date"
+            onChange={e => setDateFilter(e.target.value)}
+          >
+            <MenuItem value="">All Time</MenuItem>
+            <MenuItem value="Today">Today</MenuItem>
+            <MenuItem value="This Week">This Week</MenuItem>
           </Select>
         </FormControl>
         <FormControl size="small" sx={{ minWidth: 150 }}>
@@ -384,22 +456,31 @@ export default function Bookings() {
           data={filteredBookings}
           onRowClick={(row) => handleOpenDrawer(row)}
           actions={(row) => (
-            <Box sx={{ display: 'flex', gap: 0.5, whiteSpace: 'nowrap' }} onClick={e => e.stopPropagation()}>
-              <Tooltip title="View & Edit Booking Details">
-                <IconButton size="small" color="primary" onClick={() => handleOpenDrawer(row)}>
-                  <VisibilityIcon fontSize="small" />
-                </IconButton>
-              </Tooltip>
-              <Tooltip title="Issue E-Ticket">
-                <IconButton size="small" color="success" onClick={() => handleUpdateStatus(row.id, 'Ticketed')}>
-                  <ConfirmationNumberIcon fontSize="small" />
-                </IconButton>
-              </Tooltip>
-              <Tooltip title="Payment Link">
-                <IconButton size="small" color="secondary" onClick={() => setPaymentModalOpen(true)}>
-                  <MonetizationOnIcon fontSize="small" />
-                </IconButton>
-              </Tooltip>
+            <Box sx={{ display: 'flex', gap: 0.8, whiteSpace: 'nowrap' }} onClick={e => e.stopPropagation()}>
+              {row.ticketStatus === 'Pending' || row.ticketStatus === 'NOT_ISSUED' ? (
+                <Button
+                  size="small"
+                  variant="contained"
+                  color="primary"
+                  startIcon={<ConfirmationNumberIcon sx={{ fontSize: 13 }} />}
+                  onClick={() => {
+                    showAlert(`Opening Ticket Issuance for ${row.bookingId || row.id}...`, 'info');
+                    navigate('/ticketing');
+                  }}
+                  sx={{ py: 0.3, px: 1, fontSize: '0.72rem', fontWeight: 800 }}
+                >
+                  Issue Ticket
+                </Button>
+              ) : null}
+              <Button
+                size="small"
+                variant="outlined"
+                startIcon={<VisibilityIcon sx={{ fontSize: 13 }} />}
+                onClick={() => handleOpenDrawer(row)}
+                sx={{ py: 0.3, px: 1, fontSize: '0.72rem', fontWeight: 700 }}
+              >
+                View
+              </Button>
             </Box>
           )}
         />

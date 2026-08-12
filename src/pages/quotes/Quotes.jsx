@@ -32,6 +32,9 @@ import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import LuggageIcon from '@mui/icons-material/Luggage';
 import ConnectingAirportsIcon from '@mui/icons-material/ConnectingAirports';
+import EditIcon from '@mui/icons-material/Edit';
+import ArchiveIcon from '@mui/icons-material/Archive';
+import PublishIcon from '@mui/icons-material/Publish';
 
 import PageHeader from '../../components/PageHeader';
 import AppTable from '../../components/AppTable';
@@ -40,7 +43,7 @@ import { MOCK_QUOTES, MOCK_BOOKINGS, AIRLINES, CABIN_CLASSES } from '../../const
 import { useAlert } from '../../contexts/AlertContext';
 import { useAuth } from '../../hooks/useAuth';
 
-const QUOTE_STATUS_FLOW = ['Draft', 'Sent', 'Viewed', 'Accepted', 'Rejected', 'Expired'];
+const QUOTE_STATUS_FLOW = ['Draft', 'Sent', 'Viewed', 'Accepted', 'Rejected', 'Expired', 'Archived'];
 
 const STATUS_COLORS = {
   'Draft': { bg: '#F1F5F9', color: '#475569', icon: '📝' },
@@ -48,7 +51,8 @@ const STATUS_COLORS = {
   'Viewed': { bg: '#EFF6FF', color: '#1E40AF', icon: '👁️' },
   'Accepted': { bg: '#D1FAE5', color: '#065F46', icon: '✅' },
   'Rejected': { bg: '#FEE2E2', color: '#991B1B', icon: '❌' },
-  'Expired': { bg: '#F3E8FF', color: '#6B21A8', icon: '⏰' }
+  'Expired': { bg: '#F3E8FF', color: '#6B21A8', icon: '⏰' },
+  'Archived': { bg: '#E2E8F0', color: '#64748B', icon: '📦' }
 };
 
 export default function Quotes() {
@@ -365,6 +369,17 @@ export default function Quotes() {
     showAlert(`Quote ${quote.id} re-dispatched to ${quote.customerName} via WhatsApp & Email!`, 'success');
   };
 
+  const handleArchive = (quote) => {
+    handleUpdateStatus(quote.id, 'Archived');
+    showAlert(`Quote ${quote.id} moved to archive`, 'info');
+  };
+
+  const handleEdit = (quote) => {
+    setSelectedQuote(quote);
+    setAddModalOpen(true);
+    showAlert(`Editing Quote ${quote.id} (Frontend mode)`, 'info');
+  };
+
   const filteredQuotes = useMemo(() => {
     return quotes.filter(q => {
       const matchSearch =
@@ -381,7 +396,7 @@ export default function Quotes() {
       id: 'quoteId',
       label: 'Quote ID',
       render: (row) => (
-        <Typography variant="body2" sx={{ fontWeight: 800, color: 'primary.main', fontFamily: 'monospace' }}>
+        <Typography variant="body2" sx={{ fontWeight: 900, color: 'primary.main', fontFamily: 'monospace' }}>
           {row.id}
         </Typography>
       )
@@ -397,6 +412,13 @@ export default function Quotes() {
       )
     },
     {
+      id: 'agent',
+      label: 'Sales Agent',
+      render: (row) => (
+        <Typography variant="caption" sx={{ fontWeight: 700 }}>{row.createdBy}</Typography>
+      )
+    },
+    {
       id: 'route',
       label: 'Route',
       render: (row) => (
@@ -407,31 +429,71 @@ export default function Quotes() {
       )
     },
     {
+      id: 'cabinPax',
+      label: 'Cabin / Pax',
+      render: (row) => (
+        <Typography variant="caption" sx={{ fontWeight: 700 }}>
+          {row.options?.[0]?.cabinClass || row.cabinClass || 'Business'} · 👥 {row.passengers || 2} Pax
+        </Typography>
+      )
+    },
+    {
+      id: 'date',
+      label: 'Date',
+      render: (row) => (
+        <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600 }}>
+          {row.createdDate}
+        </Typography>
+      )
+    },
+    {
       id: 'options',
-      label: 'Options',
+      label: 'Flight Options',
       render: (row) => (
         <Chip size="small" label={`${row.optionsCount || row.options?.length || 1} Options`} color="info" variant="outlined" sx={{ fontWeight: 700, fontSize: '0.68rem' }} />
       )
     },
     {
-      id: 'validity',
-      label: 'Validity',
+      id: 'netFare',
+      label: 'Net Fare',
       render: (row) => (
-        <Typography variant="caption" sx={{ fontWeight: 700, color: '#EA580C' }}>
-          ⏳ {row.validity || '24h'}
+        <Typography variant="caption" sx={{ fontWeight: 700, color: 'text.secondary', fontFamily: 'monospace' }}>
+          ${Number(row.options?.[0]?.netFare || row.netFare || 8000).toLocaleString()}
         </Typography>
       )
     },
     {
-      id: 'agent',
-      label: 'Agent',
+      id: 'sellingPrice',
+      label: 'Selling Price',
       render: (row) => (
-        <Typography variant="caption" sx={{ fontWeight: 700 }}>{row.createdBy}</Typography>
+        <Typography variant="body2" sx={{ fontWeight: 900, color: 'success.main', fontFamily: 'monospace' }}>
+          ${Number(row.options?.[0]?.sellingPrice || row.sellingPrice || 10000).toLocaleString()}
+        </Typography>
       )
     },
     {
+      id: 'profit',
+      label: 'Profit ($ / %)',
+      render: (row) => {
+        const net = Number(row.options?.[0]?.netFare || row.netFare || 8000);
+        const sell = Number(row.options?.[0]?.sellingPrice || row.sellingPrice || 10000);
+        const prof = sell - net;
+        const pct = net > 0 ? ((prof / net) * 100).toFixed(1) : '15.0';
+        return (
+          <Box>
+            <Typography variant="caption" sx={{ fontWeight: 900, color: 'primary.main', display: 'block' }}>
+              +${prof.toLocaleString()}
+            </Typography>
+            <Typography variant="caption" color="text.secondary">
+              ({pct}%)
+            </Typography>
+          </Box>
+        );
+      }
+    },
+    {
       id: 'status',
-      label: 'Status',
+      label: 'Quote Status',
       render: (row) => {
         const cfg = STATUS_COLORS[row.status] || { bg: '#F1F5F9', color: '#475569', icon: '📝' };
         return (
@@ -523,6 +585,19 @@ export default function Quotes() {
                   View
                 </Button>
               </Tooltip>
+
+              <Tooltip title="Edit Quote">
+                <IconButton size="small" color="primary" onClick={() => handleEdit(row)}>
+                  <EditIcon fontSize="small" />
+                </IconButton>
+              </Tooltip>
+
+              <Tooltip title="Republish Quote to Client">
+                <IconButton size="small" color="info" onClick={() => handleResend(row)}>
+                  <PublishIcon fontSize="small" />
+                </IconButton>
+              </Tooltip>
+
               <Tooltip title="Convert to Confirmed Booking">
                 <Button
                   size="small"
@@ -535,9 +610,10 @@ export default function Quotes() {
                   Convert
                 </Button>
               </Tooltip>
-              <Tooltip title="Resend to Customer via WhatsApp/Email">
-                <IconButton size="small" color="primary" onClick={() => handleResend(row)}>
-                  <SendIcon fontSize="small" />
+
+              <Tooltip title="Archive Quote">
+                <IconButton size="small" color="default" onClick={() => handleArchive(row)}>
+                  <ArchiveIcon fontSize="small" />
                 </IconButton>
               </Tooltip>
             </Box>

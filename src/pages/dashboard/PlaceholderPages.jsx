@@ -19,6 +19,7 @@ const PlaceholderPage = ({ title, description }) => (
 
 import Quotes from '../quotes/Quotes';
 import FlightExpertDesk from './FlightExpertDesk';
+import FlightRequests from '../flights/FlightRequests';
 import Bookings from '../bookings/Bookings';
 import BookingDetails from '../bookings/BookingDetails';
 import Payments from '../payments/Payments';
@@ -30,6 +31,6 @@ export const BookingsPage = () => <Bookings />;
 export const BookingDetailsPage = () => <BookingDetails />;
 export const SuppliersPage = () => <PlaceholderPage title="Suppliers" description="Manage airline and travel suppliers." />;
 export const FlightAlertsPage = () => <PNRTracking />;
-export const FlightRequestsPage = () => <FlightExpertDesk />;
+export const FlightRequestsPage = () => <FlightRequests />;
 export const PaymentsPage = () => <Payments />;
 export const PaymentDetailsPage = () => <PaymentDetails />;

@@ -268,6 +268,8 @@ export const DashboardLayout = () => {
 
     // Special override: Integrations is a shared page — do not prefix it
     if (currentUser.role === 'team_leader' && ['/quotes', '/bookings', '/agents', '/agents/performance'].includes(item.path)) return item.path;
+    if (currentUser.role === 'flight_expert' && ['/quotes', '/flights', '/bookings'].includes(item.path)) return item.path;
+    if (currentUser.role === 'ticketing_agent' && ['/bookings', '/flight-alerts', '/ticketing'].includes(item.path)) return item.path;
     if (currentUser.role === 'finance' && item.path === '/agents/performance') return item.path;
     if (item.path === '/integrations') return '/integrations';
 
