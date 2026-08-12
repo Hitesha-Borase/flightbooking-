@@ -1,0 +1,11 @@
+import React, { useState } from 'react';
+import Avatar from '@mui/material/Avatar';
+import Box from '@mui/material/Box';
+import MenuItem from '@mui/material/MenuItem';
+import Paper from '@mui/material/Paper';
+import Select from '@mui/material/Select';
+import Typography from '@mui/material/Typography';
+
+const agents = [{ name: 'Maria S.', status: 'On Call', tone: '#16A34A', timer: '00:02:44', recent: '23min' }, { name: 'John D.', status: 'Idle · 12m', tone: '#D97706', timer: '00:12:00', recent: 'Activity' }, { name: 'Ken T.', status: 'Away · Break', tone: '#DC2626', timer: '00:02:40', recent: 'Activity' }, { name: 'Sara K.', status: 'On Call', tone: '#16A34A', timer: '00:14:00', recent: '27min' }];
+export default function AgentActivityFeed() { const [actions, setActions] = useState({}); const select = (id, label, choices) => <Select displayEmpty size="small" value={actions[`${id}-${label}`] || ''} onChange={e => setActions({ ...actions, [`${id}-${label}`]: e.target.value })} sx={{ height: 29, fontSize: 11 }}><MenuItem value="" disabled>{label} ▾</MenuItem>{choices.map(x => <MenuItem key={x} value={x}>{x}</MenuItem>)}</Select>;
+  return <Paper elevation={0} sx={{ p: 2, borderRadius: 2.5, border: '1px solid', borderColor: 'divider' }}><Typography variant="subtitle2" sx={{ fontWeight: 900, mb: 1.5 }}>REAL-TIME AGENT ACTIVITY FEED</Typography><Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(4, 1fr)' }, gap: 1.5 }}>{agents.map((agent, id) => <Paper key={agent.name} variant="outlined" sx={{ p: 1.3 }}><Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}><Avatar sx={{ width: 30, height: 30 }}>{agent.name[0]}</Avatar><Box><Typography variant="body2" sx={{ fontWeight: 800 }}>{agent.name}</Typography><Typography variant="caption" sx={{ color: agent.tone, fontWeight: 700 }}>● {agent.status}</Typography></Box></Box><Typography variant="caption" color="text.secondary" sx={{ display: 'block', my: 1 }}>⏱ {agent.timer} · Recent: {agent.recent}</Typography><Box sx={{ display: 'grid', gap: .6 }}>{select(id, 'Barge / Whisper', ['Barge Into Call', 'Whisper to Agent', 'Listen Only'])}{select(id, 'Recycle Leads', ['Recycle All', "Recycle Today's", 'Select Leads'])}{select(id, 'Override Discount', ['Allow 5% off', 'Allow 10% off', 'Custom'])}</Box></Paper>)}</Box></Paper>; }

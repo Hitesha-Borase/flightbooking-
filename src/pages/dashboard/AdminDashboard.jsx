@@ -1,0 +1,279 @@
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Paper from '@mui/material/Paper';
+import Grid from '@mui/material/Grid';
+import Chip from '@mui/material/Chip';
+import Divider from '@mui/material/Divider';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
+import Avatar from '@mui/material/Avatar';
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip as ChartTooltip,
+  Legend,
+  PieChart,
+  Pie,
+  Cell,
+  ResponsiveContainer
+} from 'recharts';
+
+// Icons
+import PeopleIcon from '@mui/icons-material/People';
+import AirplaneTicketIcon from '@mui/icons-material/AirplaneTicket';
+import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
+import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
+import RequestQuoteIcon from '@mui/icons-material/RequestQuote';
+import BadgeIcon from '@mui/icons-material/Badge';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import FlightTakeoffIcon from '@mui/icons-material/FlightTakeoff';
+
+import PageHeader from '../../components/PageHeader';
+import StatCard from '../../components/StatCard';
+import ChartCard from '../../components/ChartCard';
+import AppTable from '../../components/AppTable';
+
+// Mock Data for Charts
+const WEEKLY_BOOKINGS_DATA = [
+  { day: 'Mon', 'This Week': 5, 'Last Week': 4 },
+  { day: 'Tue', 'This Week': 8, 'Last Week': 6 },
+  { day: 'Wed', 'This Week': 6, 'Last Week': 7 },
+  { day: 'Thu', 'This Week': 9, 'Last Week': 5 },
+  { day: 'Fri', 'This Week': 12, 'Last Week': 8 },
+  { day: 'Sat', 'This Week': 4, 'Last Week': 3 },
+  { day: 'Sun', 'This Week': 3, 'Last Week': 2 },
+];
+
+const CABIN_CLASS_DATA = [
+  { name: 'Economy', value: 60, color: '#3B82F6' },
+  { name: 'Business', value: 35, color: '#8B5CF6' },
+  { name: 'First Class', value: 5, color: '#F59E0B' },
+];
+
+const PIPELINE_DATA = [
+  { status: 'Quoted', count: 12, value: '$48,000', color: '#64748B' },
+  { status: 'Confirmed', count: 8, value: '$32,000', color: '#F59E0B' },
+  { status: 'PNR Created', count: 6, value: '$25,000', color: '#7C3AED' },
+  { status: 'Payment Recv', count: 5, value: '$22,000', color: '#10B981' },
+  { status: 'Ticketed', count: 4, value: '$18,000', color: '#059669' },
+  { status: 'Dispatched', count: 3, value: '$12,000', color: '#06B6D4' },
+];
+
+const ACTIVITY_FEED = [
+  { time: '10:32', type: 'lead', text: 'Agent Sofia created new lead — K. Singh (DEL→LHR, Business)', icon: '👤', color: '#3B82F6' },
+  { time: '10:45', type: 'quote', text: 'Quote QT-001 sent to K. Singh — $10,350', icon: '📤', color: '#F59E0B' },
+  { time: '11:02', type: 'payment', text: 'Payment received — BK-001, $10,350, PAID ✅', icon: '💰', color: '#10B981' },
+  { time: '11:15', type: 'ticket', text: 'Ticket issued — BK-001, E-Ticket: 0172345678901', icon: '🎫', color: '#8B5CF6' }
+];
+
+export const AdminDashboard = () => {
+  const navigate = useNavigate();
+
+  const pipelineColumns = [
+    { id: 'status', label: 'Booking Status', render: row => (
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: row.color }} />
+          <Typography variant="body2" sx={{ fontWeight: 700 }}>{row.status}</Typography>
+        </Box>
+      ) 
+    },
+    { id: 'count', label: 'Count', render: row => <Typography variant="body2" sx={{ fontWeight: 600 }}>{row.count}</Typography> },
+    { id: 'value', label: 'Value ($)', render: row => <Typography variant="body2" sx={{ fontWeight: 800, color: 'success.main' }}>{row.value}</Typography> }
+  ];
+
+  return (
+    <Box sx={{ pb: 4 }}>
+      <PageHeader
+        title="Admin Control Center"
+        subtitle="Manage daily travel agency operations, flight pipelines, booking revenues & active agents."
+      />
+
+      {/* ─── TOP ROW: STAT CARDS ─── */}
+      <Grid container spacing={2} sx={{ mb: 3 }}>
+        <Grid item xs={12} sm={6} md={4} lg={2}>
+          <Paper elevation={0} sx={{ p: 2, border: '1px solid', borderColor: 'divider', borderRadius: 2.5, bgcolor: '#EFF6FF' }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+              <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 700 }}>TODAY'S NEW LEADS</Typography>
+              <PeopleIcon sx={{ color: '#2563EB', fontSize: 20 }} />
+            </Box>
+            <Typography variant="h4" sx={{ fontWeight: 900, color: '#1E3A8A' }}>18</Typography>
+            <Typography variant="caption" sx={{ color: '#16A34A', fontWeight: 700 }}>↑ +12% vs yesterday</Typography>
+          </Paper>
+        </Grid>
+
+        <Grid item xs={12} sm={6} md={4} lg={2}>
+          <Paper elevation={0} sx={{ p: 2, border: '1px solid', borderColor: 'divider', borderRadius: 2.5, bgcolor: '#ECFDF5' }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+              <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 700 }}>BOOKINGS THIS MONTH</Typography>
+              <AirplaneTicketIcon sx={{ color: '#059669', fontSize: 20 }} />
+            </Box>
+            <Typography variant="h4" sx={{ fontWeight: 900, color: '#064E3B' }}>42</Typography>
+            <Typography variant="caption" sx={{ color: 'text.secondary', fontWeight: 600 }}>Target: 50 bookings</Typography>
+          </Paper>
+        </Grid>
+
+        <Grid item xs={12} sm={6} md={4} lg={2}>
+          <Paper elevation={0} sx={{ p: 2, border: '1px solid', borderColor: 'divider', borderRadius: 2.5, bgcolor: '#EEF2FF' }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+              <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 700 }}>REVENUE THIS MONTH</Typography>
+              <MonetizationOnIcon sx={{ color: '#4F46E5', fontSize: 20 }} />
+            </Box>
+            <Typography variant="h4" sx={{ fontWeight: 900, color: '#312E81' }}>$88,200</Typography>
+            <Typography variant="caption" sx={{ color: '#16A34A', fontWeight: 700 }}>↑ +8% vs last month</Typography>
+          </Paper>
+        </Grid>
+
+        <Grid item xs={12} sm={6} md={4} lg={2}>
+          <Paper elevation={0} sx={{ p: 2, border: '1px solid', borderColor: 'divider', borderRadius: 2.5, bgcolor: '#FEF3C7' }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+              <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 700 }}>PENDING PAYMENTS</Typography>
+              <HourglassEmptyIcon sx={{ color: '#D97706', fontSize: 20 }} />
+            </Box>
+            <Typography variant="h4" sx={{ fontWeight: 900, color: '#78350F' }}>5</Typography>
+            <Typography variant="caption" sx={{ color: '#D97706', fontWeight: 800 }}>$14,500 pending</Typography>
+          </Paper>
+        </Grid>
+
+        <Grid item xs={12} sm={6} md={4} lg={2}>
+          <Paper elevation={0} sx={{ p: 2, border: '1px solid', borderColor: 'divider', borderRadius: 2.5, bgcolor: '#FFF1F2' }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+              <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 700 }}>OPEN QUOTES</Typography>
+              <RequestQuoteIcon sx={{ color: '#E11D48', fontSize: 20 }} />
+            </Box>
+            <Typography variant="h4" sx={{ fontWeight: 900, color: '#9F1239' }}>14</Typography>
+            <Typography variant="caption" sx={{ color: '#E11D48', fontWeight: 900 }}>⚠️ 3 expiring soon</Typography>
+          </Paper>
+        </Grid>
+
+        <Grid item xs={12} sm={6} md={4} lg={2}>
+          <Paper elevation={0} sx={{ p: 2, border: '1px solid', borderColor: 'divider', borderRadius: 2.5, bgcolor: '#F5F3FF' }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+              <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 700 }}>TEAM ACTIVE NOW</Typography>
+              <BadgeIcon sx={{ color: '#7C3AED', fontSize: 20 }} />
+            </Box>
+            <Typography variant="h4" sx={{ fontWeight: 900, color: '#5B21B6' }}>8</Typography>
+            <Typography variant="caption" sx={{ color: '#7C3AED', fontWeight: 700 }}>Agents online</Typography>
+          </Paper>
+        </Grid>
+      </Grid>
+
+      {/* ─── MIDDLE ROW: PIPELINE & CHARTS ─── */}
+      <Grid container spacing={2.5} sx={{ mb: 3 }}>
+        {/* Left Card: Booking Pipeline */}
+        <Grid item xs={12} md={4}>
+          <Paper elevation={0} sx={{ p: 2.5, border: '1px solid', borderColor: 'divider', borderRadius: 2.5, height: '100%' }}>
+            <Typography variant="subtitle1" sx={{ fontWeight: 900, mb: 2 }}>
+              ⚡ FLIGHT BOOKING PIPELINE
+            </Typography>
+            <AppTable
+              columns={pipelineColumns}
+              data={PIPELINE_DATA}
+              count={PIPELINE_DATA.length}
+              page={0}
+              rowsPerPage={6}
+              onPageChange={() => {}}
+              onRowsPerPageChange={() => {}}
+              hidePagination
+            />
+          </Paper>
+        </Grid>
+
+        {/* Center Card: Weekly Booking Volume Chart */}
+        <Grid item xs={12} md={5}>
+          <Paper elevation={0} sx={{ p: 2.5, border: '1px solid', borderColor: 'divider', borderRadius: 2.5, height: '100%' }}>
+            <Typography variant="subtitle1" sx={{ fontWeight: 900, mb: 2 }}>
+              📊 WEEKLY BOOKING VOLUME
+            </Typography>
+            <Box sx={{ height: 210, width: '100%' }}>
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={WEEKLY_BOOKINGS_DATA}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F1F5F9" />
+                  <XAxis dataKey="day" stroke="#64748B" />
+                  <YAxis stroke="#64748B" />
+                  <ChartTooltip />
+                  <Legend />
+                  <Bar dataKey="This Week" fill="#3B82F6" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="Last Week" fill="#94A3B8" radius={[4, 4, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </Box>
+          </Paper>
+        </Grid>
+
+        {/* Right Card: Cabin Class Distribution Pie Chart */}
+        <Grid item xs={12} md={3}>
+          <Paper elevation={0} sx={{ p: 2.5, border: '1px solid', borderColor: 'divider', borderRadius: 2.5, height: '100%', display: 'flex', flexDirection: 'column' }}>
+            <Typography variant="subtitle1" sx={{ fontWeight: 900, mb: 1 }}>
+              💺 CABIN CLASS SHARE
+            </Typography>
+            <Box sx={{ height: 130, width: '100%', mb: 1 }}>
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie data={CABIN_CLASS_DATA} dataKey="value" nameKey="name" cx="50%" cy="50%" innerRadius={35} outerRadius={55} paddingAngle={3}>
+                    {CABIN_CLASS_DATA.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Pie>
+                  <ChartTooltip formatter={v => `${v}%`} />
+                </PieChart>
+              </ResponsiveContainer>
+            </Box>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.8 }}>
+              {CABIN_CLASS_DATA.map((c, i) => (
+                <Box key={i} sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: 12 }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.8 }}>
+                    <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: c.color }} />
+                    <Typography variant="caption" sx={{ fontWeight: 700 }}>{c.name}</Typography>
+                  </Box>
+                  <Typography variant="caption" sx={{ fontWeight: 800 }}>{c.value}%</Typography>
+                </Box>
+              ))}
+            </Box>
+          </Paper>
+        </Grid>
+      </Grid>
+
+      {/* ─── BOTTOM ROW: ACTIVITY FEED ─── */}
+      <Paper elevation={0} sx={{ p: 2.5, border: '1px solid', borderColor: 'divider', borderRadius: 2.5 }}>
+        <Typography variant="subtitle1" sx={{ fontWeight: 900, mb: 2 }}>
+          🔔 TODAY'S LIVE OPERATIONS ACTIVITY FEED
+        </Typography>
+        <List sx={{ p: 0 }}>
+          {ACTIVITY_FEED.map((act, idx) => (
+            <React.Fragment key={idx}>
+              <ListItem sx={{ px: 0, py: 1.5 }}>
+                <ListItemAvatar sx={{ minWidth: 46 }}>
+                  <Avatar sx={{ bgcolor: act.color, width: 34, height: 34, fontSize: 14 }}>
+                    {act.icon}
+                  </Avatar>
+                </ListItemAvatar>
+                <ListItemText
+                  primary={
+                    <Typography variant="body2" sx={{ fontWeight: 700, color: '#1E293B' }}>
+                      {act.text}
+                    </Typography>
+                  }
+                  secondary={
+                    <Typography variant="caption" color="text.secondary">
+                      Timestamp: today at {act.time}
+                    </Typography>
+                  }
+                />
+              </ListItem>
+              {idx < ACTIVITY_FEED.length - 1 && <Divider />}
+            </React.Fragment>
+          ))}
+        </List>
+      </Paper>
+    </Box>
+  );
+};
+
+export default AdminDashboard;
