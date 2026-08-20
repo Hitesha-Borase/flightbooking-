@@ -710,7 +710,23 @@ export const AppRoutes = () => {
         />
         <Route path="/" element={<Navigate to="/dashboard" replace />} />
 
-        {/* Leads Module (Admins, Consultants, Operations) */}
+        {/* Leads Module (Admins, Consultants, Operations, Team Leaders, Expert TLs) */}
+        <Route
+          path="/expert_team_leader/leads"
+          element={
+            <ProtectedRoute allowedRoles={['expert_team_leader', 'team_leader', 'admin', 'super_admin']}>
+              <SuperAdminLeadList />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/expert_team_leader/leads/details/:id"
+          element={
+            <ProtectedRoute allowedRoles={['expert_team_leader', 'team_leader', 'admin', 'super_admin']}>
+              <SuperAdminLeadDetails />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/admin/leads"
           element={
@@ -916,7 +932,25 @@ export const AppRoutes = () => {
           }
         />
 
-        {/* Customers Module (Admins, Consultants, Operations, Team Leader) */}
+        {/* Customers Module (Admins, Consultants, Operations, Team Leader, Expert TL) */}
+        <Route path="/expert_team_leader/clients" element={<Navigate to="/expert_team_leader/customers" replace />} />
+        <Route
+          path="/expert_team_leader/customers"
+          element={
+            <ProtectedRoute allowedRoles={['expert_team_leader', 'team_leader', 'admin', 'super_admin']}>
+              <SuperAdminClientList />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="/expert_team_leader/clients/details/:id" element={<ClientDetailsRedirect />} />
+        <Route
+          path="/expert_team_leader/customers/details/:id"
+          element={
+            <ProtectedRoute allowedRoles={['expert_team_leader', 'team_leader', 'admin', 'super_admin']}>
+              <SuperAdminClientDetails />
+            </ProtectedRoute>
+          }
+        />
         <Route path="/admin/clients" element={<Navigate to="/admin/customers" replace />} />
         <Route
           path="/admin/customers"
