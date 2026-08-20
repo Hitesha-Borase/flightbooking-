@@ -247,27 +247,27 @@ export default function MarketingDashboard() {
     <Box sx={{ pb: 6, minHeight: '100vh' }}>
       
       {/* Top Executive Marketing Header */}
-      <Paper elevation={0} sx={{ p: 2.5, px: 3, mb: 3, border: '1px solid', borderColor: 'divider', borderRadius: 3, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2, bgcolor: '#FFFFFF' }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-          <Avatar sx={{ bgcolor: '#3F51B5', width: 48, height: 48, fontWeight: 900, fontSize: '1.1rem', boxShadow: '0 4px 12px rgba(63, 81, 181, 0.3)' }}>
+      <Paper elevation={0} sx={{ p: { xs: 1.5, sm: 2.5 }, px: { xs: 2, sm: 3 }, mb: 3, border: '1px solid', borderColor: 'divider', borderRadius: 3, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2, bgcolor: '#FFFFFF' }}>
+        <Box sx={{ display: 'flex', alignItems: { xs: 'flex-start', sm: 'center' }, gap: 1.5, flexWrap: 'wrap', minWidth: 0, width: '100%' }}>
+          <Avatar sx={{ bgcolor: '#3F51B5', width: { xs: 40, sm: 48 }, height: { xs: 40, sm: 48 }, fontWeight: 900, fontSize: { xs: '0.9rem', sm: '1.1rem' }, boxShadow: '0 4px 12px rgba(63, 81, 181, 0.3)' }}>
             MKT
           </Avatar>
-          <Box>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.2 }}>
-              <Typography variant="h5" sx={{ fontWeight: 900, color: 'text.primary', fontFamily: 'Outfit, sans-serif' }}>
+          <Box sx={{ flex: 1, minWidth: 0 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap', mb: 0.5 }}>
+              <Typography variant="h5" sx={{ fontWeight: 900, color: 'text.primary', fontFamily: 'Outfit, sans-serif', fontSize: { xs: '1.05rem', sm: '1.35rem' }, lineHeight: 1.2 }}>
                 Marketing ROI & Automation Command Center
               </Typography>
-              <Chip label="ROLE: MARKETING MANAGER" size="small" sx={{ fontWeight: 900, fontSize: '0.68rem', bgcolor: '#3F51B5', color: '#FFF', height: 24 }} />
-              <Chip label="ATTRIBUTION & PROFIT ANALYTICS" size="small" variant="outlined" color="secondary" sx={{ fontWeight: 800, fontSize: '0.68rem', height: 24 }} />
+              <Chip label="ROLE: MARKETING MANAGER" size="small" sx={{ fontWeight: 900, fontSize: '0.65rem', bgcolor: '#3F51B5', color: '#FFF', height: 22 }} />
+              <Chip label="ATTRIBUTION & PROFIT ANALYTICS" size="small" variant="outlined" color="secondary" sx={{ fontWeight: 800, fontSize: '0.65rem', height: 22 }} />
             </Box>
-            <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 600, mt: 0.2 }}>
+            <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 600, fontSize: { xs: '0.75rem', sm: '0.875rem' } }}>
               End-to-End Customer Journey Attribution: From Campaign Ad Click to Gross Profit & ROI
             </Typography>
           </Box>
         </Box>
         
-        <Box sx={{ display: 'flex', gap: 1.5, alignItems: 'center' }}>
-          <Button variant="contained" color="secondary" startIcon={<FileDownloadIcon />} onClick={handleExportCSV} sx={{ fontWeight: 800 }}>
+        <Box sx={{ display: 'flex', gap: 1.5, alignItems: 'center', flexWrap: 'wrap', width: { xs: '100%', sm: 'auto' } }}>
+          <Button variant="contained" color="secondary" startIcon={<FileDownloadIcon />} onClick={handleExportCSV} sx={{ fontWeight: 800, width: { xs: '100%', sm: 'auto' } }}>
             Export Marketing ROI CSV
           </Button>
           <DualClock client={{ timezone: 'America/New_York', label: 'Campaign Time (EST)' }} />
@@ -276,7 +276,7 @@ export default function MarketingDashboard() {
 
       {/* 10 MARKETING KPI CARDS */}
       <Box sx={{ mb: 3.5 }}>
-        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)', lg: 'repeat(5, 1fr)' }, gap: 1.5 }}>
+        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)', lg: 'repeat(5, 1fr)' }, gap: 1.5 }}>
           {INITIAL_MARKETING_KPIS.map((kpi) => (
             <Paper
               key={kpi.id}
