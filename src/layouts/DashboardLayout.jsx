@@ -303,36 +303,37 @@ export const DashboardLayout = () => {
     // WORKSPACE
     { section: 'WORKSPACE', label: 'Dashboard', icon: <DashboardIcon />, path: '/dashboard', roles: ['admin', 'consultant', 'sales_agent', 'operations', 'finance', 'super_admin', 'marketing', 'team_leader', 'flight_expert', 'ticketing_agent'] },
     { section: 'WORKSPACE', label: 'Leads', icon: <PeopleIcon />, path: '/leads', roles: ['admin', 'consultant', 'sales_agent', 'operations', 'super_admin', 'marketing', 'team_leader'] },
-    { section: 'WORKSPACE', label: 'Customers', icon: <BusinessCenterIcon />, path: '/customers', roles: ['admin', 'consultant', 'sales_agent', 'operations', 'super_admin', 'team_leader'] },
-    { section: 'WORKSPACE', label: 'Flight Requests', icon: <CalendarMonthIcon />, path: '/consultations/calendar', roles: ['operations', 'super_admin'] },
+    { section: 'WORKSPACE', label: 'Customers', icon: <BusinessCenterIcon />, path: '/customers', roles: ['admin', 'consultant', 'sales_agent', 'operations', 'super_admin', 'team_leader', 'flight_expert'] },
+    { section: 'WORKSPACE', label: 'Flight Requests', icon: <CalendarMonthIcon />, path: '/consultations/calendar', roles: ['operations', 'super_admin', 'team_leader'] },
 
     // TRAVEL OPERATIONS
-    { section: 'TRAVEL OPERATIONS', label: 'Flight Requests', icon: <FlightIcon />, path: '/flights', roles: ['super_admin', 'flight_expert'] },
+    { section: 'TRAVEL OPERATIONS', label: 'Flight Requests', icon: <FlightIcon />, path: '/flights', roles: ['super_admin', 'flight_expert', 'operations'] },
     { section: 'TRAVEL OPERATIONS', label: 'Quotes', icon: <RequestQuoteIcon />, path: '/quotes', roles: ['admin', 'super_admin', 'team_leader', 'sales_agent', 'consultant', 'flight_expert'] },
-    { section: 'TRAVEL OPERATIONS', label: 'Bookings', icon: <AirplaneTicketIcon />, path: '/bookings', roles: ['admin', 'super_admin', 'team_leader', 'sales_agent', 'consultant', 'flight_expert', 'ticketing_agent'] },
+    { section: 'TRAVEL OPERATIONS', label: 'Bookings', icon: <AirplaneTicketIcon />, path: '/bookings', roles: ['admin', 'super_admin', 'team_leader', 'sales_agent', 'consultant', 'flight_expert', 'ticketing_agent', 'operations'] },
     { section: 'TRAVEL OPERATIONS', label: 'After-Sales', icon: <SupportAgentIcon />, path: '/after-sales', roles: ['admin', 'consultant', 'sales_agent', 'operations', 'finance', 'super_admin', 'marketing', 'team_leader', 'flight_expert', 'ticketing_agent'] },
-    { section: 'TRAVEL OPERATIONS', label: 'PNR / Tracking', icon: <ConnectingAirportsIcon />, path: '/flight-alerts', roles: ['super_admin', 'ticketing_agent'] },
+    { section: 'TRAVEL OPERATIONS', label: 'PNR / Tracking', icon: <ConnectingAirportsIcon />, path: '/flight-alerts', roles: ['super_admin', 'ticketing_agent', 'operations'] },
     { section: 'TRAVEL OPERATIONS', label: 'Ticketing', icon: <ConfirmationNumberIcon />, path: '/ticketing', roles: ['super_admin', 'ticketing_agent'] },
 
     // FINANCE
     { section: 'FINANCE', label: 'Payments', icon: <MonetizationOnIcon />, path: '/payments', roles: ['admin', 'finance', 'super_admin'] },
     { section: 'FINANCE', label: 'Invoices', icon: <ReceiptIcon />, path: '/payments/invoices', roles: ['admin', 'finance', 'super_admin'] },
-    { section: 'FINANCE', label: 'Refunds', icon: <CurrencyExchangeIcon />, path: '/payments/refund-commission', roles: ['admin', 'super_admin', 'finance'] },
+    { section: 'FINANCE', label: 'Refunds', icon: <CurrencyExchangeIcon />, path: '/payments/refund-commission', roles: ['admin', 'super_admin', 'finance', 'operations'] },
 
     // MANAGEMENT
     { section: 'MANAGEMENT', label: 'Team', icon: <GroupsIcon />, path: '/agents', roles: ['admin', 'operations', 'super_admin', 'team_leader'] },
-    { section: 'MANAGEMENT', label: 'Suppliers', icon: <StorefrontIcon />, path: '/suppliers', roles: ['super_admin'] },
-    { section: 'MANAGEMENT', label: 'Reports', icon: <AssessmentIcon />, path: '/agents/performance', roles: ['admin', 'operations', 'super_admin', 'team_leader', 'finance'] },
+    { section: 'MANAGEMENT', label: 'Suppliers', icon: <StorefrontIcon />, path: '/suppliers', roles: ['super_admin', 'finance'] },
+    { section: 'MANAGEMENT', label: 'Reports', icon: <AssessmentIcon />, path: '/agents/performance', roles: ['admin', 'operations', 'super_admin', 'team_leader', 'finance', 'marketing'] },
     { section: 'MANAGEMENT', label: 'QA Audits', icon: <VerifiedUserIcon />, path: '/qa-audits', roles: ['admin', 'consultant', 'sales_agent', 'operations', 'finance', 'super_admin', 'marketing', 'team_leader', 'flight_expert', 'ticketing_agent'] },
 
     // COMMUNICATION
-    { section: 'COMMUNICATION', label: 'Social Inbox', icon: <ForumIcon />, path: '/social-inbox', roles: ['admin', 'consultant', 'sales_agent', 'operations', 'super_admin', 'team_leader'] },
+    { section: 'COMMUNICATION', label: 'Social Inbox', icon: <ForumIcon />, path: '/social-inbox', roles: ['admin', 'consultant', 'sales_agent', 'operations', 'super_admin', 'team_leader', 'marketing'] },
 
     // ADMINISTRATION
     { section: 'ADMINISTRATION', label: 'Users', icon: <SecurityIcon />, path: '/active-cases', roles: ['admin', 'operations', 'super_admin'] },
     { section: 'ADMINISTRATION', label: 'Documents', icon: <AssignmentTurnedInIcon />, path: '/documents/verify', roles: ['admin', 'operations', 'super_admin'] },
     { section: 'ADMINISTRATION', label: 'Settings', icon: <SettingsIcon />, path: '/super_admin/customization', roles: ['super_admin'] },
   ];
+
 
   const ALL_SUB_ITEMS = [
     {
@@ -616,9 +617,18 @@ export const DashboardLayout = () => {
       }
     }
 
+    // 3. Granular permission-based menu filtering
+    if (currentUser?.customPermissions?.enabled) {
+      const perms = currentUser.customPermissions.granular || {};
+      // Hide finance section items if viewFinanceReports is disabled
+      if (['Payments', 'Invoices', 'Refunds'].includes(item.label) && !perms.viewPayment) return null;
+      if (item.label === 'Reports' && !perms.viewFinanceReports) return null;
+    }
+
     if (item.label === 'Social Inbox') {
       return renderSocialInboxMenu(item);
     }
+
 
     const active = isActive(item);
     const itemPath = getDynamicPath(item);

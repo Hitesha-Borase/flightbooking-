@@ -60,6 +60,14 @@ export const SuperAdminClientDetails = () => {
   const { showAlert } = useAlert();
   const { currentUser } = useAuth();
 
+  // Permission helpers
+  const hasPermission = (key) => {
+    if (currentUser?.customPermissions?.enabled) {
+      return !!currentUser.customPermissions.granular?.[key];
+    }
+    return true; // Default allow when no custom permissions set
+  };
+
   const [activeTab, setActiveTab] = useState(0);
   const [paymentModalOpen, setPaymentModalOpen] = useState(false);
   const [newLogText, setNewLogText] = useState('');
@@ -199,42 +207,51 @@ export const SuperAdminClientDetails = () => {
           </Box>
 
           <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-            <Button
-              variant="outlined"
-              color="success"
-              startIcon={<PhoneIcon />}
-              onClick={() => showAlert(`Calling ${client.firstName} via Telnyx WebRTC…`, 'success')}
-            >
-              Call
-            </Button>
-            <Button
-              variant="outlined"
-              color="success"
-              startIcon={<WhatsAppIcon />}
-              onClick={() => navigate('/social-inbox?channel=whatsapp')}
-            >
-              WhatsApp
-            </Button>
-            <Button
-              variant="contained"
-              color="primary"
-              startIcon={<FlightTakeoffIcon />}
-              onClick={() => {
-                showAlert(`New flight quote created for ${client.firstName}!`, 'success');
-                navigate('/quotes');
-              }}
-            >
-              Create Flight Quote
-            </Button>
-            <Button
-              variant="contained"
-              color="secondary"
-              startIcon={<MonetizationOnIcon />}
-              onClick={() => setPaymentModalOpen(true)}
-            >
-              Send Payment Link
-            </Button>
+            {hasPermission('makeCall') && (
+              <Button
+                variant="outlined"
+                color="success"
+                startIcon={<PhoneIcon />}
+                onClick={() => showAlert(`Calling ${client.firstName} via Telnyx WebRTC…`, 'success')}
+              >
+                Call
+              </Button>
+            )}
+            {hasPermission('sendWhatsApp') && (
+              <Button
+                variant="outlined"
+                color="success"
+                startIcon={<WhatsAppIcon />}
+                onClick={() => navigate('/social-inbox?channel=whatsapp')}
+              >
+                WhatsApp
+              </Button>
+            )}
+            {hasPermission('createBooking') && (
+              <Button
+                variant="contained"
+                color="primary"
+                startIcon={<FlightTakeoffIcon />}
+                onClick={() => {
+                  showAlert(`New flight quote created for ${client.firstName}!`, 'success');
+                  navigate('/quotes');
+                }}
+              >
+                Create Flight Quote
+              </Button>
+            )}
+            {hasPermission('createPaymentRequest') && (
+              <Button
+                variant="contained"
+                color="secondary"
+                startIcon={<MonetizationOnIcon />}
+                onClick={() => setPaymentModalOpen(true)}
+              >
+                Send Payment Link
+              </Button>
+            )}
           </Box>
+
         </Box>
 
         <Divider sx={{ my: 2 }} />

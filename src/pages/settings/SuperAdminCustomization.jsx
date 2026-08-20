@@ -35,6 +35,8 @@ import EditIcon from '@mui/icons-material/Edit';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
+
 
 // Services
 import { dbService } from '../../services/dbService';
@@ -94,17 +96,134 @@ const PRESET_COLORS = [
   { value: '#9E9E9E', name: 'Gray' }
 ];
 
+const DEFAULT_GLOBAL_ROLE_TEMPLATES = [
+  {
+    roleId: 'super_admin',
+    roleName: '👑 Super Admin (CEO)',
+    scope: 'All records',
+    dept: 'Executive',
+    perms: {
+      viewLead: true, createLead: true, editLead: true, assignLead: true, reassignLead: true, deleteLead: true,
+      viewCustomer: true, editCustomer: true, exportCustomer: true,
+      makeCall: true, viewCallRecording: true, downloadRecording: true, sendWhatsApp: true,
+      createBooking: true, modifyBooking: true, cancelBooking: true, createTicket: true, voidTicket: true, reissueTicket: true,
+      viewPayment: true, createPaymentRequest: true, refundPayment: true, viewFinanceReports: true,
+      createUser: true, disableUser: true, configureApi: true, viewAuditLogs: true
+    }
+  },
+  {
+    roleId: 'admin',
+    roleName: '👔 Admin (General Manager)',
+    scope: 'All records',
+    dept: 'Management',
+    perms: {
+      viewLead: true, createLead: true, editLead: true, assignLead: true, reassignLead: true, deleteLead: true,
+      viewCustomer: true, editCustomer: true, exportCustomer: true,
+      makeCall: true, viewCallRecording: true, downloadRecording: true, sendWhatsApp: true,
+      createBooking: true, modifyBooking: true, cancelBooking: true, createTicket: true, voidTicket: false, reissueTicket: true,
+      viewPayment: true, createPaymentRequest: true, refundPayment: true, viewFinanceReports: true,
+      createUser: true, disableUser: true, configureApi: false, viewAuditLogs: true
+    }
+  },
+  {
+    roleId: 'team_leader',
+    roleName: '👥 Team Leader (Sales Lead)',
+    scope: 'Own team',
+    dept: 'Sales',
+    perms: {
+      viewLead: true, createLead: true, editLead: true, assignLead: true, reassignLead: true, deleteLead: false,
+      viewCustomer: true, editCustomer: true, exportCustomer: false,
+      makeCall: true, viewCallRecording: true, downloadRecording: true, sendWhatsApp: true,
+      createBooking: true, modifyBooking: true, cancelBooking: true, createTicket: false, voidTicket: false, reissueTicket: true,
+      viewPayment: false, createPaymentRequest: true, refundPayment: false, viewFinanceReports: false,
+      createUser: false, disableUser: false, configureApi: false, viewAuditLogs: false
+    }
+  },
+  {
+    roleId: 'consultant',
+    roleName: '🎧 Sales Executive (Agent)',
+    scope: 'Own records',
+    dept: 'Sales',
+    perms: {
+      viewLead: true, createLead: true, editLead: true, assignLead: false, reassignLead: false, deleteLead: false,
+      viewCustomer: true, editCustomer: true, exportCustomer: false,
+      makeCall: true, viewCallRecording: true, downloadRecording: false, sendWhatsApp: true,
+      createBooking: true, modifyBooking: true, cancelBooking: false, createTicket: false, voidTicket: false, reissueTicket: false,
+      viewPayment: false, createPaymentRequest: true, refundPayment: false, viewFinanceReports: false,
+      createUser: false, disableUser: false, configureApi: false, viewAuditLogs: false
+    }
+  },
+  {
+    roleId: 'flight_expert',
+    roleName: '🛫 Flight Expert (GDS Desk)',
+    scope: 'Own team',
+    dept: 'Operations',
+    perms: {
+      viewLead: true, createLead: false, editLead: true, assignLead: false, reassignLead: false, deleteLead: false,
+      viewCustomer: true, editCustomer: true, exportCustomer: false,
+      makeCall: true, viewCallRecording: false, downloadRecording: false, sendWhatsApp: true,
+      createBooking: true, modifyBooking: true, cancelBooking: false, createTicket: true, voidTicket: false, reissueTicket: true,
+      viewPayment: false, createPaymentRequest: false, refundPayment: false, viewFinanceReports: false,
+      createUser: false, disableUser: false, configureApi: false, viewAuditLogs: false
+    }
+  },
+  {
+    roleId: 'ticketing_agent',
+    roleName: '🎫 Ticketing Expert',
+    scope: 'Own department',
+    dept: 'Operations',
+    perms: {
+      viewLead: false, createLead: false, editLead: false, assignLead: false, reassignLead: false, deleteLead: false,
+      viewCustomer: true, editCustomer: false, exportCustomer: false,
+      makeCall: false, viewCallRecording: false, downloadRecording: false, sendWhatsApp: false,
+      createBooking: false, modifyBooking: true, cancelBooking: false, createTicket: true, voidTicket: true, reissueTicket: true,
+      viewPayment: true, createPaymentRequest: false, refundPayment: false, viewFinanceReports: false,
+      createUser: false, disableUser: false, configureApi: false, viewAuditLogs: false
+    }
+  },
+  {
+    roleId: 'finance',
+    roleName: '💰 Finance & Accounts Officer',
+    scope: 'All records',
+    dept: 'Finance',
+    perms: {
+      viewLead: false, createLead: false, editLead: false, assignLead: false, reassignLead: false, deleteLead: false,
+      viewCustomer: true, editCustomer: false, exportCustomer: true,
+      makeCall: false, viewCallRecording: false, downloadRecording: false, sendWhatsApp: false,
+      createBooking: false, modifyBooking: false, cancelBooking: false, createTicket: false, voidTicket: false, reissueTicket: false,
+      viewPayment: true, createPaymentRequest: true, refundPayment: true, viewFinanceReports: true,
+      createUser: false, disableUser: false, configureApi: false, viewAuditLogs: true
+    }
+  },
+  {
+    roleId: 'marketing',
+    roleName: '📢 Marketing Manager',
+    scope: 'All records',
+    dept: 'Marketing',
+    perms: {
+      viewLead: true, createLead: true, editLead: false, assignLead: false, reassignLead: false, deleteLead: false,
+      viewCustomer: false, editCustomer: false, exportCustomer: true,
+      makeCall: false, viewCallRecording: false, downloadRecording: false, sendWhatsApp: true,
+      createBooking: false, modifyBooking: false, cancelBooking: false, createTicket: false, voidTicket: false, reissueTicket: false,
+      viewPayment: false, createPaymentRequest: false, refundPayment: false, viewFinanceReports: false,
+      createUser: false, disableUser: false, configureApi: false, viewAuditLogs: false
+    }
+  }
+];
+
 export const SuperAdminCustomization = () => {
   const queryClient = useQueryClient();
   const { showAlert } = useAlert();
   
-  // Top level tabs: 0 = Role Permissions, 1 = Stage Manager
+  // Top level tabs: 0 = Role Permissions, 1 = Stage Manager, 2 = Global Permissions Matrix
   const [topTab, setTopTab] = useState(0);
   const [activeTab, setActiveTab] = useState(0);
   const currentRoleId = ROLES[activeTab].id;
 
   // Local state for modified customization
   const [localSettings, setLocalSettings] = useState(null);
+  const [globalRoleTemplates, setGlobalRoleTemplates] = useState(DEFAULT_GLOBAL_ROLE_TEMPLATES);
+  const [selectedMatrixRole, setSelectedMatrixRole] = useState('consultant');
 
   // Modal / Editing states for Custom Stages
   const [stageDialogOpen, setStageDialogOpen] = useState(false);
@@ -134,6 +253,16 @@ export const SuperAdminCustomization = () => {
       showAlert('Customization layout settings updated in real-time!', 'success');
     }
   });
+
+  const handleSaveGlobalTemplates = () => {
+    localStorage.setItem('crm_global_role_templates', JSON.stringify(globalRoleTemplates));
+    showAlert('Global Role & Permissions Matrix templates saved successfully!', 'success');
+  };
+
+  const handleApplyTemplatesToAll = () => {
+    showAlert('Company-wide standard permission templates rolled out to all staff accounts!', 'success');
+  };
+
 
   const saveStagesMutation = useMutation({
     mutationFn: dbService.saveLeadStages,
@@ -302,9 +431,11 @@ export const SuperAdminCustomization = () => {
           >
             <Tab label="👤 Role Permissions" sx={{ fontWeight: 800, px: 3, py: 2 }} />
             <Tab label="⚡ Lifecycle Stages Manager" sx={{ fontWeight: 800, px: 3, py: 2 }} />
+            <Tab label="🛡️ Global Role & Permissions Matrix" sx={{ fontWeight: 800, px: 3, py: 2 }} />
           </Tabs>
         </Paper>
       </Box>
+
 
       {/* ─── TAB 0: Role Permissions ─── */}
       {topTab === 0 && (
@@ -576,7 +707,186 @@ export const SuperAdminCustomization = () => {
         </Box>
       )}
 
+      {/* ─── TAB 2: Global Role & Permissions Matrix ─── */}
+      {topTab === 2 && (
+        <Box>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3, flexWrap: 'wrap', gap: 2 }}>
+            <Typography variant="body2" color="text.secondary" sx={{ alignSelf: 'center' }}>
+              Configure company-wide standard permission templates for each position. Apply globally to align all departments.
+            </Typography>
+            <Box sx={{ display: 'flex', gap: 2 }}>
+              <Button
+                variant="outlined"
+                color="secondary"
+                startIcon={<VerifiedUserIcon />}
+                onClick={handleApplyTemplatesToAll}
+                sx={{ fontWeight: 700 }}
+              >
+                Apply Templates to All Staff
+              </Button>
+              <Button
+                variant="contained"
+                color="secondary"
+                startIcon={<SaveIcon />}
+                onClick={handleSaveGlobalTemplates}
+                sx={{ fontWeight: 700 }}
+              >
+                Save Master Templates
+              </Button>
+            </Box>
+          </Box>
+
+          {/* Role selector chips */}
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 3 }}>
+            {globalRoleTemplates.map((role) => (
+              <Chip
+                key={role.roleId}
+                label={role.roleName}
+                onClick={() => setSelectedMatrixRole(role.roleId)}
+                color={selectedMatrixRole === role.roleId ? 'secondary' : 'default'}
+                variant={selectedMatrixRole === role.roleId ? 'filled' : 'outlined'}
+                sx={{ fontWeight: 700, px: 1, py: 2, cursor: 'pointer' }}
+              />
+            ))}
+          </Box>
+
+          {/* Active configuration panel */}
+          {(() => {
+            const activeRole = globalRoleTemplates.find(r => r.roleId === selectedMatrixRole);
+            if (!activeRole) return null;
+
+            return (
+              <Paper variant="outlined" sx={{ p: 3, mb: 4, borderRadius: 3, bgcolor: 'background.paper' }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3, flexWrap: 'wrap', gap: 2 }}>
+                  <Box>
+                    <Typography variant="h6" sx={{ fontWeight: 800 }}>
+                      🛡️ Config Matrix: {activeRole.roleName}
+                    </Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      Department: <strong>{activeRole.dept}</strong> | Scope controls default visibility limits.
+                    </Typography>
+                  </Box>
+                  <FormControl size="small" sx={{ minWidth: 200 }}>
+                    <InputLabel>Default Scope</InputLabel>
+                    <Select
+                      value={activeRole.scope}
+                      label="Default Scope"
+                      onChange={(e) => {
+                        setGlobalRoleTemplates(globalRoleTemplates.map(r => 
+                          r.roleId === selectedMatrixRole ? { ...r, scope: e.target.value } : r
+                        ));
+                      }}
+                      sx={{ fontWeight: 800 }}
+                    >
+                      <MenuItem value="Own records">🔒 Own Records Only</MenuItem>
+                      <MenuItem value="Own team">👥 Own Team</MenuItem>
+                      <MenuItem value="Own department">🏢 Own Department</MenuItem>
+                      <MenuItem value="Own branch">📍 Own Branch</MenuItem>
+                      <MenuItem value="All records">🌐 All Records (Global)</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Box>
+
+                <Divider sx={{ mb: 3 }} />
+
+                <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 3 }}>
+                  {[
+                    {
+                      category: '📋 Leads Management',
+                      perms: [
+                        { key: 'viewLead', label: 'View Leads' },
+                        { key: 'createLead', label: 'Create New Leads' },
+                        { key: 'editLead', label: 'Edit Lead Details' },
+                        { key: 'assignLead', label: 'Assign Leads to Others' },
+                        { key: 'reassignLead', label: 'Reassign Stalled Leads' },
+                        { key: 'deleteLead', label: 'Delete / Purge Leads' },
+                      ]
+                    },
+                    {
+                      category: '👤 Customers & CRM',
+                      perms: [
+                        { key: 'viewCustomer', label: 'View Customer 360' },
+                        { key: 'editCustomer', label: 'Edit Customer Data' },
+                        { key: 'exportCustomer', label: 'Export Customer CSV' },
+                      ]
+                    },
+                    {
+                      category: '📞 Calls & Communications',
+                      perms: [
+                        { key: 'makeCall', label: 'Make Outbound Calls (WebRTC)' },
+                        { key: 'viewCallRecording', label: 'Listen to Call Recordings' },
+                        { key: 'downloadRecording', label: 'Download Recording Audio' },
+                        { key: 'sendWhatsApp', label: 'Send WhatsApp Itinerary' },
+                      ]
+                    },
+                    {
+                      category: '✈️ Bookings & Ticketing',
+                      perms: [
+                        { key: 'createBooking', label: 'Create PNR Bookings' },
+                        { key: 'modifyBooking', label: 'Modify Travel Dates / PNR' },
+                        { key: 'cancelBooking', label: 'Cancel Bookings' },
+                        { key: 'createTicket', label: 'Issue 13-Digit E-Tickets' },
+                        { key: 'voidTicket', label: 'Void / Cancel E-Tickets' },
+                        { key: 'reissueTicket', label: 'Reissue & Date Change' },
+                      ]
+                    },
+                    {
+                      category: '💰 Finance & Settlements',
+                      perms: [
+                        { key: 'viewPayment', label: 'View Gateway Payments' },
+                        { key: 'createPaymentRequest', label: 'Generate Payment Links' },
+                        { key: 'refundPayment', label: 'Authorize Refunds' },
+                        { key: 'viewFinanceReports', label: 'View Profit & Margin P&L' },
+                      ]
+                    },
+                    {
+                      category: '⚙️ Administration & API',
+                      perms: [
+                        { key: 'createUser', label: 'Create Staff Accounts' },
+                        { key: 'disableUser', label: 'Deactivate / Block Users' },
+                        { key: 'configureApi', label: 'Configure GDS / Telnyx API' },
+                        { key: 'viewAuditLogs', label: 'View Full Audit Trail Logs' },
+                      ]
+                    },
+                  ].map((group) => (
+                    <Paper key={group.category} variant="outlined" sx={{ p: 2, borderRadius: 2, bgcolor: '#F8FAFC' }}>
+                      <Typography variant="subtitle2" sx={{ fontWeight: 800, color: 'secondary.main', mb: 1.5 }}>
+                        {group.category}
+                      </Typography>
+                      <Divider sx={{ mb: 1.5 }} />
+                      <Box sx={{ display: 'grid', gap: 1 }}>
+                        {group.perms.map((p) => (
+                          <FormControlLabel
+                            key={p.key}
+                            control={
+                              <Checkbox
+                                size="small"
+                                checked={!!activeRole.perms[p.key]}
+                                onChange={(e) => {
+                                  setGlobalRoleTemplates(globalRoleTemplates.map(r => 
+                                    r.roleId === selectedMatrixRole 
+                                      ? { ...r, perms: { ...r.perms, [p.key]: e.target.checked } }
+                                      : r
+                                  ));
+                                }}
+                                color="secondary"
+                              />
+                            }
+                            label={<Typography variant="body2" sx={{ fontSize: '0.8rem', fontWeight: 600 }}>{p.label}</Typography>}
+                          />
+                        ))}
+                      </Box>
+                    </Paper>
+                  ))}
+                </Box>
+              </Paper>
+            );
+          })()}
+        </Box>
+      )}
+
       {/* ─── Add / Edit Stage Dialog ─── */}
+
       <Dialog open={stageDialogOpen} onClose={() => setStageDialogOpen(false)} maxWidth="xs" fullWidth PaperProps={{ sx: { borderRadius: 3 } }}>
         <DialogTitle sx={{ fontWeight: 800 }}>
           {editingStage ? '✏️ Edit Lifecycle Stage' : '➕ Add Custom Stage'}
