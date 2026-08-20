@@ -256,7 +256,7 @@ export default function PNRTracking() {
           <TrackChangesIcon color="primary" sx={{ fontSize: 32 }} />
           <Box>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <Typography variant="h5" sx={{ fontWeight: 900, lineHeight: 1 }}>
+              <Typography variant="h5" sx={{ fontWeight: 900, lineHeight: 1, fontSize: { xs: '1.1rem', sm: '1.5rem' } }}>
                 ACTIVE PNR TRACKER
               </Typography>
               {/* LIVE Indicator */}
@@ -278,26 +278,26 @@ export default function PNRTracking() {
           color="primary"
           startIcon={<AddIcon />}
           onClick={() => setAddPNROpen(true)}
-          sx={{ fontWeight: 700 }}
+          sx={{ fontWeight: 700, width: { xs: '100%', sm: 'auto' } }}
         >
           + Add PNR to Tracker
         </Button>
       </Box>
 
       {/* ─── 2. SEARCH & FILTER TABS BAR ─── */}
-      <Paper elevation={0} sx={{ p: 2, mb: 2.5, border: '1px solid', borderColor: 'divider', borderRadius: 2.5, bgcolor: 'background.paper' }}>
-        <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
+      <Paper elevation={0} sx={{ p: { xs: 1.5, sm: 2 }, mb: 2.5, border: '1px solid', borderColor: 'divider', borderRadius: 2.5, bgcolor: 'background.paper' }}>
+        <Box sx={{ display: 'flex', gap: 1.5, flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
           {/* Search by PNR or Customer Name */}
           <TextField
             size="small"
             placeholder="Search by PNR or Customer Name..."
             value={search}
             onChange={e => setSearch(e.target.value)}
-            sx={{ width: { xs: '100%', sm: 320 } }}
+            sx={{ width: { xs: '100%', sm: 280, md: 320 } }}
           />
 
           {/* Filter Tabs */}
-          <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap', border: '1px solid', borderColor: 'divider', borderRadius: 2, p: 0.5, bgcolor: '#F8FAFC' }}>
+          <Box sx={{ display: 'flex', gap: 0.5, border: '1px solid', borderColor: 'divider', borderRadius: 2, p: 0.5, bgcolor: '#F8FAFC', width: { xs: '100%', sm: 'auto' }, overflowX: 'auto', py: 0.5 }}>
             {FILTER_TABS.map(tab => (
               <Button
                 key={tab.key}
@@ -305,7 +305,7 @@ export default function PNRTracking() {
                 variant={filterTab === tab.key ? 'contained' : 'text'}
                 color={filterTab === tab.key ? 'primary' : 'inherit'}
                 onClick={() => setFilterTab(tab.key)}
-                sx={{ minWidth: 0, px: 1.5, py: 0.4, fontSize: '0.72rem', fontWeight: 700, borderRadius: 1.5 }}
+                sx={{ minWidth: 'auto', whiteSpace: 'nowrap', px: 1.2, py: 0.4, fontSize: '0.7rem', fontWeight: 700, borderRadius: 1.5 }}
               >
                 {tab.label}
               </Button>
@@ -317,8 +317,8 @@ export default function PNRTracking() {
       {/* ─── 3. PNR TRACKER TABLE & MOBILE CARDS ─── */}
       <Paper elevation={0} sx={{ border: '1px solid', borderColor: 'divider', borderRadius: 2.5, overflow: 'hidden' }}>
         
-        {/* DESKTOP GRID VIEW (md & up) */}
-        <Box sx={{ display: { xs: 'none', md: 'block' } }}>
+        {/* DESKTOP GRID VIEW (lg & up) */}
+        <Box sx={{ display: { xs: 'none', lg: 'block' } }}>
           {/* Table Header */}
           <Box sx={{
             display: 'grid',
@@ -437,8 +437,8 @@ export default function PNRTracking() {
           )}
         </Box>
 
-        {/* MOBILE CARD VIEW (xs & sm) */}
-        <Box sx={{ display: { xs: 'flex', md: 'none' }, flexDirection: 'column', gap: 1.5, p: 1.5 }}>
+        {/* MOBILE & TABLET CARD VIEW (xs, sm & md) */}
+        <Box sx={{ display: { xs: 'flex', lg: 'none' }, flexDirection: 'column', gap: 1.5, p: 1.5 }}>
           {filtered.length === 0 ? (
             <Box sx={{ py: 4, textAlign: 'center' }}>
               <Typography variant="body2" color="text.secondary">
