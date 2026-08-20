@@ -294,20 +294,18 @@ export default function AgentDashboard() {
       <Paper
         elevation={0}
         sx={{
-          p: 1.5,
-          px: 2.5,
+          p: { xs: 1, sm: 1.5 },
+          px: { xs: 1.5, sm: 2.5 },
           mb: 2,
           border: "1px solid",
           borderColor: "divider",
           borderRadius: 2,
           display: "flex",
-          justifyContent: "space-between",
+          justifyContent: "center",
           alignItems: "center",
-          gap: 2,
-          flexWrap: "wrap",
+          width: "100%",
         }}
       >
-        <Box />
         <DualClock
           client={{
             timezone: lead.timezone,
@@ -329,22 +327,24 @@ export default function AgentDashboard() {
         <Paper
           elevation={0}
           sx={{
-            p: 2.5,
+            p: { xs: 1.5, sm: 2.5 },
             border: "1px solid",
             borderColor: "divider",
             borderRadius: 3,
-            overflow: "auto",
+            overflow: "hidden",
+            width: "100%",
           }}
         >
           <Box
             sx={{
               display: "flex",
               justifyContent: "space-between",
+              alignItems: "center",
               mb: 1.5,
               gap: 1,
             }}
           >
-            <Typography variant="subtitle2" sx={{ fontWeight: 900 }}>
+            <Typography variant="subtitle2" sx={{ fontWeight: 900, fontSize: { xs: "0.85rem", sm: "0.95rem" } }}>
               HIGH PRIORITY LEADS (5)
             </Typography>
             <Chip
@@ -353,16 +353,18 @@ export default function AgentDashboard() {
               size="small"
               color="success"
               variant="outlined"
+              sx={{ fontSize: "0.65rem", height: 20 }}
             />
           </Box>
-          <table
-            style={{
-              width: "100%",
-              borderCollapse: "collapse",
-              fontSize: "0.8rem",
-              minWidth: 450,
-            }}
-          >
+          <Box sx={{ overflowX: "auto", width: "100%" }}>
+            <table
+              style={{
+                width: "100%",
+                borderCollapse: "collapse",
+                fontSize: "0.8rem",
+                minWidth: 420,
+              }}
+            >
             <thead>
               <tr>
                 {["Time", "Client", "Labels", "Contact", "Actions"].map((h) => (
@@ -489,7 +491,8 @@ export default function AgentDashboard() {
               ))}
             </tbody>
           </table>
-        </Paper>
+        </Box>
+      </Paper>
         <ClientPanel
           lead={lead}
           onComment={addComment}
