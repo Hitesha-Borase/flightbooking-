@@ -8,10 +8,7 @@
 
 ---
 
-## Sidebar Menu (Sales Agent sees):
-
-```
-WORKSPACE
+## WORKSPACE
   ✅ Dashboard        → /agent/dashboard   (AgentDashboard.jsx)
   ✅ Leads            → /agent/leads       ("My Leads")
   ✅ Customers        → /agent/clients     ("My Customers")

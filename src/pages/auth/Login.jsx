@@ -108,7 +108,7 @@ export const Login = () => {
     if (role === 'consultant') {
       mockUser = {
         id: 'c1',
-        name: 'Sofia Rodriguez',
+        name: 'Sofia Rodriguez (Sales)',
         email: 'sofia.r@wowmyflight.com',
         role: 'consultant',
         avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150',
@@ -116,10 +116,18 @@ export const Login = () => {
     } else if (role === 'team_leader') {
       mockUser = {
         id: 'tl-1',
-        name: 'David Sales Lead',
+        name: 'David Sales Lead (TL)',
         email: 'david.lead@wowmyflight.com',
         role: 'team_leader',
         avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150',
+      };
+    } else if (role === 'expert_tl') {
+      mockUser = {
+        id: 'etl-1',
+        name: 'Michael Expert TL',
+        email: 'michael.etl@wowmyflight.com',
+        role: 'team_leader',
+        avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150',
       };
     } else if (role === 'flight_expert') {
       mockUser = {
@@ -145,10 +153,18 @@ export const Login = () => {
         role: 'finance',
         avatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150',
       };
-    } else if (role === 'operations') {
+    } else if (role === 'accountant') {
+      mockUser = {
+        id: 'acc-1',
+        name: 'Robert Accountant',
+        email: 'robert.acc@wowmyflight.com',
+        role: 'finance',
+        avatar: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=150',
+      };
+    } else if (role === 'operations' || role === 'after_sales') {
       mockUser = {
         id: 'operations-staff',
-        name: 'Carlos Ops',
+        name: 'Carlos Ops & After-Sales',
         email: 'ops@wowmyflight.com',
         role: 'operations',
         avatar: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=150',
@@ -160,6 +176,22 @@ export const Login = () => {
         email: 'wael.m@wowmyflight.com',
         role: 'super_admin',
         avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150',
+      };
+    } else if (role === 'api_manager') {
+      mockUser = {
+        id: 'api-mgr',
+        name: 'Alex API & System Mgr',
+        email: 'alex.api@wowmyflight.com',
+        role: 'admin',
+        avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150',
+      };
+    } else if (role === 'qa') {
+      mockUser = {
+        id: 'qa-1',
+        name: 'Sarah QA Auditor',
+        email: 'sarah.qa@wowmyflight.com',
+        role: 'team_leader',
+        avatar: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=150',
       };
     } else if (role === 'marketing') {
       mockUser = {
@@ -175,26 +207,43 @@ export const Login = () => {
     showAlert(`Logged in as Demo ${role.toUpperCase().replace('_', ' ')}`, 'success');
 
     if (role === 'super_admin') navigate('/super_admin/dashboard');
+    else if (role === 'api_manager') navigate('/integrations');
     else if (role === 'admin') navigate('/admin/dashboard');
-    else if (role === 'team_leader') navigate('/team_leader/dashboard');
+    else if (role === 'team_leader' || role === 'expert_tl' || role === 'qa') navigate('/team_leader/dashboard');
     else if (role === 'flight_expert') navigate('/flight_expert/dashboard');
     else if (role === 'ticketing_agent') navigate('/ticketing_agent/dashboard');
-    else if (role === 'finance') navigate('/finance/dashboard');
-    else if (role === 'operations') navigate('/operations/dashboard');
+    else if (role === 'finance' || role === 'accountant') navigate('/finance/dashboard');
+    else if (role === 'operations' || role === 'after_sales') navigate('/operations/dashboard');
     else if (role === 'marketing') navigate('/marketing-manager/dashboard');
     else navigate('/agent/dashboard');
   };
 
-  const quickRoles = [
-    { role: 'super_admin', label: 'Super Admin', icon: <AdminPanelSettingsIcon sx={{ fontSize: 16 }} /> },
-    { role: 'admin', label: 'Admin', icon: <SupervisorAccountIcon sx={{ fontSize: 16 }} /> },
-    { role: 'team_leader', label: 'Team Leader', icon: <GroupsIcon sx={{ fontSize: 16 }} /> },
-    { role: 'consultant', label: 'Sales Exec', icon: <SupportAgentIcon sx={{ fontSize: 16 }} /> },
-    { role: 'flight_expert', label: 'Flight Expert', icon: <FlightTakeoffIcon sx={{ fontSize: 16 }} /> },
-    { role: 'ticketing_agent', label: 'Ticketing', icon: <ConfirmationNumberIcon sx={{ fontSize: 16 }} /> },
-    { role: 'finance', label: 'Finance', icon: <AccountBalanceWalletIcon sx={{ fontSize: 16 }} /> },
-    { role: 'operations', label: 'Operations', icon: <SettingsSuggestIcon sx={{ fontSize: 16 }} /> },
-    { role: 'marketing', label: 'Marketing', icon: <CampaignIcon sx={{ fontSize: 16 }} /> },
+  const roleCategories = [
+    {
+      title: '👑 Management & Admin',
+      roles: [
+        { role: 'super_admin', label: 'Super Admin', icon: <AdminPanelSettingsIcon sx={{ fontSize: 15 }} /> },
+        { role: 'admin', label: 'Admin (GM)', icon: <SupervisorAccountIcon sx={{ fontSize: 15 }} /> },
+        { role: 'api_manager', label: 'API / System Mgr', icon: <SettingsSuggestIcon sx={{ fontSize: 15 }} /> },
+      ]
+    },
+    {
+      title: '✈️ Sales Department',
+      roles: [
+        { role: 'consultant', label: 'Sales Exec', icon: <SupportAgentIcon sx={{ fontSize: 15 }} /> },
+        { role: 'team_leader', label: 'Team Leader', icon: <GroupsIcon sx={{ fontSize: 15 }} /> },
+        { role: 'flight_expert', label: 'Flight Expert (GDS)', icon: <FlightTakeoffIcon sx={{ fontSize: 15 }} /> },
+      ]
+    },
+    {
+      title: '🎫 Operations, Finance & Marketing',
+      roles: [
+        { role: 'ticketing_agent', label: 'Ticketing Expert', icon: <ConfirmationNumberIcon sx={{ fontSize: 15 }} /> },
+        { role: 'after_sales', label: 'After-Sales / Ops', icon: <SettingsSuggestIcon sx={{ fontSize: 15 }} /> },
+        { role: 'finance', label: 'Finance & Accounts', icon: <AccountBalanceWalletIcon sx={{ fontSize: 15 }} /> },
+        { role: 'marketing', label: 'Marketing Manager', icon: <CampaignIcon sx={{ fontSize: 15 }} /> },
+      ]
+    }
   ];
 
   return (
@@ -244,42 +293,52 @@ export const Login = () => {
       </form>
 
       <Divider sx={{ my: 2.5 }}>
-        <Chip label="DEMO QUICK LOGIN (ALL 9 ROLES)" size="small" sx={{ fontSize: '0.64rem', fontWeight: 800 }} />
+        <Chip label="DEMO QUICK LOGIN (ROLE-BASED PORTALS)" size="small" sx={{ fontSize: '0.64rem', fontWeight: 800 }} />
       </Divider>
 
-      {/* Grid of All 9 Quick Login Role Buttons with Uniform Height & Single Line Styling */}
-      <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 1 }}>
-        {quickRoles.map((r) => (
-          <Button
-            key={r.role}
-            variant="outlined"
-            size="small"
-            startIcon={r.icon}
-            fullWidth
-            onClick={() => handleQuickLogin(r.role)}
-            sx={{
-              height: 38,
-              py: 0,
-              px: 0.8,
-              fontSize: '0.66rem',
-              fontWeight: 800,
-              whiteSpace: 'nowrap',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              justifyContent: 'center',
-              borderRadius: 1.8,
-              borderColor: 'divider',
-              color: 'text.primary',
-              '&:hover': {
-                borderColor: 'secondary.main',
-                bgcolor: '#FFFBEB',
-              },
-            }}
-          >
-            {r.label}
-          </Button>
+      {/* 3 Role Categories for Easy Testing */}
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+        {roleCategories.map((cat) => (
+          <Box key={cat.title}>
+            <Typography variant="caption" sx={{ fontWeight: 800, color: 'text.secondary', display: 'block', mb: 0.8, textTransform: 'uppercase', fontSize: '0.66rem' }}>
+              {cat.title}
+            </Typography>
+            <Box sx={{ display: 'grid', gridTemplateColumns: cat.roles.length === 4 ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)', gap: 0.8 }}>
+              {cat.roles.map((r) => (
+                <Button
+                  key={r.role}
+                  variant="outlined"
+                  size="small"
+                  startIcon={r.icon}
+                  fullWidth
+                  onClick={() => handleQuickLogin(r.role)}
+                  sx={{
+                    height: 36,
+                    py: 0,
+                    px: 0.8,
+                    fontSize: '0.66rem',
+                    fontWeight: 800,
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    justifyContent: 'center',
+                    borderRadius: 1.8,
+                    borderColor: 'divider',
+                    color: 'text.primary',
+                    '&:hover': {
+                      borderColor: 'secondary.main',
+                      bgcolor: '#FFFBEB',
+                    },
+                  }}
+                >
+                  {r.label}
+                </Button>
+              ))}
+            </Box>
+          </Box>
         ))}
       </Box>
+
 
       <Box sx={{ mt: 3, textAlign: 'center' }}>
         <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5, fontSize: '0.8rem' }}>

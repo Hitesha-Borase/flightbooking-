@@ -142,12 +142,36 @@ export default function ClientPanel({ lead, onComment, onAction }) {
         <Button onClick={add} variant="contained" size="small" sx={{ borderRadius: 2, px: 3, fontWeight: 800 }}>Add</Button>
       </Box>
       
-      <Divider sx={{ my: 2, borderStyle: 'dashed' }} />
+      <Divider sx={{ my: 1.5, borderStyle: 'dashed' }} />
+
+      {/* Quick Action Matrix for Travel Sales CRM */}
+      <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1, mb: 1 }}>
+        <Button 
+          onClick={() => onAction('flight_expert')} 
+          size="small" 
+          variant="contained" 
+          color="primary"
+          sx={{ borderRadius: 2, fontWeight: 800, py: 0.8, fontSize: '0.72rem', textTransform: 'none' }}
+        >
+          ✈️ Send to GDS Desk
+        </Button>
+        <Button 
+          onClick={() => onAction('tl_approval')} 
+          size="small" 
+          variant="outlined" 
+          color="warning"
+          sx={{ borderRadius: 2, fontWeight: 800, py: 0.8, fontSize: '0.72rem', textTransform: 'none' }}
+        >
+          🛡️ Request TL Discount
+        </Button>
+      </Box>
+
       <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 1 }}>
-        <Button onClick={() => onAction('quote')} size="small" variant="contained" sx={{ borderRadius: 2, fontWeight: 800, py: 1, fontSize: '0.75rem' }}>Req Quote</Button>
-        <Button onClick={() => onAction('booking')} size="small" variant="outlined" sx={{ borderRadius: 2, fontWeight: 800, py: 1, fontSize: '0.75rem' }}>Book Flight</Button>
-        <Button onClick={() => onAction('payment')} size="small" variant="outlined" sx={{ borderRadius: 2, fontWeight: 800, py: 1, fontSize: '0.75rem' }}>Send Link</Button>
+        <Button onClick={() => onAction('whatsapp_quote')} size="small" variant="outlined" color="success" sx={{ borderRadius: 2, fontWeight: 700, py: 0.8, fontSize: '0.7rem', textTransform: 'none' }}>📱 WhatsApp</Button>
+        <Button onClick={() => onAction('quote')} size="small" variant="outlined" sx={{ borderRadius: 2, fontWeight: 700, py: 0.8, fontSize: '0.7rem', textTransform: 'none' }}>📄 Full Quote</Button>
+        <Button onClick={() => onAction('payment')} size="small" variant="outlined" color="secondary" sx={{ borderRadius: 2, fontWeight: 700, py: 0.8, fontSize: '0.7rem', textTransform: 'none' }}>💳 Pay Link</Button>
       </Box>
     </Paper>
   );
 }
+

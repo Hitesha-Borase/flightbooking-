@@ -33,6 +33,14 @@ const MAIN_MODULES = [
   { title: 'Refunds & Commissions', desc: 'Process refunds, record agent commissions and handle chargeback disputes.' },
 ];
 
+const SETTLEMENT_RECORDS = [
+  { id: 'BK-9901', pnr: 'ABC12D', passenger: 'M. Chen', route: 'JFK → LHR', grossPrice: 1250, bspCost: 950, gatewayFee: 31.25, netProfit: 268.75, marginPct: '21.5%', status: 'Cleared', bspStatus: 'Settled' },
+  { id: 'BK-9902', pnr: 'LMN78F', passenger: 'A. Lee', route: 'DEL → SIN', grossPrice: 530, bspCost: 420, gatewayFee: 13.25, netProfit: 96.75, marginPct: '18.2%', status: 'Cleared', bspStatus: 'Pending Cycle' },
+  { id: 'BK-9903', pnr: 'QRS90G', passenger: 'K. Singh', route: 'DXB → LHR', grossPrice: 1850, bspCost: 1450, gatewayFee: 46.25, netProfit: 353.75, marginPct: '19.1%', status: 'Pending Review', bspStatus: 'Under Audit' },
+  { id: 'BK-9904', pnr: 'SAB89A', passenger: 'K. Patel', route: 'DEL → LHR', grossPrice: 2500, bspCost: 2100, gatewayFee: 62.50, netProfit: 337.50, marginPct: '13.5%', status: 'Cleared', bspStatus: 'Settled' },
+];
+
+
 export default function FinanceDashboard() {
   const navigate = useNavigate();
   const { showAlert } = useAlert();
@@ -111,10 +119,11 @@ export default function FinanceDashboard() {
         variant="scrollable"
         scrollButtons="auto"
       >
-        {['📊 Dashboard', '👁 Monitoring', '📦 Main Modules', '⚙ Overview'].map((label, i) => (
+        {['📊 Dashboard', '👁 Monitoring', '📦 Main Modules', '⚙ Overview', '💰 Flight Margins & BSP'].map((label, i) => (
           <Tab key={label} label={label} id={`finance-tab-${i}`} sx={{ fontWeight: 700, fontSize: '0.8rem' }} />
         ))}
       </Tabs>
+
 
       {/* ─── Tab 0: Dashboard ─── */}
       {tab === 0 && (
@@ -219,6 +228,113 @@ export default function FinanceDashboard() {
           </Paper>
         </Box>
       )}
+
+      {/* ─── Tab 4: Flight Margins & BSP Settlement ─── */}
+      {tab === 4 && (
+        <Box sx={{ display: 'grid', gap: 2.5 }}>
+          {/* Summary KPI Strip */}
+          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr 1fr', md: 'repeat(4, 1fr)' }, gap: 2 }}>
+            {[
+              { label: 'Gross Flight Collections', value: '$6,130.00', color: '#16A34A', bg: '#F0FDF4' },
+              { label: 'Net BSP / Supplier Cost', value: '$4,920.00', color: '#2563EB', bg: '#EFF6FF' },
+              { label: 'Merchant Gateway Fees (2.5%)', value: '$153.25', color: '#D97706', bg: '#FFFBEB' },
+              { label: 'Net Agency Profit Margin', value: '$1,056.75 (17.2%)', color: '#059669', bg: '#ECFDF5' },
+            ].map((kpi, idx) => (
+              <Paper key={idx} elevation={0} sx={{ p: 2, border: '1px solid', borderColor: 'divider', borderRadius: 2.5, bgcolor: kpi.bg }}>
+                <Typography variant="caption" sx={{ fontWeight: 700, color: 'text.secondary', display: 'block', mb: 0.5 }}>
+                  {kpi.label}
+                </Typography>
+                <Typography variant="h6" sx={{ fontWeight: 900, color: kpi.color }}>
+                  {kpi.value}
+                </Typography>
+              </Paper>
+            ))}
+          </Box>
+
+          {/* Detailed Settlement Table */}
+          <Paper elevation={0} sx={{ p: 2.5, border: '1px solid', borderColor: 'divider', borderRadius: 2.5 }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2, flexWrap: 'wrap', gap: 1 }}>
+              <Box>
+                <Typography variant="subtitle1" sx={{ fontWeight: 900 }}>
+                  ✈️ TICKET PROFIT & MARGIN SETTLEMENT MATRIX
+                </Typography>
+                <Typography variant="caption" color="text.secondary">
+                  Live reconciliation: Client gross payment vs. BSP consolidator cost & net profit breakdown
+                </Typography>
+              </Box>
+              <Button
+                variant="outlined"
+                size="small"
+                onClick={() => showAlert('Reconciliation export (CSV) downloaded successfully.', 'success')}
+                sx={{ fontWeight: 700, borderRadius: 2 }}
+              >
+                📥 Export P&L Report
+              </Button>
+            </Box>
+
+            <table style={{ width: '100%', fontSize: '0.8rem', borderCollapse: 'collapse' }}>
+              <thead>
+                <tr style={{ background: '#F8FAFC', borderBottom: '1px solid #E2E8F0' }}>
+                  {['Booking / PNR', 'Passenger & Sector', 'Gross Collected', 'Net BSP Cost', 'Gateway Fee', 'Net Profit ($)', 'Margin %', 'Ticketing Clearance', 'Action'].map((h) => (
+                    <th key={h} style={{ textAlign: 'left', padding: '10px 8px', color: '#64748B', fontWeight: 700 }}>
+                      {h}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {SETTLEMENT_RECORDS.map((rec) => (
+                  <tr key={rec.id} style={{ borderBottom: '1px solid #F1F5F9' }}>
+                    <td style={{ padding: '10px 8px' }}>
+                      <Typography variant="body2" sx={{ fontWeight: 800, color: 'primary.main' }}>{rec.id}</Typography>
+                      <Typography variant="caption" sx={{ fontFamily: 'monospace', fontWeight: 700 }}>{rec.pnr}</Typography>
+                    </td>
+                    <td style={{ padding: '10px 8px' }}>
+                      <Typography variant="body2" sx={{ fontWeight: 700 }}>{rec.passenger}</Typography>
+                      <Typography variant="caption" color="text.secondary">{rec.route}</Typography>
+                    </td>
+                    <td style={{ padding: '10px 8px', fontWeight: 800, color: '#16A34A' }}>
+                      ${rec.grossPrice.toFixed(2)}
+                    </td>
+                    <td style={{ padding: '10px 8px', fontWeight: 700, color: '#2563EB' }}>
+                      ${rec.bspCost.toFixed(2)}
+                    </td>
+                    <td style={{ padding: '10px 8px', color: '#64748B' }}>
+                      ${rec.gatewayFee.toFixed(2)}
+                    </td>
+                    <td style={{ padding: '10px 8px', fontWeight: 900, color: '#059669' }}>
+                      +${rec.netProfit.toFixed(2)}
+                    </td>
+                    <td style={{ padding: '10px 8px' }}>
+                      <Chip label={rec.marginPct} size="small" color="success" sx={{ fontWeight: 800, height: 20, fontSize: '0.68rem' }} />
+                    </td>
+                    <td style={{ padding: '10px 8px' }}>
+                      <Chip
+                        label={rec.status}
+                        size="small"
+                        color={rec.status === 'Cleared' ? 'success' : 'warning'}
+                        sx={{ fontWeight: 800, height: 20, fontSize: '0.68rem' }}
+                      />
+                    </td>
+                    <td style={{ padding: '10px 8px' }}>
+                      <Button
+                        size="small"
+                        variant={rec.status === 'Cleared' ? 'text' : 'contained'}
+                        color={rec.status === 'Cleared' ? 'inherit' : 'primary'}
+                        onClick={() => showAlert(`Finance cleared for Booking #${rec.id} (${rec.pnr}). Ticketing queue notified.`, 'success')}
+                        sx={{ fontSize: '0.68rem', fontWeight: 800, py: 0.2, px: 1 }}
+                      >
+                        {rec.status === 'Cleared' ? '✓ Verified' : 'Clear for Issue'}
+                      </Button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </Paper>
+        </Box>
+      )}
+
 
       {/* ─── Modals ─── */}
       <PaymentLinkModal

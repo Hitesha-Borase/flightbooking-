@@ -120,35 +120,51 @@ export default function GDSParsingBox({ activeRequest, onParseSuccess }) {
     showAlert('📥 Parsed itinerary imported successfully.', 'info');
   };
 
-  const handleSampleLoad = () => {
-    const sample = '1 AA 100 J 15OCT JFK LHR 1830 0730+1\n2 BA 117 C 22OCT LHR JFK 1100 1430';
+  const loadGdsPreset = (system) => {
+    let sample = '';
+    if (system === 'Amadeus') {
+      sample = '1 EK 511 J 15OCT DEL DXB HK1 1030 1245 /E\n2 EK 512 J 22OCT DXB DEL HK1 2150 0240+1 /E\nFARE: USD 1850.00 TAX: USD 240.00 TOTAL: USD 2090.00';
+    } else if (system === 'Sabre') {
+      sample = '1 AA 100 J 15OCT JFK LHR 1830 0730+1\n2 BA 117 C 22OCT LHR JFK 1100 1430\nFARE: USD 4100.00 TAX: USD 400.00 TOTAL: USD 4500.00';
+    } else {
+      sample = '1 QR 571 Y 10NOV DEL DOH HK1 0950 1145\n2 QR 007 Y 10NOV DOH LHR HK1 1430 1900\nFARE: USD 780.00 TAX: USD 140.00 TOTAL: USD 920.00';
+    }
     setRawGDS(sample);
     setParsingState('idle');
     setParsedData(null);
     setValidationMessage('');
     setImportMessage('');
+    showAlert(`Loaded sample ${system} PNR format`, 'info');
   };
 
   return (
     <Paper elevation={0} sx={{ p: 2.5, border: '1px solid', borderColor: 'divider', borderRadius: 2.5 }}>
       {/* Box Header */}
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1.5 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1.5, flexWrap: 'wrap', gap: 1 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
           <ArticleIcon color="primary" fontSize="small" />
           <Typography variant="subtitle1" sx={{ fontWeight: 900, letterSpacing: 0.5 }}>
-            SABRE / GDS PARSING BOX
+            GDS CRYPTIC PNR PARSER
           </Typography>
         </Box>
 
-        <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
-          <Button size="small" variant="text" onClick={handleSampleLoad} sx={{ fontSize: '0.75rem', fontWeight: 700 }}>
-            Load Sample PNR
+        <Box sx={{ display: 'flex', gap: 0.8, alignItems: 'center' }}>
+          <Typography variant="caption" sx={{ color: 'text.secondary', fontWeight: 700 }}>Quick Presets:</Typography>
+          <Button size="small" variant="outlined" onClick={() => loadGdsPreset('Sabre')} sx={{ fontSize: '0.68rem', fontWeight: 700, py: 0.2, px: 1, minWidth: 0, height: 24 }}>
+            Sabre (1S)
+          </Button>
+          <Button size="small" variant="outlined" onClick={() => loadGdsPreset('Amadeus')} sx={{ fontSize: '0.68rem', fontWeight: 700, py: 0.2, px: 1, minWidth: 0, height: 24 }}>
+            Amadeus (1A)
+          </Button>
+          <Button size="small" variant="outlined" onClick={() => loadGdsPreset('Galileo')} sx={{ fontSize: '0.68rem', fontWeight: 700, py: 0.2, px: 1, minWidth: 0, height: 24 }}>
+            Galileo (1G)
           </Button>
           {validationMessage && (
-            <Chip size="small" icon={<VerifiedIcon />} label="Codes Validated" color="success" sx={{ fontWeight: 800 }} />
+            <Chip size="small" icon={<VerifiedIcon />} label="Validated" color="success" sx={{ fontWeight: 800, height: 24 }} />
           )}
         </Box>
       </Box>
+
 
       {/* Raw GDS Input Area */}
       <TextField

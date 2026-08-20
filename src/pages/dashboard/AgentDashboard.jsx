@@ -165,11 +165,34 @@ const labelColors = {
   Urgent: ["#FEE2E2", "#B91C1C", "🚨"],
 };
 
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import SendIcon from "@mui/icons-material/Send";
+
 export default function AgentDashboard() {
   const navigate = useNavigate();
   const { showAlert } = useAlert();
   const [selectedId, setSelectedId] = useState(leads[0].id);
   const [activity, setActivity] = useState({});
+
+  // Workflow Dialog States
+  const [gdsDialogOpen, setGdsDialogOpen] = useState(false);
+  const [gdsForm, setGdsForm] = useState({ notes: "", cabin: "Economy", priority: "Standard" });
+
+  const [tlDialogOpen, setTlDialogOpen] = useState(false);
+  const [tlForm, setTlForm] = useState({ currentPrice: 1250, requestedDiscount: 75, reason: "Client comparing with competitor price" });
+
+  const [waDialogOpen, setWaDialogOpen] = useState(false);
+
   const lead = useMemo(
     () => ({
       ...leads.find((x) => x.id === selectedId),
@@ -180,6 +203,7 @@ export default function AgentDashboard() {
     }),
     [selectedId, activity],
   );
+
   const addComment = (comments) => {
     setActivity((prev) => ({
       ...prev,
@@ -195,11 +219,76 @@ export default function AgentDashboard() {
     }));
     showAlert("Comment added to activity history", "success");
   };
-  const quickAction = (action) => {
-    const paths = { quote: "/agent/quotes", booking: "/agent/bookings" };
-    if (paths[action]) navigate(paths[action]);
-    else showAlert("Payment link prepared for the customer", "success");
+
+  const handleGdsSubmit = () => {
+    setActivity((prev) => ({
+      ...prev,
+      [selectedId]: [
+        {
+          time: new Date().toLocaleTimeString(),
+          agent: "me",
+          status: "GDS Request",
+          comments: `Forwarded to GDS Desk: ${lead.origin} → ${lead.destination} (${lead.travelDate}) | Priority: ${gdsForm.priority} | Notes: ${gdsForm.notes || "Best net fare needed"}`,
+        },
+        ...(prev[selectedId] || []),
+      ],
+    }));
+    setGdsDialogOpen(false);
+    showAlert(`Flight request for ${lead.origin} → ${lead.destination} sent to Flight Expert queue`, "success");
   };
+
+  const handleTlSubmit = () => {
+    setActivity((prev) => ({
+      ...prev,
+      [selectedId]: [
+        {
+          time: new Date().toLocaleTimeString(),
+          agent: "me",
+          status: "TL Review",
+          comments: `Discount Approval Req: $${tlForm.requestedDiscount} off (Final: $${tlForm.currentPrice - tlForm.requestedDiscount}) | Reason: ${tlForm.reason}`,
+        },
+        ...(prev[selectedId] || []),
+      ],
+    }));
+    setTlDialogOpen(false);
+    showAlert(`Discount approval of $${tlForm.requestedDiscount} submitted to Team Leader desk`, "warning");
+  };
+
+  const handleWhatsAppSend = () => {
+    setActivity((prev) => ({
+      ...prev,
+      [selectedId]: [
+        {
+          time: new Date().toLocaleTimeString(),
+          agent: "me",
+          status: "Quote Sent",
+          comments: `WhatsApp Itinerary Quote dispatched to ${lead.fullPhone}`,
+        },
+        ...(prev[selectedId] || []),
+      ],
+    }));
+    setWaDialogOpen(false);
+    showAlert(`WhatsApp quote sent to ${lead.firstName} (${lead.phone})`, "success");
+  };
+
+  const quickAction = (action) => {
+    if (action === "flight_expert") {
+      setGdsForm({ notes: "", cabin: lead.cabinClass || "Economy", priority: "Standard" });
+      setGdsDialogOpen(true);
+    } else if (action === "tl_approval") {
+      setTlForm({ currentPrice: 1250, requestedDiscount: 75, reason: "Client comparing with competitor price" });
+      setTlDialogOpen(true);
+    } else if (action === "whatsapp_quote") {
+      setWaDialogOpen(true);
+    } else if (action === "quote") {
+      navigate("/quotes/create");
+    } else if (action === "booking") {
+      navigate("/bookings");
+    } else {
+      showAlert(`Payment link generated: https://pay.travelagency.com/inv-${lead.id}`, "success");
+    }
+  };
+
   return (
     <Box sx={{ minHeight: "100vh", pb: 4 }}>
       <Paper
@@ -443,6 +532,176 @@ export default function AgentDashboard() {
           </Paper>
         </Box>
       </Box>
+
+      {/* 1. GDS FLIGHT EXPERT REQUEST MODAL */}
+      <Dialog open={gdsDialogOpen} onClose={() => setGdsDialogOpen(false)} maxWidth="sm" fullWidth>
+        <DialogTitle sx={{ fontWeight: 800, color: 'primary.main', display: 'flex', alignItems: 'center', gap: 1 }}>
+          ✈️ Forward to Flight Expert / GDS Desk
+        </DialogTitle>
+        <DialogContent dividers sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+          <Box sx={{ p: 1.5, bgcolor: '#F0F9FF', borderRadius: 2, border: '1px solid #BAE6FD' }}>
+            <Typography variant="subtitle2" sx={{ fontWeight: 700, color: '#0369A1' }}>
+              Passenger & Sector Summary:
+            </Typography>
+            <Typography variant="body2" sx={{ fontWeight: 600 }}>
+              {lead.firstName} {lead.lastName} ({lead.passengers} Pax) | {lead.origin} → {lead.destination}
+            </Typography>
+            <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block' }}>
+              Travel: {lead.travelDate} {lead.returnDate ? `to ${lead.returnDate}` : '(One Way)'}
+            </Typography>
+          </Box>
+
+          <FormControl fullWidth size="small">
+            <InputLabel>Cabin Class Preference</InputLabel>
+            <Select
+              value={gdsForm.cabin}
+              label="Cabin Class Preference"
+              onChange={(e) => setGdsForm({ ...gdsForm, cabin: e.target.value })}
+            >
+              <MenuItem value="Economy">Economy Class</MenuItem>
+              <MenuItem value="Premium Economy">Premium Economy</MenuItem>
+              <MenuItem value="Business">Business Class</MenuItem>
+              <MenuItem value="First">First Class</MenuItem>
+            </Select>
+          </FormControl>
+
+          <FormControl fullWidth size="small">
+            <InputLabel>Request Priority</InputLabel>
+            <Select
+              value={gdsForm.priority}
+              label="Request Priority"
+              onChange={(e) => setGdsForm({ ...gdsForm, priority: e.target.value })}
+            >
+              <MenuItem value="Standard">Standard (Under 1 Hour)</MenuItem>
+              <MenuItem value="Urgent">Urgent - Customer on Call (5 Mins)</MenuItem>
+              <MenuItem value="Price Match">Competitor Price Match</MenuItem>
+            </Select>
+          </FormControl>
+
+          <TextField
+            label="Specific Airlines / GDS Cryptic Instructions"
+            multiline
+            rows={3}
+            fullWidth
+            size="small"
+            placeholder="e.g., Client prefers Emirates or Qatar with under 3h layover. Max budget $1,200."
+            value={gdsForm.notes}
+            onChange={(e) => setGdsForm({ ...gdsForm, notes: e.target.value })}
+          />
+        </DialogContent>
+        <DialogActions sx={{ p: 2 }}>
+          <Button onClick={() => setGdsDialogOpen(false)} color="inherit">Cancel</Button>
+          <Button onClick={handleGdsSubmit} variant="contained" color="primary" sx={{ fontWeight: 800 }}>
+            Send to GDS Queue
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* 2. TEAM LEADER DISCOUNT / MARGIN APPROVAL MODAL */}
+      <Dialog open={tlDialogOpen} onClose={() => setTlDialogOpen(false)} maxWidth="xs" fullWidth>
+        <DialogTitle sx={{ fontWeight: 800, color: '#D97706', display: 'flex', alignItems: 'center', gap: 1 }}>
+          🛡️ Request TL Margin / Discount Approval
+        </DialogTitle>
+        <DialogContent dividers sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+          <Box sx={{ p: 1.5, bgcolor: '#FFFBEB', borderRadius: 2, border: '1px solid #FDE68A' }}>
+            <Typography variant="caption" sx={{ color: '#92400E', fontWeight: 800, display: 'block' }}>
+              LEAD: {lead.firstName} {lead.lastName} (#{lead.id})
+            </Typography>
+            <Typography variant="body2" sx={{ fontWeight: 700, color: '#B45309' }}>
+              Sector: {lead.origin} → {lead.destination}
+            </Typography>
+          </Box>
+
+          <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1.5 }}>
+            <TextField
+              label="Current Quote ($)"
+              type="number"
+              size="small"
+              value={tlForm.currentPrice}
+              onChange={(e) => setTlForm({ ...tlForm, currentPrice: Number(e.target.value) })}
+            />
+            <TextField
+              label="Requested Discount ($)"
+              type="number"
+              size="small"
+              value={tlForm.requestedDiscount}
+              onChange={(e) => setTlForm({ ...tlForm, requestedDiscount: Number(e.target.value) })}
+            />
+          </Box>
+
+          <Box sx={{ p: 1.5, bgcolor: '#F8FAFC', borderRadius: 2, border: '1px dashed #CBD5E1' }}>
+            <Typography variant="caption" sx={{ color: 'text.secondary', fontWeight: 700 }}>
+              Final Selling Price: <b>${tlForm.currentPrice - tlForm.requestedDiscount}</b>
+            </Typography>
+          </Box>
+
+          <TextField
+            label="Reason for Discount"
+            multiline
+            rows={2}
+            fullWidth
+            size="small"
+            value={tlForm.reason}
+            onChange={(e) => setTlForm({ ...tlForm, reason: e.target.value })}
+            placeholder="e.g. Ready to pay immediately if we match OTA competitor"
+          />
+        </DialogContent>
+        <DialogActions sx={{ p: 2 }}>
+          <Button onClick={() => setTlDialogOpen(false)} color="inherit">Cancel</Button>
+          <Button onClick={handleTlSubmit} variant="contained" color="warning" sx={{ fontWeight: 800 }}>
+            Submit to Team Lead
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* 3. QUICK WHATSAPP ITINERARY QUOTE MODAL */}
+      <Dialog open={waDialogOpen} onClose={() => setWaDialogOpen(false)} maxWidth="sm" fullWidth>
+        <DialogTitle sx={{ fontWeight: 800, color: '#16A34A', display: 'flex', alignItems: 'center', gap: 1 }}>
+          📱 WhatsApp Travel Itinerary & Quote
+        </DialogTitle>
+        <DialogContent dividers sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+            Sending personalized itinerary quote to <b>{lead.firstName} {lead.lastName}</b> ({lead.fullPhone}):
+          </Typography>
+
+          <Paper variant="outlined" sx={{ p: 2, bgcolor: '#F0FDF4', borderRadius: 2, border: '1px solid #BBF7D0', fontFamily: 'monospace', fontSize: '0.82rem' }}>
+            ✈️ *FLIGHT QUOTATION — {lead.origin} to {lead.destination}*<br />
+            ━━━━━━━━━━━━━━━━━━━━━<br />
+            👤 *Passenger:* {lead.firstName} {lead.lastName} ({lead.passengers} Pax)<br />
+            🛫 *Outbound:* {lead.travelDate} ({lead.cabinClass})<br />
+            {lead.returnDate && `🛬 *Inbound:* ${lead.returnDate}<br />`}
+            💼 *Baggage:* Included (Cabin 7kg + Check-in 23kg)<br />
+            💵 *Total Special Fare:* $1,175 All Inclusive<br />
+            ━━━━━━━━━━━━━━━━━━━━━<br />
+            ⏱️ *Fare Valid For:* 4 Hours (Subject to seat availability)<br />
+            💳 *Book & Pay Securely:* https://pay.travelagency.com/inv-{lead.id}
+          </Paper>
+        </DialogContent>
+        <DialogActions sx={{ p: 2 }}>
+          <Button onClick={() => setWaDialogOpen(false)} color="inherit">Close</Button>
+          <Button 
+            onClick={() => {
+              navigator.clipboard?.writeText(`FLIGHT QUOTATION: ${lead.origin} to ${lead.destination} for ${lead.firstName} - $1,175. Travel Date: ${lead.travelDate}`);
+              showAlert("WhatsApp quote copied to clipboard", "info");
+            }} 
+            variant="outlined" 
+            color="success" 
+            startIcon={<ContentCopyIcon />}
+          >
+            Copy Text
+          </Button>
+          <Button 
+            onClick={handleWhatsAppSend} 
+            variant="contained" 
+            color="success" 
+            startIcon={<SendIcon />}
+            sx={{ fontWeight: 800 }}
+          >
+            Send WhatsApp Now
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 }
+

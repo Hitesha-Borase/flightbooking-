@@ -124,6 +124,46 @@ export default function TicketingAgentDashboard() {
         </Paper>
       </Box>
 
+      {/* Urgent TTL Banner */}
+      <Paper
+
+        elevation={0}
+        sx={{
+          p: 2,
+          mb: 3,
+          border: '1px solid #FECACA',
+          borderRadius: 2.5,
+          bgcolor: '#FEF2F2',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          gap: 1.5
+        }}
+      >
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+          <WarningIcon sx={{ color: '#DC2626', fontSize: 28 }} />
+          <Box>
+            <Typography variant="subtitle2" sx={{ fontWeight: 900, color: '#991B1B' }}>
+              🚨 URGENT AIRLINE TTL WARNING: PNR #ABC12D (M. Chen · JFK → LHR)
+            </Typography>
+            <Typography variant="caption" sx={{ color: '#B91C1C', fontWeight: 600 }}>
+              Ticketing Time Limit expires in <b>38 minutes</b>. Auto-cancellation by American Airlines if unissued.
+            </Typography>
+          </Box>
+        </Box>
+
+        <Button
+          variant="contained"
+          color="error"
+          size="small"
+          onClick={() => navigate('/ticketing')}
+          sx={{ fontWeight: 800, borderRadius: 2, textTransform: 'none' }}
+        >
+          Issue Ticket Now (001-XXXX)
+        </Button>
+      </Paper>
+
       {/* Main Grid Content */}
       <Grid container spacing={3}>
         {/* Left Section: Recent Tickets & GDS Status */}
@@ -132,6 +172,8 @@ export default function TicketingAgentDashboard() {
             <Typography variant="subtitle1" sx={{ fontWeight: 900, mb: 2 }}>
               🎫 RECENTLY ISSUED TICKETS
             </Typography>
+
+
             <AppTable
               columns={columns}
               data={RECENT_ISSUED_TICKETS}

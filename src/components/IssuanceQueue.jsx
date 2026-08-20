@@ -18,10 +18,12 @@ export const DEMO_ISSUANCE_QUEUE = [
     name: 'M. Chen',
     route: 'JFK → LHR',
     pnr: 'ABC12D',
-    amount: '$200.00',
+    amount: '$1,250.00',
     date: '15 Oct 2026',
     cabinClass: 'Business',
     passengers: 2,
+    ttl: '38 mins remaining',
+    isTtlUrgent: true,
     paymentStatus: 'Payment Confirmed',
     ticketingStatus: 'Pending Issuance'
   },
@@ -34,6 +36,8 @@ export const DEMO_ISSUANCE_QUEUE = [
     date: '20 Nov 2026',
     cabinClass: 'Economy',
     passengers: 1,
+    ttl: '2h 15m remaining',
+    isTtlUrgent: false,
     paymentStatus: 'Payment Confirmed',
     ticketingStatus: 'Pending Issuance'
   },
@@ -46,10 +50,13 @@ export const DEMO_ISSUANCE_QUEUE = [
     date: '05 Dec 2026',
     cabinClass: 'First Class',
     passengers: 3,
+    ttl: '4h 30m remaining',
+    isTtlUrgent: false,
     paymentStatus: 'Payment Confirmed',
     ticketingStatus: 'Pending Issuance'
   }
 ];
+
 
 export default function IssuanceQueue({
   items = DEMO_ISSUANCE_QUEUE,
@@ -153,12 +160,29 @@ export default function IssuanceQueue({
               </Box>
 
               {/* Sabre PNR */}
-              <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 1 }}>
-                ◉ Sabre PNR: <b style={{ fontFamily: 'monospace', color: '#0F172A' }}>{item.pnr}</b>
-              </Typography>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+                <Typography variant="caption" color="text.secondary">
+                  ◉ PNR: <b style={{ fontFamily: 'monospace', color: '#0F172A' }}>{item.pnr}</b>
+                </Typography>
+                {item.ttl && (
+                  <Chip
+                    size="small"
+                    label={`⏱️ ${item.ttl}`}
+                    color={item.isTtlUrgent ? "error" : "default"}
+                    sx={{
+                      height: 18,
+                      fontSize: '0.62rem',
+                      fontWeight: 800,
+                      bgcolor: item.isTtlUrgent ? '#FEE2E2' : '#F1F5F9',
+                      color: item.isTtlUrgent ? '#B91C1C' : '#475569'
+                    }}
+                  />
+                )}
+              </Box>
 
               {/* Action Buttons */}
               <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1 }}>
+
                 <Button
                   size="small"
                   variant="contained"

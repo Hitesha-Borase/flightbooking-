@@ -12,16 +12,12 @@ import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import Tooltip from '@mui/material/Tooltip';
 import FlightTakeoffIcon from '@mui/icons-material/FlightTakeoff';
-import VisibilityIcon from '@mui/icons-material/Visibility';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import SearchIcon from '@mui/icons-material/Search';
 
 import PageHeader from '../../components/PageHeader';
 import AppTable from '../../components/AppTable';
 import AppModal from '../../components/AppModal';
-import { STATUS_CONFIG, PRIORITY_CONFIG } from '../../components/FlightRequestQueue';
 import { useAlert } from '../../contexts/AlertContext';
-import { useAuth } from '../../hooks/useAuth';
 
 export const DEMO_ALL_FLIGHT_REQUESTS = [
   {
@@ -29,15 +25,14 @@ export const DEMO_ALL_FLIGHT_REQUESTS = [
     route: 'JFK → LHR',
     origin: 'JFK',
     destination: 'LHR',
-    region: 'Transatlantic',
+    region: 'Americas',
     travelDate: '2026-10-15',
-    returnDate: '2026-10-22',
-    dateDisplay: '15OCT - 22OCT',
+    dateDisplay: '15OCT',
     cabinClass: 'Business',
     passengers: 2,
-    salesAgent: 'Sarah Jenkins',
-    status: 'New',
-    priority: 'Urgent',
+    salesAgent: 'Sara J.',
+    status: 'In Progress',
+    priority: 'Normal',
     notes: 'Client looking for lie-flat seats on AA/BA non-stop.'
   },
   {
@@ -45,15 +40,14 @@ export const DEMO_ALL_FLIGHT_REQUESTS = [
     route: 'JFK → LHR',
     origin: 'JFK',
     destination: 'LHR',
-    region: 'Transatlantic',
+    region: 'Americas',
     travelDate: '2026-10-15',
-    returnDate: '2026-10-22',
-    dateDisplay: '15OCT - 22OCT',
+    dateDisplay: '15OCT',
     cabinClass: 'Business',
     passengers: 2,
-    salesAgent: 'Alex Morgan',
-    status: 'In Progress',
-    priority: 'High',
+    salesAgent: 'Sara J.',
+    status: 'New',
+    priority: 'Urgent',
     notes: 'Checking Virgin Atlantic vs British Airways pricing.'
   },
   {
@@ -62,44 +56,41 @@ export const DEMO_ALL_FLIGHT_REQUESTS = [
     origin: 'DEL',
     destination: 'DXB',
     region: 'Middle East',
-    travelDate: '2026-11-01',
-    returnDate: '2026-11-10',
-    dateDisplay: '01NOV - 10NOV',
-    cabinClass: 'First',
-    passengers: 1,
-    salesAgent: 'David Ray',
-    status: 'Quote Ready',
-    priority: 'High',
-    notes: 'Emirates First Class suite quote calculated.'
+    travelDate: '2026-11-20',
+    dateDisplay: '20NOV',
+    cabinClass: 'Economy',
+    passengers: 4,
+    salesAgent: 'Alex R.',
+    status: 'Completed',
+    priority: 'Normal',
+    notes: 'Emirates economy booking ticketed.'
   },
   {
     id: 'FE-4594',
     route: 'SFO → SIN',
     origin: 'SFO',
     destination: 'SIN',
-    region: 'Asia Pacific',
+    region: 'Asia',
     travelDate: '2026-12-05',
-    returnDate: '2026-12-20',
-    dateDisplay: '05DEC - 20DEC',
+    dateDisplay: '05DEC',
     cabinClass: 'Business',
-    passengers: 4,
-    salesAgent: 'Maria Chen',
-    status: 'Sent to Agent',
+    passengers: 2,
+    salesAgent: 'Maria C.',
+    status: 'In Progress',
     priority: 'Normal',
     notes: 'Family business class booking on Singapore Airlines.'
   },
   {
     id: 'FE-4595',
-    route: 'ORD → CDG',
-    origin: 'ORD',
+    route: 'LHR → CDG',
+    origin: 'LHR',
     destination: 'CDG',
-    region: 'Transatlantic',
+    region: 'Europe',
     travelDate: '2026-11-12',
-    returnDate: '2026-11-19',
-    dateDisplay: '12NOV - 19NOV',
+    dateDisplay: '12NOV',
     cabinClass: 'Economy',
-    passengers: 3,
-    salesAgent: 'Sarah Jenkins',
+    passengers: 1,
+    salesAgent: 'David R.',
     status: 'Completed',
     priority: 'Normal',
     notes: 'Air France non-stop ticketing complete.'
@@ -109,7 +100,6 @@ export const DEMO_ALL_FLIGHT_REQUESTS = [
 export default function FlightRequests() {
   const navigate = useNavigate();
   const { showAlert } = useAlert();
-  const { currentUser } = useAuth();
 
   // Filters State
   const [search, setSearch] = useState('');
@@ -138,7 +128,15 @@ export default function FlightRequests() {
       const matchCabin = cabinFilter ? r.cabinClass === cabinFilter : true;
       const matchRegion = regionFilter ? r.region === regionFilter : true;
       const matchPriority = priorityFilter ? r.priority === priorityFilter : true;
-      const matchDate = dateFilter ? r.travelDate.includes(dateFilter) : true;
+
+      let matchDate = true;
+      if (dateFilter === 'Today') {
+        matchDate = r.dateDisplay === '15OCT';
+      } else if (dateFilter === 'This Week') {
+        matchDate = r.dateDisplay === '15OCT' || r.dateDisplay === '20NOV';
+      } else if (dateFilter === 'Custom') {
+        matchDate = true;
+      }
 
       return matchSearch && matchStatus && matchCabin && matchRegion && matchPriority && matchDate;
     });
@@ -154,22 +152,44 @@ export default function FlightRequests() {
     navigate('/flight_expert/dashboard');
   };
 
+  const renderStatusChip = (status) => {
+    if (status === 'New') {
+      return (
+        <Chip
+          size="small"
+          label="🔴 New"
+          sx={{ bgcolor: '#FEF2F2', color: '#DC2626', fontWeight: 800, fontSize: '0.72rem', height: 24 }}
+        />
+      );
+    }
+    if (status === 'In Progress') {
+      return (
+        <Chip
+          size="small"
+          label="🟡 In Progress"
+          sx={{ bgcolor: '#FFFBEB', color: '#D97706', fontWeight: 800, fontSize: '0.72rem', height: 24 }}
+        />
+      );
+    }
+    if (status === 'Completed') {
+      return (
+        <Chip
+          size="small"
+          label="🟢 Completed"
+          sx={{ bgcolor: '#F0FDF4', color: '#16A34A', fontWeight: 800, fontSize: '0.72rem', height: 24 }}
+        />
+      );
+    }
+    return <Chip size="small" label={status} sx={{ fontWeight: 700 }} />;
+  };
+
   const columns = [
     {
       id: 'reqId',
       label: 'Request ID',
       render: (row) => (
         <Typography variant="body2" sx={{ fontWeight: 900, color: 'primary.main', fontFamily: 'monospace' }}>
-          {row.id}
-        </Typography>
-      )
-    },
-    {
-      id: 'customer',
-      label: 'Customer',
-      render: (row) => (
-        <Typography variant="body2" sx={{ fontWeight: 700 }}>
-          {row.customerName || 'Karan Singh'}
+          #{row.id}
         </Typography>
       )
     },
@@ -179,10 +199,7 @@ export default function FlightRequests() {
       render: (row) => (
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.8 }}>
           <FlightTakeoffIcon sx={{ fontSize: 16, color: 'primary.main' }} />
-          <Box>
-            <Typography variant="body2" sx={{ fontWeight: 800 }}>{row.route}</Typography>
-            <Typography variant="caption" color="text.secondary">{row.region}</Typography>
-          </Box>
+          <Typography variant="body2" sx={{ fontWeight: 800 }}>{row.route}</Typography>
         </Box>
       )
     },
@@ -190,24 +207,24 @@ export default function FlightRequests() {
       id: 'date',
       label: 'Date',
       render: (row) => (
-        <Typography variant="body2" sx={{ fontWeight: 600 }}>
+        <Typography variant="body2" sx={{ fontWeight: 700 }}>
           {row.dateDisplay}
         </Typography>
       )
     },
     {
       id: 'cabin',
-      label: 'Cabin',
+      label: 'Cabin Class',
       render: (row) => (
-        <Chip size="small" label={row.cabinClass} variant="outlined" sx={{ fontWeight: 700, fontSize: '0.7rem' }} />
+        <Chip size="small" label={row.cabinClass} variant="outlined" sx={{ fontWeight: 700, fontSize: '0.72rem' }} />
       )
     },
     {
       id: 'pax',
-      label: 'Pax',
+      label: 'Passengers',
       render: (row) => (
         <Typography variant="body2" sx={{ fontWeight: 700 }}>
-          👥 {row.passengers}
+          {row.passengers} Pax
         </Typography>
       )
     },
@@ -215,7 +232,7 @@ export default function FlightRequests() {
       id: 'agent',
       label: 'Sales Agent',
       render: (row) => (
-        <Typography variant="body2" sx={{ fontWeight: 600 }}>
+        <Typography variant="body2" sx={{ fontWeight: 700 }}>
           {row.salesAgent}
         </Typography>
       )
@@ -223,32 +240,19 @@ export default function FlightRequests() {
     {
       id: 'priority',
       label: 'Priority',
-      render: (row) => {
-        const pCfg = PRIORITY_CONFIG[row.priority] || PRIORITY_CONFIG['Normal'];
-        return (
-          <Chip size="small" label={pCfg.label} color={pCfg.color} sx={{ fontWeight: 800, fontSize: '0.65rem', height: 22 }} />
-        );
-      }
+      render: (row) => (
+        <Chip
+          size="small"
+          label={row.priority}
+          color={row.priority === 'Urgent' ? 'error' : 'default'}
+          sx={{ fontWeight: 800, fontSize: '0.68rem', height: 22 }}
+        />
+      )
     },
     {
       id: 'status',
       label: 'Status',
-      render: (row) => {
-        const sCfg = STATUS_CONFIG[row.status] || STATUS_CONFIG['New'];
-        return (
-          <Chip
-            size="small"
-            label={sCfg.label}
-            sx={{
-              bgcolor: sCfg.bg,
-              color: sCfg.text,
-              fontWeight: 800,
-              fontSize: '0.68rem',
-              height: 22
-            }}
-          />
-        );
-      }
+      render: (row) => renderStatusChip(row.status)
     }
   ];
 
@@ -270,33 +274,13 @@ export default function FlightRequests() {
         }
       />
 
-      {/* KPI Cards */}
-      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr 1fr', md: 'repeat(5, 1fr)' }, gap: 1.5, mb: 3 }}>
-        {[
-          { label: 'Total Requests', value: DEMO_ALL_FLIGHT_REQUESTS.length, color: '#2563EB', bg: '#EFF6FF' },
-          { label: 'New Requests', value: DEMO_ALL_FLIGHT_REQUESTS.filter(r => r.status === 'New').length, color: '#DC2626', bg: '#FEF2F2' },
-          { label: 'In Progress', value: DEMO_ALL_FLIGHT_REQUESTS.filter(r => r.status === 'In Progress').length, color: '#D97706', bg: '#FFFBEB' },
-          { label: 'Quotes Ready', value: DEMO_ALL_FLIGHT_REQUESTS.filter(r => r.status === 'Quote Ready').length, color: '#0284C7', bg: '#E0F2FE' },
-          { label: 'Urgent Priority', value: DEMO_ALL_FLIGHT_REQUESTS.filter(r => r.priority === 'Urgent').length, color: '#9333EA', bg: '#F3E8FF' }
-        ].map((kpi, idx) => (
-          <Paper key={idx} elevation={0} sx={{ p: 2, border: '1px solid', borderColor: 'divider', borderRadius: 2.5, bgcolor: kpi.bg }}>
-            <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 700, textTransform: 'uppercase' }}>
-              {kpi.label}
-            </Typography>
-            <Typography variant="h5" sx={{ fontWeight: 900, color: kpi.color, mt: 0.5 }}>
-              {kpi.value}
-            </Typography>
-          </Paper>
-        ))}
-      </Box>
-
       {/* Filter Bar */}
       <Paper elevation={0} sx={{ p: 2, mb: 2.5, border: '1px solid', borderColor: 'divider', borderRadius: 2.5 }}>
-        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(3, 1fr)', md: '200px 150px 160px 160px 150px 140px' }, gap: 1.5, alignItems: 'center' }}>
+        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(3, 1fr)', md: '180px 150px 150px 150px 140px 140px 120px' }, gap: 1.5, alignItems: 'center' }}>
           {/* Search */}
           <TextField
             size="small"
-            placeholder="Search ID, route, agent..."
+            placeholder="Search ID, route..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
@@ -312,13 +296,11 @@ export default function FlightRequests() {
               <MenuItem value="">All Statuses</MenuItem>
               <MenuItem value="New">New</MenuItem>
               <MenuItem value="In Progress">In Progress</MenuItem>
-              <MenuItem value="Quote Ready">Quote Ready</MenuItem>
-              <MenuItem value="Sent to Agent">Sent to Agent</MenuItem>
               <MenuItem value="Completed">Completed</MenuItem>
             </Select>
           </FormControl>
 
-          {/* Cabin Filter */}
+          {/* Cabin Class Filter */}
           <FormControl size="small" fullWidth>
             <InputLabel>Cabin Class</InputLabel>
             <Select
@@ -328,13 +310,12 @@ export default function FlightRequests() {
             >
               <MenuItem value="">All Cabins</MenuItem>
               <MenuItem value="Economy">Economy</MenuItem>
-              <MenuItem value="Premium Economy">Premium Economy</MenuItem>
               <MenuItem value="Business">Business</MenuItem>
               <MenuItem value="First">First</MenuItem>
             </Select>
           </FormControl>
 
-          {/* Region Filter */}
+          {/* Route Region Filter */}
           <FormControl size="small" fullWidth>
             <InputLabel>Route Region</InputLabel>
             <Select
@@ -343,11 +324,25 @@ export default function FlightRequests() {
               onChange={(e) => setRegionFilter(e.target.value)}
             >
               <MenuItem value="">All Regions</MenuItem>
-              <MenuItem value="Transatlantic">Transatlantic</MenuItem>
-              <MenuItem value="Middle East">Middle East</MenuItem>
-              <MenuItem value="Asia Pacific">Asia Pacific</MenuItem>
+              <MenuItem value="Americas">Americas</MenuItem>
               <MenuItem value="Europe">Europe</MenuItem>
-              <MenuItem value="Latin America">Latin America</MenuItem>
+              <MenuItem value="Middle East">Middle East</MenuItem>
+              <MenuItem value="Asia">Asia</MenuItem>
+            </Select>
+          </FormControl>
+
+          {/* Date Filter */}
+          <FormControl size="small" fullWidth>
+            <InputLabel>Date</InputLabel>
+            <Select
+              value={dateFilter}
+              label="Date"
+              onChange={(e) => setDateFilter(e.target.value)}
+            >
+              <MenuItem value="">All Dates</MenuItem>
+              <MenuItem value="Today">Today</MenuItem>
+              <MenuItem value="This Week">This Week</MenuItem>
+              <MenuItem value="Custom">Custom</MenuItem>
             </Select>
           </FormControl>
 
@@ -361,7 +356,6 @@ export default function FlightRequests() {
             >
               <MenuItem value="">All Priorities</MenuItem>
               <MenuItem value="Urgent">Urgent</MenuItem>
-              <MenuItem value="High">High</MenuItem>
               <MenuItem value="Normal">Normal</MenuItem>
             </Select>
           </FormControl>
@@ -380,7 +374,7 @@ export default function FlightRequests() {
             }}
             sx={{ fontWeight: 700 }}
           >
-            Clear Filters
+            Clear
           </Button>
         </Box>
       </Paper>
@@ -392,40 +386,22 @@ export default function FlightRequests() {
           data={filteredData}
           onRowClick={(row) => handleOpenRequest(row)}
           actions={(row) => (
-            <Box sx={{ display: 'flex', gap: 0.8, whiteSpace: 'nowrap' }}>
-              <Tooltip title="View Request Details">
+            <Box sx={{ display: 'flex', gap: 1 }}>
+              <Tooltip title={row.status === 'Completed' ? 'View Details' : 'Open in GDS Desk'}>
                 <Button
                   size="small"
-                  variant="outlined"
-                  onClick={() => handleOpenRequest(row)}
-                  sx={{ py: 0.3, px: 1, fontSize: '0.72rem', fontWeight: 700 }}
+                  variant={row.status === 'Completed' ? 'outlined' : 'contained'}
+                  color={row.status === 'Completed' ? 'inherit' : 'primary'}
+                  onClick={() => {
+                    if (row.status === 'Completed') {
+                      handleOpenRequest(row);
+                    } else {
+                      handleOpenInDesk(row);
+                    }
+                  }}
+                  sx={{ py: 0.4, px: 1.8, fontSize: '0.75rem', fontWeight: 800 }}
                 >
-                  View
-                </Button>
-              </Tooltip>
-
-              <Tooltip title="Open in GDS Parsing Desk">
-                <Button
-                  size="small"
-                  variant="contained"
-                  color="primary"
-                  startIcon={<PlayArrowIcon sx={{ fontSize: 13 }} />}
-                  onClick={() => handleOpenInDesk(row)}
-                  sx={{ py: 0.3, px: 1, fontSize: '0.72rem', fontWeight: 700 }}
-                >
-                  Parse
-                </Button>
-              </Tooltip>
-
-              <Tooltip title="Continue Processing Request">
-                <Button
-                  size="small"
-                  variant="outlined"
-                  color="warning"
-                  onClick={() => handleOpenInDesk(row)}
-                  sx={{ py: 0.3, px: 1, fontSize: '0.72rem', fontWeight: 700 }}
-                >
-                  Continue Processing
+                  {row.status === 'Completed' ? 'View' : 'Open'}
                 </Button>
               </Tooltip>
             </Box>
@@ -437,7 +413,7 @@ export default function FlightRequests() {
       <AppModal
         open={modalOpen}
         onClose={() => setModalOpen(false)}
-        title={selectedReq ? `Flight Request Details: ${selectedReq.id}` : ''}
+        title={selectedReq ? `Flight Request Details: #${selectedReq.id}` : ''}
         maxWidth="sm"
         actions={
           selectedReq && (
@@ -445,17 +421,19 @@ export default function FlightRequests() {
               <Button variant="outlined" onClick={() => setModalOpen(false)}>
                 Close
               </Button>
-              <Button
-                variant="contained"
-                color="primary"
-                startIcon={<PlayArrowIcon />}
-                onClick={() => {
-                  setModalOpen(false);
-                  handleOpenInDesk(selectedReq);
-                }}
-              >
-                Open in GDS Parsing Desk
-              </Button>
+              {selectedReq.status !== 'Completed' && (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  startIcon={<PlayArrowIcon />}
+                  onClick={() => {
+                    setModalOpen(false);
+                    handleOpenInDesk(selectedReq);
+                  }}
+                >
+                  Open in GDS Desk
+                </Button>
+              )}
             </Box>
           )
         }
@@ -466,13 +444,13 @@ export default function FlightRequests() {
               <Typography variant="h6" sx={{ fontWeight: 900 }}>
                 ✈️ {selectedReq.route} ({selectedReq.region})
               </Typography>
-              <Chip label={selectedReq.status} color="primary" sx={{ fontWeight: 800 }} />
+              {renderStatusChip(selectedReq.status)}
             </Box>
 
             <Paper elevation={0} sx={{ p: 2, bgcolor: '#F8FAFC', borderRadius: 2, border: '1px solid', borderColor: 'divider' }}>
               <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1.5, fontSize: '0.85rem' }}>
                 <Box>
-                  <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 700 }}>Travel Dates:</Typography>
+                  <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 700 }}>Travel Date:</Typography>
                   <Typography variant="body2" sx={{ fontWeight: 700 }}>{selectedReq.dateDisplay}</Typography>
                 </Box>
 
@@ -488,7 +466,7 @@ export default function FlightRequests() {
 
                 <Box>
                   <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 700 }}>Priority:</Typography>
-                  <Typography variant="body2" sx={{ fontWeight: 700, color: 'error.main' }}>{selectedReq.priority}</Typography>
+                  <Typography variant="body2" sx={{ fontWeight: 700, color: selectedReq.priority === 'Urgent' ? 'error.main' : 'text.primary' }}>{selectedReq.priority}</Typography>
                 </Box>
               </Box>
             </Paper>

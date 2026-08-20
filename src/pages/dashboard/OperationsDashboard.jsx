@@ -69,9 +69,34 @@ export const OperationsDashboard = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // AI Simulation Hub State
+
   const [activeSimTab, setActiveSimTab] = useState(0);
   const [chatbotName, setChatbotName] = useState('');
   const [chatbotLog, setChatbotLog] = useState([]);
+
+  // After-Sales Operations Suite State
+  const [afterSalesType, setAfterSalesType] = useState('Date Change');
+
+  const [asPnr, setAsPnr] = useState('ABC12D');
+  const [airlineFee, setAirlineFee] = useState(120);
+  const [fareDiff, setFareDiff] = useState(85);
+  const [agencyServiceFee, setAgencyServiceFee] = useState(35);
+  const [tktPrice, setTktPrice] = useState(950);
+  const [cancelPenalty, setCancelPenalty] = useState(250);
+
+  const totalDateChangeCharge = Number(airlineFee) + Number(fareDiff) + Number(agencyServiceFee);
+  const netRefundDue = Math.max(0, Number(tktPrice) - Number(cancelPenalty) - Number(agencyServiceFee));
+
+  const handleProcessAfterSales = () => {
+    if (afterSalesType === 'Date Change') {
+      showAlert(`✓ Date change processed for PNR #${asPnr}. Client charged $${totalDateChangeCharge} (Airline: $${airlineFee}, Fare Diff: $${fareDiff}, Agency Fee: $${agencyServiceFee}). Re-issuance triggered.`, 'success');
+    } else if (afterSalesType === 'Cancellation') {
+      showAlert(`✓ Cancellation & Refund logged for PNR #${asPnr}. Net refund due to customer: $${netRefundDue} (Gross: $${tktPrice} - Airline: $${cancelPenalty} - Fee: $${agencyServiceFee}). Forwarded to Finance.`, 'warning');
+    } else {
+      showAlert(`✓ Ancillary SSR (Seat/Meal/Baggage) added to PNR #${asPnr} and synced with GDS.`, 'success');
+    }
+  };
+
 
   const handleSimulateChat = () => {
     if (!chatbotName.trim()) {
@@ -491,19 +516,20 @@ export const OperationsDashboard = () => {
               <AppCard title="AI Automation & Simulation Hub" subheader="Interactive Control Center for AI Workflows">
                 {/* Tab Selectors */}
                 <Box sx={{ display: 'flex', gap: 0.5, mb: 2, flexWrap: 'wrap', borderBottom: '1px solid', borderColor: 'divider', pb: 1 }}>
-                  {['Bot Qualify', 'Auto-Route', 'Call AI', 'OCR Doc', 'Follow-up'].map((tabName, idx) => (
+                  {['Bot Qualify', 'Auto-Route', 'Call AI', 'OCR Doc', 'Follow-up', 'After-Sales Ops'].map((tabName, idx) => (
                     <Button
                       key={idx}
                       size="small"
                       onClick={() => setActiveSimTab(idx)}
                       variant={activeSimTab === idx ? 'contained' : 'text'}
-                      color="secondary"
-                      sx={{ fontSize: '0.65rem', py: 0.5, px: 1, minWidth: 0, borderRadius: 1.5 }}
+                      color={idx === 5 ? 'primary' : 'secondary'}
+                      sx={{ fontSize: '0.65rem', py: 0.5, px: 1, minWidth: 0, borderRadius: 1.5, fontWeight: idx === 5 ? 800 : 600 }}
                     >
                       {tabName}
                     </Button>
                   ))}
                 </Box>
+
 
                 {/* Tab 0: WhatsApp Bot Qualification */}
                 {activeSimTab === 0 && (
@@ -690,8 +716,114 @@ export const OperationsDashboard = () => {
                     </Button>
                   </Box>
                 )}
+
+                {/* Tab 5: After-Sales & Post-Booking Operations Suite */}
+                {activeSimTab === 5 && (
+                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+                    <Typography variant="caption" color="text.secondary">
+                      Manage post-booking requests: date change re-issuance, airline cancellation penalties & net refund calculations.
+                    </Typography>
+
+                    <TextField
+                      select
+                      label="Service Type"
+                      value={afterSalesType}
+                      onChange={(e) => setAfterSalesType(e.target.value)}
+                      fullWidth
+                      size="small"
+                    >
+                      <MenuItem value="Date Change">Flight Date Change & Re-issuance</MenuItem>
+                      <MenuItem value="Cancellation">Cancellation & Client Refund</MenuItem>
+                      <MenuItem value="SSR">Ancillary (Seat / Meals / Extra Bag)</MenuItem>
+                    </TextField>
+
+                    <TextField
+                      label="Booking PNR / Ref"
+                      value={asPnr}
+                      onChange={(e) => setAsPnr(e.target.value)}
+                      fullWidth
+                      size="small"
+                    />
+
+                    {afterSalesType === 'Date Change' && (
+                      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                        <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 1 }}>
+                          <TextField
+                            label="Airline Fee ($)"
+                            type="number"
+                            size="small"
+                            value={airlineFee}
+                            onChange={(e) => setAirlineFee(Number(e.target.value))}
+                          />
+                          <TextField
+                            label="Fare Diff ($)"
+                            type="number"
+                            size="small"
+                            value={fareDiff}
+                            onChange={(e) => setFareDiff(Number(e.target.value))}
+                          />
+                          <TextField
+                            label="Agency Fee ($)"
+                            type="number"
+                            size="small"
+                            value={agencyServiceFee}
+                            onChange={(e) => setAgencyServiceFee(Number(e.target.value))}
+                          />
+                        </Box>
+                        <Box sx={{ p: 1, bgcolor: '#EFF6FF', borderRadius: 1.5, border: '1px solid #BFDBFE' }}>
+                          <Typography variant="caption" sx={{ fontWeight: 800, color: '#1D4ED8' }}>
+                            Total Date Change Charge: <b>${totalDateChangeCharge}</b>
+                          </Typography>
+                        </Box>
+                      </Box>
+                    )}
+
+                    {afterSalesType === 'Cancellation' && (
+                      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                        <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 1 }}>
+                          <TextField
+                            label="Ticket Price ($)"
+                            type="number"
+                            size="small"
+                            value={tktPrice}
+                            onChange={(e) => setTktPrice(Number(e.target.value))}
+                          />
+                          <TextField
+                            label="Airline Pen ($)"
+                            type="number"
+                            size="small"
+                            value={cancelPenalty}
+                            onChange={(e) => setCancelPenalty(Number(e.target.value))}
+                          />
+                          <TextField
+                            label="Agency Fee ($)"
+                            type="number"
+                            size="small"
+                            value={agencyServiceFee}
+                            onChange={(e) => setAgencyServiceFee(Number(e.target.value))}
+                          />
+                        </Box>
+                        <Box sx={{ p: 1, bgcolor: '#FEF2F2', borderRadius: 1.5, border: '1px solid #FECACA' }}>
+                          <Typography variant="caption" sx={{ fontWeight: 800, color: '#B91C1C' }}>
+                            Net Refund Due to Customer: <b>${netRefundDue}</b>
+                          </Typography>
+                        </Box>
+                      </Box>
+                    )}
+
+                    <Button
+                      variant="contained"
+                      size="small"
+                      onClick={handleProcessAfterSales}
+                      sx={{ background: 'linear-gradient(135deg, #2563EB 0%, #14B8A6 100%)', color: 'white', fontWeight: 800 }}
+                    >
+                      Process & Dispatch Update
+                    </Button>
+                  </Box>
+                )}
               </AppCard>
             </Box>
+
 
             {/* Recent activity timeline log */}
             <Box xs={12}>

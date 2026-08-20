@@ -449,11 +449,142 @@ export const SuperAdminDashboard = () => {
         </Box>
       </Box>
 
-      {/* ─── 3. TOP PERFORMING AGENTS LEADERBOARD ─── */}
+      {/* ─── 3. REVENUE LEAKAGE & MONEY FLOW INTELLIGENCE ─── */}
+      <Paper elevation={0} sx={{ p: 2.5, mb: 3, border: '1px solid', borderColor: 'divider', borderRadius: 2.5, bgcolor: '#FAFAFA' }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2, flexWrap: 'wrap', gap: 1 }}>
+          <Box>
+            <Typography variant="subtitle1" sx={{ fontWeight: 900, display: 'flex', alignItems: 'center', gap: 1 }}>
+              🚨 REVENUE LEAKAGE RADAR & PROFIT CONTROL
+            </Typography>
+            <Typography variant="caption" color="text.secondary">
+              Real-time identification of where money is being made or lost across the sales floor
+            </Typography>
+          </Box>
+          <Chip label="Live P&L Shield Active" color="success" size="small" sx={{ fontWeight: 800 }} />
+        </Box>
+
+        {/* 4 Revenue Leakage / Gain Cards */}
+        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', lg: 'repeat(4, 1fr)' }, gap: 2, mb: 2.5 }}>
+          {/* Card 1: Dropped Leads */}
+          <Paper variant="outlined" sx={{ p: 2, borderRadius: 2, bgcolor: '#FEF2F2', borderColor: '#FECACA' }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.5 }}>
+              <Typography variant="caption" sx={{ fontWeight: 800, color: '#991B1B' }}>DROPPED LEADS (SLA &gt; 15M)</Typography>
+              <Chip label="14 Leads" size="small" color="error" sx={{ height: 18, fontSize: '0.62rem', fontWeight: 800 }} />
+            </Box>
+            <Typography variant="h5" sx={{ fontWeight: 900, color: '#DC2626' }}>-$14,200</Typography>
+            <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block', mb: 1.5 }}>
+              Estimated revenue at risk due to delayed first callbacks.
+            </Typography>
+            <Button
+              size="small"
+              variant="contained"
+              color="error"
+              fullWidth
+              onClick={() => showAlert('14 stalled leads automatically reallocated to Top 3 Conversion Agents.', 'success')}
+              sx={{ fontWeight: 800, fontSize: '0.68rem', py: 0.4 }}
+            >
+              Auto-Reassign to Top Agents
+            </Button>
+          </Paper>
+
+          {/* Card 2: Uncollected Second Installments */}
+          <Paper variant="outlined" sx={{ p: 2, borderRadius: 2, bgcolor: '#FFFBEB', borderColor: '#FDE68A' }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.5 }}>
+              <Typography variant="caption" sx={{ fontWeight: 800, color: '#92400E' }}>PENDING 2ND INSTALLMENTS</Typography>
+              <Chip label="6 Bookings" size="small" color="warning" sx={{ height: 18, fontSize: '0.62rem', fontWeight: 800 }} />
+            </Box>
+            <Typography variant="h5" sx={{ fontWeight: 900, color: '#D97706' }}>+$8,600</Typography>
+            <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block', mb: 1.5 }}>
+              Partial payment balances due within 48 hours.
+            </Typography>
+            <Button
+              size="small"
+              variant="contained"
+              color="warning"
+              fullWidth
+              onClick={() => showAlert('Automated WhatsApp payment links dispatched to 6 customers.', 'success')}
+              sx={{ fontWeight: 800, fontSize: '0.68rem', py: 0.4 }}
+            >
+              Trigger WhatsApp Reminders
+            </Button>
+          </Paper>
+
+          {/* Card 3: Ticketing Delay Penalty Avoidance */}
+          <Paper variant="outlined" sx={{ p: 2, borderRadius: 2, bgcolor: '#F0F9FF', borderColor: '#BAE6FD' }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.5 }}>
+              <Typography variant="caption" sx={{ fontWeight: 800, color: '#0369A1' }}>GDS TTL PENALTY SAVINGS</Typography>
+              <Chip label="Protected" size="small" color="info" sx={{ height: 18, fontSize: '0.62rem', fontWeight: 800 }} />
+            </Box>
+            <Typography variant="h5" sx={{ fontWeight: 900, color: '#0284C7' }}>+$3,150</Typography>
+            <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block', mb: 1.5 }}>
+              Saved this week via instant TTL countdown queue alerts.
+            </Typography>
+            <Button
+              size="small"
+              variant="outlined"
+              color="info"
+              fullWidth
+              onClick={() => navigate('/ticketing')}
+              sx={{ fontWeight: 800, fontSize: '0.68rem', py: 0.4 }}
+            >
+              View Ticketing Queue
+            </Button>
+          </Paper>
+
+          {/* Card 4: Preferred Airline High Margin Share */}
+          <Paper variant="outlined" sx={{ p: 2, borderRadius: 2, bgcolor: '#F0FDF4', borderColor: '#BBF7D0' }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.5 }}>
+              <Typography variant="caption" sx={{ fontWeight: 800, color: '#166534' }}>HIGH-COMMISSION AIRLINES</Typography>
+              <Chip label="68% Share" size="small" color="success" sx={{ height: 18, fontSize: '0.62rem', fontWeight: 800 }} />
+            </Box>
+            <Typography variant="h5" sx={{ fontWeight: 900, color: '#16A34A' }}>+$28,400</Typography>
+            <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block', mb: 1.5 }}>
+              Extra commission earned from Emirates, BA & Qatar deals.
+            </Typography>
+            <Button
+              size="small"
+              variant="outlined"
+              color="success"
+              fullWidth
+              onClick={() => showAlert('Airline incentive distribution report generated.', 'info')}
+              sx={{ fontWeight: 800, fontSize: '0.68rem', py: 0.4 }}
+            >
+              View Airline Incentive Matrix
+            </Button>
+          </Paper>
+        </Box>
+
+        {/* Complete 5-Stage Sales Conversion Funnel */}
+        <Typography variant="caption" sx={{ fontWeight: 800, color: 'text.secondary', textTransform: 'uppercase', display: 'block', mb: 1.5 }}>
+          OTA 5-STAGE CUSTOMER JOURNEY FUNNEL
+        </Typography>
+        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(5, 1fr)' }, gap: 1.5, textAlign: 'center' }}>
+          {[
+            { step: '1. Inbound Leads', count: '1,420', conv: '100%', color: '#3F51B5', bg: '#EEF2FF' },
+            { step: '2. Contacted & Dialed', count: '1,180', conv: '83.1%', color: '#0284C7', bg: '#F0F9FF' },
+            { step: '3. GDS Quotes Sent', count: '720', conv: '61.0%', color: '#7C3AED', bg: '#F5F3FF' },
+            { step: '4. Payment Received', count: '312', conv: '43.3%', color: '#059669', bg: '#ECFDF5' },
+            { step: '5. Ticketed & Flown', count: '298', conv: '95.5%', color: '#16A34A', bg: '#F0FDF4' },
+          ].map((f, i) => (
+            <Paper key={i} variant="outlined" sx={{ p: 1.5, borderRadius: 2, bgcolor: f.bg, borderColor: `${f.color}30` }}>
+              <Typography variant="caption" sx={{ fontWeight: 800, color: f.color, display: 'block' }}>
+                {f.step}
+              </Typography>
+              <Typography variant="h5" sx={{ fontWeight: 900, my: 0.5, color: '#0F172A' }}>
+                {f.count}
+              </Typography>
+              <Chip label={`Stage Conv: ${f.conv}`} size="small" sx={{ fontWeight: 800, fontSize: '0.62rem', height: 18, bgcolor: 'background.paper' }} />
+            </Paper>
+          ))}
+        </Box>
+      </Paper>
+
+      {/* ─── 4. TOP PERFORMING AGENTS LEADERBOARD ─── */}
       <Paper elevation={0} sx={{ p: 2.5, mb: 3, border: '1px solid', borderColor: 'divider', borderRadius: 2.5 }}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
           <Box>
             <Typography variant="subtitle1" sx={{ fontWeight: 900 }}>TOP PERFORMING SALES AGENTS</Typography>
+
             <Typography variant="caption" color="text.secondary">Real-time agent turnaround time and booking volume</Typography>
           </Box>
           <Button size="small" variant="outlined" onClick={() => navigate('/agents')}>

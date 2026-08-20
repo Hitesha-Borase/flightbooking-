@@ -24,15 +24,22 @@ export default function FlightExpertDesk() {
     setSelectedRequest(req);
   };
 
+  const handleParseSuccess = (parsedFlights) => {
+    // Check if any flight has parsed fare or default calculate
+    showAlert(`✓ Parsed ${parsedFlights.length} flight segments from GDS. Margin & pricing synced.`, 'success');
+  };
+
   const handlePublishQuote = (quoteData) => {
     // Update local demo state to reflect status update
     setRequestsList(prev =>
-      prev.map(r => r.id === quoteData.requestId ? { ...r, status: 'Quote Ready' } : r)
+      prev.map(r => r.id === quoteData.requestId ? { ...r, status: 'Sent to Agent', netFare: quoteData.netFare } : r)
     );
     if (selectedRequest && selectedRequest.id === quoteData.requestId) {
-      setSelectedRequest(prev => ({ ...prev, status: 'Quote Ready' }));
+      setSelectedRequest(prev => ({ ...prev, status: 'Sent to Agent', netFare: quoteData.netFare }));
     }
+    showAlert(`🚀 Quote for #${quoteData.requestId} (${selectedRequest?.origin}→${selectedRequest?.destination}) published to ${selectedRequest?.salesAgent || 'Sales Agent'}. Selling: $${quoteData.sellingPrice.toFixed(0)} | Profit: $${quoteData.profit.toFixed(0)}`, 'success');
   };
+
 
   return (
     <Box sx={{ pb: 4 }}>
@@ -149,7 +156,9 @@ export default function FlightExpertDesk() {
           {/* 1. GDS / SABRE Parsing Box */}
           <GDSParsingBox
             activeRequest={selectedRequest}
+            onParseSuccess={handleParseSuccess}
           />
+
 
           {/* 2. Margin Calculator UI */}
           <MarginCalculator
