@@ -40,32 +40,37 @@ export default function DualClock({ client }) {
     <Box sx={{ 
       display: 'flex', 
       alignItems: 'center', 
-      gap: 3, 
+      justifyContent: { xs: 'space-between', sm: 'flex-start' },
+      flexWrap: 'wrap',
+      gap: { xs: 1, sm: 2 }, 
       bgcolor: 'background.paper',
-      p: 1.5,
-      px: 3,
-      borderRadius: 4,
+      p: { xs: 1, sm: 1.5 },
+      px: { xs: 1.5, sm: 3 },
+      borderRadius: { xs: 2.5, sm: 4 },
       boxShadow: '0 4px 15px rgba(0,0,0,0.03)',
       border: '1px solid',
       borderColor: 'divider',
+      width: { xs: '100%', sm: 'auto' },
       transition: 'all 0.3s ease',
-      '&:hover': { transform: 'translateY(-2px)', boxShadow: '0 8px 25px rgba(0,0,0,0.06)' }
+      '&:hover': { boxShadow: '0 8px 25px rgba(0,0,0,0.06)' }
     }}>
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-        <AccessTimeIcon sx={{ color: 'text.secondary', fontSize: 18 }} />
-        <Typography variant="body2" sx={{ fontWeight: 600, color: 'text.secondary' }}>Agent (Local):</Typography>
-        <Typography variant="body1" sx={{ fontWeight: 800, color: 'primary.main', fontFamily: 'monospace', fontSize: '1.1rem' }}>{agentTime}</Typography>
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.8 }}>
+        <AccessTimeIcon sx={{ color: 'text.secondary', fontSize: 16 }} />
+        <Typography variant="caption" sx={{ fontWeight: 700, color: 'text.secondary', display: { xs: 'none', sm: 'inline' } }}>Agent (Local):</Typography>
+        <Typography variant="caption" sx={{ fontWeight: 700, color: 'text.secondary', display: { xs: 'inline', sm: 'none' } }}>Agent:</Typography>
+        <Typography variant="body2" sx={{ fontWeight: 800, color: 'primary.main', fontFamily: 'monospace' }}>{agentTime}</Typography>
       </Box>
-      <Box sx={{ width: '1px', height: 24, bgcolor: 'divider' }} />
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-        <PublicIcon sx={{ color: 'text.secondary', fontSize: 18 }} />
-        <Typography variant="body2" sx={{ fontWeight: 600, color: 'text.secondary' }}>Client ({client.label}):</Typography>
-        <Typography variant="body1" sx={{ fontWeight: 800, color: 'secondary.main', fontFamily: 'monospace', fontSize: '1.1rem' }}>{clientTime}</Typography>
+      <Box sx={{ width: '1px', height: 18, bgcolor: 'divider' }} />
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.8 }}>
+        <PublicIcon sx={{ color: 'text.secondary', fontSize: 16 }} />
+        <Typography variant="caption" sx={{ fontWeight: 700, color: 'text.secondary', display: { xs: 'none', sm: 'inline' } }}>Client ({client?.label || 'EST'}):</Typography>
+        <Typography variant="caption" sx={{ fontWeight: 700, color: 'text.secondary', display: { xs: 'inline', sm: 'none' } }}>Client:</Typography>
+        <Typography variant="body2" sx={{ fontWeight: 800, color: 'secondary.main', fontFamily: 'monospace' }}>{clientTime}</Typography>
       </Box>
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, ml: 1, px: 1.5, py: 0.5, borderRadius: 2, bgcolor: isDay ? '#FFFBEB' : '#F1F5F9' }}>
-        {isDay ? <WbSunnyIcon sx={{ color: '#F59E0B', fontSize: 16 }} /> : <NightlightRoundIcon sx={{ color: '#475569', fontSize: 16 }} />}
-        <Typography variant="caption" sx={{ fontWeight: 800, color: isDay ? '#D97706' : '#334155' }}>
-          {isDay ? 'DAYTIME' : 'NIGHTTIME'}
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, px: 1, py: 0.3, borderRadius: 1.5, bgcolor: isDay ? '#FFFBEB' : '#F1F5F9' }}>
+        {isDay ? <WbSunnyIcon sx={{ color: '#F59E0B', fontSize: 14 }} /> : <NightlightRoundIcon sx={{ color: '#475569', fontSize: 14 }} />}
+        <Typography variant="caption" sx={{ fontWeight: 800, fontSize: '0.62rem', color: isDay ? '#D97706' : '#334155' }}>
+          {isDay ? 'DAY' : 'NIGHT'}
         </Typography>
       </Box>
     </Box>

@@ -155,9 +155,9 @@ export const AdminDashboard = () => {
       {/* ─── MIDDLE ROW: PIPELINE & CHARTS ─── */}
       <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', lg: '4fr 5fr 3fr' }, gap: 2.5, mb: 3 }}>
         {/* Left Card: Booking Pipeline */}
-        <Box sx={{ width: '100%', overflow: 'hidden' }}>
+        <Box sx={{ width: '100%', minWidth: 0 }}>
           <Paper elevation={0} sx={{ p: { xs: 1.5, sm: 2.5 }, border: '1px solid', borderColor: 'divider', borderRadius: 2.5, height: '100%' }}>
-            <Typography variant="subtitle1" sx={{ fontWeight: 900, mb: 1.5, fontSize: { xs: '0.85rem', sm: '1rem' } }}>
+            <Typography variant="subtitle1" sx={{ fontWeight: 900, mb: 1.5, fontSize: { xs: '0.88rem', sm: '1rem' } }}>
               ⚡ FLIGHT BOOKING PIPELINE
             </Typography>
             <Box sx={{ overflowX: 'auto', width: '100%' }}>
@@ -176,19 +176,19 @@ export const AdminDashboard = () => {
         </Box>
 
         {/* Center Card: Weekly Booking Volume Chart */}
-        <Box>
-          <Paper elevation={0} sx={{ p: 2.5, border: '1px solid', borderColor: 'divider', borderRadius: 2.5, height: '100%' }}>
-            <Typography variant="subtitle1" sx={{ fontWeight: 900, mb: 2 }}>
+        <Box sx={{ width: '100%', minWidth: 0 }}>
+          <Paper elevation={0} sx={{ p: { xs: 1.5, sm: 2.5 }, border: '1px solid', borderColor: 'divider', borderRadius: 2.5, height: '100%' }}>
+            <Typography variant="subtitle1" sx={{ fontWeight: 900, mb: 1.5, fontSize: { xs: '0.88rem', sm: '1rem' } }}>
               📊 WEEKLY BOOKING VOLUME
             </Typography>
-            <Box sx={{ height: 210, width: '100%' }}>
+            <Box sx={{ height: { xs: 190, sm: 210 }, width: '100%', minWidth: 0 }}>
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={WEEKLY_BOOKINGS_DATA}>
+                <BarChart data={WEEKLY_BOOKINGS_DATA} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F1F5F9" />
-                  <XAxis dataKey="day" stroke="#64748B" />
-                  <YAxis stroke="#64748B" />
+                  <XAxis dataKey="day" stroke="#64748B" tick={{ fontSize: 11 }} />
+                  <YAxis stroke="#64748B" tick={{ fontSize: 11 }} />
                   <ChartTooltip />
-                  <Legend />
+                  <Legend wrapperStyle={{ fontSize: 12 }} />
                   <Bar dataKey="This Week" fill="#3B82F6" radius={[4, 4, 0, 0]} />
                   <Bar dataKey="Last Week" fill="#94A3B8" radius={[4, 4, 0, 0]} />
                 </BarChart>
@@ -198,12 +198,12 @@ export const AdminDashboard = () => {
         </Box>
 
         {/* Right Card: Cabin Class Distribution Pie Chart */}
-        <Box>
-          <Paper elevation={0} sx={{ p: 2.5, border: '1px solid', borderColor: 'divider', borderRadius: 2.5, height: '100%', display: 'flex', flexDirection: 'column' }}>
-            <Typography variant="subtitle1" sx={{ fontWeight: 900, mb: 1 }}>
+        <Box sx={{ width: '100%', minWidth: 0 }}>
+          <Paper elevation={0} sx={{ p: { xs: 1.5, sm: 2.5 }, border: '1px solid', borderColor: 'divider', borderRadius: 2.5, height: '100%', display: 'flex', flexDirection: 'column' }}>
+            <Typography variant="subtitle1" sx={{ fontWeight: 900, mb: 1, fontSize: { xs: '0.88rem', sm: '1rem' } }}>
               💺 CABIN CLASS SHARE
             </Typography>
-            <Box sx={{ height: 130, width: '100%', mb: 1 }}>
+            <Box sx={{ height: 130, width: '100%', minWidth: 0, mb: 1 }}>
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie data={CABIN_CLASS_DATA} dataKey="value" nameKey="name" cx="50%" cy="50%" innerRadius={35} outerRadius={55} paddingAngle={3}>
@@ -231,7 +231,7 @@ export const AdminDashboard = () => {
       </Box>
 
       {/* ─── BOTTOM ROW: ACTIVITY FEED ─── */}
-      <Paper elevation={0} sx={{ p: 2.5, border: '1px solid', borderColor: 'divider', borderRadius: 2.5 }}>
+      <Paper elevation={0} sx={{ p: { xs: 1.5, sm: 2.5 }, border: '1px solid', borderColor: 'divider', borderRadius: 2.5 }}>
         <Typography variant="subtitle1" sx={{ fontWeight: 900, mb: 2 }}>
           🔔 TODAY'S LIVE OPERATIONS ACTIVITY FEED
         </Typography>

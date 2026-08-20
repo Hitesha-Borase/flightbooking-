@@ -484,14 +484,16 @@ export const SuperAdminPaymentDashboard = () => {
         title="Payment & Financial Records Hub"
         subtitle="10 Exact Payment Statuses, Provider Webhook Automated Signature Verification & 10-Point Booking Profitability Ledger."
         action={
-          <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-            <DualClock compact client={{ timezone: 'America/New_York', label: 'Client EST' }} />
+          <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', width: { xs: '100%', sm: 'auto' } }}>
+            <Box sx={{ width: { xs: '100%', sm: 'auto' } }}>
+              <DualClock compact client={{ timezone: 'America/New_York', label: 'Client EST' }} />
+            </Box>
             <Button
               variant="contained"
               color="primary"
               startIcon={<LinkIcon />}
               onClick={() => setPaymentModalOpen(true)}
-              sx={{ fontWeight: 700 }}
+              sx={{ fontWeight: 700, flex: { xs: 1, sm: 'none' }, fontSize: { xs: '0.78rem', sm: '0.875rem' } }}
             >
               Generate Payment Link
             </Button>
@@ -500,7 +502,7 @@ export const SuperAdminPaymentDashboard = () => {
               color="secondary"
               startIcon={<DrawIcon />}
               onClick={() => setESignModalOpen(true)}
-              sx={{ fontWeight: 700 }}
+              sx={{ fontWeight: 700, flex: { xs: 1, sm: 'none' }, fontSize: { xs: '0.78rem', sm: '0.875rem' } }}
             >
               Create E-Sign Auth
             </Button>
@@ -509,63 +511,66 @@ export const SuperAdminPaymentDashboard = () => {
       />
 
       {/* KPI Cards */}
-      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', md: 'repeat(4, 1fr)' }, gap: 2, mb: 3 }}>
-        <Paper elevation={0} sx={{ p: 2, border: '1px solid', borderColor: 'divider', borderRadius: 2.5, bgcolor: '#F0FDF4' }}>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-            <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 800 }}>TOTAL CUSTOMER REVENUE</Typography>
-            <MonetizationOnIcon sx={{ color: '#16A34A' }} />
+      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: 'repeat(2, 1fr)', sm: '1fr 1fr', md: 'repeat(4, 1fr)' }, gap: 1.5, mb: 3 }}>
+        <Paper elevation={0} sx={{ p: { xs: 1.5, sm: 2 }, border: '1px solid', borderColor: 'divider', borderRadius: 2.5, bgcolor: '#F0FDF4' }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.8 }}>
+            <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 800, fontSize: { xs: '0.62rem', sm: '0.7rem' } }}>TOTAL REVENUE</Typography>
+            <MonetizationOnIcon sx={{ color: '#16A34A', fontSize: 18 }} />
           </Box>
-          <Typography variant="h4" sx={{ fontWeight: 900, color: '#15803D' }}>
+          <Typography variant="h5" sx={{ fontWeight: 900, color: '#15803D' }}>
             ${financialTotals.totalRevenue.toLocaleString('en-US', { minimumFractionDigits: 2 })}
           </Typography>
-          <Typography variant="caption" color="success.main" sx={{ fontWeight: 700 }}>Invoiced & Verified by Webhooks</Typography>
+          <Typography variant="caption" color="success.main" sx={{ fontWeight: 700, fontSize: '0.65rem' }}>Invoiced & Webhooks</Typography>
         </Paper>
 
-        <Paper elevation={0} sx={{ p: 2, border: '1px solid', borderColor: 'divider', borderRadius: 2.5, bgcolor: '#FEF2F2' }}>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-            <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 800 }}>SUPPLIER PAYABLES & COSTS</Typography>
-            <CurrencyExchangeIcon sx={{ color: '#DC2626' }} />
+        <Paper elevation={0} sx={{ p: { xs: 1.5, sm: 2 }, border: '1px solid', borderColor: 'divider', borderRadius: 2.5, bgcolor: '#FEF2F2' }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.8 }}>
+            <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 800, fontSize: { xs: '0.62rem', sm: '0.7rem' } }}>SUPPLIER COSTS</Typography>
+            <CurrencyExchangeIcon sx={{ color: '#DC2626', fontSize: 18 }} />
           </Box>
-          <Typography variant="h4" sx={{ fontWeight: 900, color: '#B91C1C' }}>
+          <Typography variant="h5" sx={{ fontWeight: 900, color: '#B91C1C' }}>
             -${financialTotals.totalSupplier.toLocaleString('en-US', { minimumFractionDigits: 2 })}
           </Typography>
-          <Typography variant="caption" color="error.main" sx={{ fontWeight: 700 }}>Net Airline / Sabre Cost</Typography>
+          <Typography variant="caption" color="error.main" sx={{ fontWeight: 700, fontSize: '0.65rem' }}>Net Airline / Sabre Cost</Typography>
         </Paper>
 
-        <Paper elevation={0} sx={{ p: 2, border: '1px solid', borderColor: 'divider', borderRadius: 2.5, bgcolor: '#FFFBEB' }}>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-            <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 800 }}>FEES, REFUNDS & DISCOUNTS</Typography>
-            <CreditCardIcon sx={{ color: '#D97706' }} />
+        <Paper elevation={0} sx={{ p: { xs: 1.5, sm: 2 }, border: '1px solid', borderColor: 'divider', borderRadius: 2.5, bgcolor: '#FFFBEB' }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.8 }}>
+            <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 800, fontSize: { xs: '0.62rem', sm: '0.7rem' } }}>FEES & REFUNDS</Typography>
+            <CreditCardIcon sx={{ color: '#D97706', fontSize: 18 }} />
           </Box>
-          <Typography variant="h4" sx={{ fontWeight: 900, color: '#B45309' }}>
+          <Typography variant="h5" sx={{ fontWeight: 900, color: '#B45309' }}>
             -${(financialTotals.totalProcessingFees + financialTotals.totalRefunds + financialTotals.totalDiscounts).toLocaleString('en-US', { minimumFractionDigits: 2 })}
           </Typography>
-          <Typography variant="caption" color="warning.main" sx={{ fontWeight: 800 }}>Gateway fees & refunds</Typography>
+          <Typography variant="caption" color="warning.main" sx={{ fontWeight: 800, fontSize: '0.65rem' }}>Gateway fees & refunds</Typography>
         </Paper>
 
-        <Paper elevation={0} sx={{ p: 2, border: '1px solid', borderColor: 'divider', borderRadius: 2.5, bgcolor: '#EFF6FF' }}>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-            <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 800 }}>NET GROSS PROFIT</Typography>
-            <CalculateIcon sx={{ color: '#2563EB' }} />
+        <Paper elevation={0} sx={{ p: { xs: 1.5, sm: 2 }, border: '1px solid', borderColor: 'divider', borderRadius: 2.5, bgcolor: '#EFF6FF' }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.8 }}>
+            <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 800, fontSize: { xs: '0.62rem', sm: '0.7rem' } }}>NET GROSS PROFIT</Typography>
+            <CalculateIcon sx={{ color: '#2563EB', fontSize: 18 }} />
           </Box>
-          <Typography variant="h4" sx={{ fontWeight: 900, color: '#1D4ED8' }}>
+          <Typography variant="h5" sx={{ fontWeight: 900, color: '#1D4ED8' }}>
             +${financialTotals.totalGrossProfit.toLocaleString('en-US', { minimumFractionDigits: 2 })}
           </Typography>
-          <Typography variant="caption" color="primary.main" sx={{ fontWeight: 800 }}>
-            Avg Profit Margin: {financialTotals.avgMarginPct}%
+          <Typography variant="caption" color="primary.main" sx={{ fontWeight: 800, fontSize: '0.65rem' }}>
+            Avg Margin: {financialTotals.avgMarginPct}%
           </Typography>
         </Paper>
       </Box>
 
       {/* Main Tabs Area */}
-      <Paper elevation={0} sx={{ p: 2.5, border: '1px solid', borderColor: 'divider', borderRadius: 2.5 }}>
+      <Paper elevation={0} sx={{ p: { xs: 1.5, sm: 2.5 }, border: '1px solid', borderColor: 'divider', borderRadius: 2.5 }}>
         <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 2.5 }}>
           <Tabs
             value={activeTab}
             onChange={(e, val) => setActiveTab(val)}
+            variant="scrollable"
+            scrollButtons="auto"
+            allowScrollButtonsMobile
             sx={{
               '& .MuiTab-root': {
-                fontSize: '0.85rem',
+                fontSize: { xs: '0.75rem', sm: '0.85rem' },
                 fontWeight: 900,
                 textTransform: 'none',
                 minHeight: 42,
@@ -573,19 +578,19 @@ export const SuperAdminPaymentDashboard = () => {
             }}
           >
             <Tab
-              label="📊 BOOKING FINANCIAL RECORDS & PROFITABILITY LEDGER"
+              label="📊 PROFITABILITY LEDGER"
               value="PROFITABILITY"
               icon={<CalculateIcon fontSize="small" />}
               iconPosition="start"
             />
             <Tab
-              label="⚡ PROVIDER WEBHOOK AUTOMATION & EVENT LOG"
+              label="⚡ WEBHOOK AUTOMATION"
               value="WEBHOOKS"
               icon={<FlashOnIcon fontSize="small" />}
               iconPosition="start"
             />
             <Tab
-              label="💳 PAYMENT LINKS & PIPELINE"
+              label="💳 PAYMENT LINKS"
               value="PIPELINE"
               icon={<MonetizationOnIcon fontSize="small" />}
               iconPosition="start"
@@ -597,20 +602,20 @@ export const SuperAdminPaymentDashboard = () => {
         {activeTab === 'PROFITABILITY' && (
           <Box>
             {/* Security Alert Banner */}
-            <Alert severity="info" icon={<LockIcon />} sx={{ mb: 2.5, borderRadius: 2, fontWeight: 700 }}>
-              <b>🔒 Payment Provider Automated Confirmation Rule:</b> Payment status updates are strictly driven by signed Payment Provider Webhook events (Stripe, SWIFT, Telnyx). Manual agent editing in browser is locked to guarantee financial compliance.
+            <Alert severity="info" icon={<LockIcon />} sx={{ mb: 2.5, borderRadius: 2, fontWeight: 700, fontSize: { xs: '0.75rem', sm: '0.875rem' } }}>
+              <b>🔒 Payment Confirmation Rule:</b> Payment status updates are strictly driven by signed Payment Provider Webhook events.
             </Alert>
 
             {/* Filter controls */}
             <Box sx={{ display: 'flex', gap: 2, mb: 2, flexWrap: 'wrap', alignItems: 'center' }}>
               <TextField
                 size="small"
-                placeholder="Search Booking ID, PNR, Customer, Invoice #, Status..."
+                placeholder="Search Booking ID, PNR, Customer, Invoice #..."
                 value={searchTerm}
                 onChange={e => setSearchTerm(e.target.value)}
                 sx={{ width: { xs: '100%', md: 360 } }}
               />
-              <FormControl size="small" sx={{ minWidth: 220 }}>
+              <FormControl size="small" sx={{ minWidth: { xs: '100%', sm: 220 } }}>
                 <InputLabel>Payment Status Filter</InputLabel>
                 <Select
                   value={statusFilter}
@@ -628,16 +633,18 @@ export const SuperAdminPaymentDashboard = () => {
             </Box>
 
             {/* Table */}
-            <AppTable
-              columns={financialColumns}
-              data={filteredFinancialRecords}
-              count={filteredFinancialRecords.length}
-              page={0}
-              rowsPerPage={25}
-              onPageChange={() => {}}
-              onRowsPerPageChange={() => {}}
-              hidePagination
-            />
+            <Box sx={{ overflowX: 'auto', width: '100%' }}>
+              <AppTable
+                columns={financialColumns}
+                data={filteredFinancialRecords}
+                count={filteredFinancialRecords.length}
+                page={0}
+                rowsPerPage={25}
+                onPageChange={() => {}}
+                onRowsPerPageChange={() => {}}
+                hidePagination
+              />
+            </Box>
           </Box>
         )}
 
@@ -722,7 +729,7 @@ export const SuperAdminPaymentDashboard = () => {
               📜 LIVE PROVIDER WEBHOOK AUDIT TRAIL LOG ({webhookLogs.length} Events Received)
             </Typography>
 
-            <Paper elevation={0} sx={{ border: '1px solid', borderColor: 'divider', borderRadius: 2 }}>
+            <Paper elevation={0} sx={{ border: '1px solid', borderColor: 'divider', borderRadius: 2, overflowX: 'auto', width: '100%' }}>
               <AppTable
                 columns={[
                   { id: 'id', label: 'Event ID', render: r => <Typography variant="caption" sx={{ fontFamily: 'monospace', fontWeight: 900, color: 'primary.main' }}>{r.id}</Typography> },

@@ -314,138 +314,237 @@ export default function PNRTracking() {
         </Box>
       </Paper>
 
-      {/* ─── 3. PNR TRACKER TABLE ─── */}
+      {/* ─── 3. PNR TRACKER TABLE & MOBILE CARDS ─── */}
       <Paper elevation={0} sx={{ border: '1px solid', borderColor: 'divider', borderRadius: 2.5, overflow: 'hidden' }}>
-        <Box sx={{ overflowX: 'auto', width: '100%' }}>
-          <Box sx={{ minWidth: { xs: 750, md: 'auto' } }}>
-            {/* Table Header */}
-            <Box sx={{
-              display: 'grid',
-              gridTemplateColumns: '110px 1.2fr 130px 90px 180px 90px 190px',
-              px: 2, py: 1.2, bgcolor: '#F8FAFC',
-              borderBottom: '1px solid', borderColor: 'divider'
-            }}>
-              {['PNR', 'Customer', 'Route', 'Date', 'Status', 'Last Updated', 'Actions'].map(h => (
-                <Typography key={h} variant="caption" sx={{ fontWeight: 800, color: 'text.secondary', textTransform: 'uppercase', fontSize: '0.68rem' }}>
-                  {h}
-                </Typography>
-              ))}
-            </Box>
-
-            {/* Table Rows */}
-            {filtered.length === 0 ? (
-              <Box sx={{ py: 5, textAlign: 'center' }}>
-                <Typography variant="body2" color="text.secondary">
-                  No PNR records match your search filter.
-                </Typography>
-              </Box>
-            ) : (
-              filtered.map((row) => {
-                const cfg = STATUS_COLOR[row.tone] || STATUS_COLOR['info'];
-                return (
-                  <Box
-                    key={row.pnr}
-                    sx={{
-                      display: 'grid',
-                      gridTemplateColumns: '110px 1.2fr 130px 90px 180px 90px 190px',
-                      px: 2, py: 1.5,
-                      bgcolor: row.needsAction ? cfg.rowBg : 'transparent',
-                      borderBottom: '1px solid', borderColor: 'divider',
-                      '&:last-child': { borderBottom: 'none' },
-                      '&:hover': { bgcolor: row.needsAction ? cfg.rowBg : '#F8FAFC' },
-                      transition: 'background 0.15s',
-                      alignItems: 'center'
-                    }}
-                  >
-                {/* PNR Code */}
-                <Typography variant="body2" sx={{ fontWeight: 900, fontFamily: 'monospace', color: 'primary.main' }}>
-                  {cfg.icon} {row.pnr}
-                </Typography>
-
-                {/* Customer Name */}
-                <Typography variant="body2" sx={{ fontWeight: 700 }}>
-                  {row.customer}
-                </Typography>
-
-                {/* Route */}
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                  <FlightIcon sx={{ fontSize: 13, color: 'primary.main' }} />
-                  <Typography variant="caption" sx={{ fontWeight: 700 }}>{row.route}</Typography>
-                </Box>
-
-                {/* Date */}
-                <Typography variant="caption" color="text.secondary">{row.date}</Typography>
-
-                {/* Status Badge */}
-                <Box>
-                  <Chip
-                    size="small"
-                    label={row.status}
-                    color={cfg.chip}
-                    sx={{ fontSize: '0.68rem', fontWeight: 800, height: 22 }}
-                  />
-                </Box>
-
-                {/* Last Updated */}
-                <Typography variant="caption" color="text.secondary">{row.ago}</Typography>
-
-                {/* Action Buttons */}
-                <Box sx={{ display: 'flex', gap: 0.6, flexWrap: 'wrap', alignItems: 'center' }}>
-                  {/* Action or View Button */}
-                  {row.needsAction ? (
-                    <Button
-                      size="small"
-                      variant="contained"
-                      color={row.tone === 'error' ? 'error' : 'warning'}
-                      startIcon={<EditNotificationsIcon sx={{ fontSize: 13 }} />}
-                      sx={{ fontSize: '0.68rem', fontWeight: 800, py: 0.3, px: 1 }}
-                      onClick={() => setSchedEvent(row)}
-                    >
-                      Action
-                    </Button>
-                  ) : (
-                    <Button
-                      size="small"
-                      variant="outlined"
-                      color="inherit"
-                      startIcon={<VisibilityIcon sx={{ fontSize: 13 }} />}
-                      sx={{ fontSize: '0.68rem', fontWeight: 700, py: 0.3, px: 1 }}
-                      onClick={() => setDetailRow(row)}
-                    >
-                      View
-                    </Button>
-                  )}
-
-                  {/* Dispatch Official Itinerary */}
-                  {(row.status === 'Dispatched' || row.status === 'Ticketed') && (
-                    <Button
-                      size="small"
-                      variant="contained"
-                      color="success"
-                      startIcon={<SendIcon sx={{ fontSize: 12 }} />}
-                      sx={{ fontSize: '0.65rem', fontWeight: 700, py: 0.3, px: 0.8 }}
-                      onClick={() => handleDispatchOfficialItinerary(row)}
-                    >
-                      Dispatch
-                    </Button>
-                  )}
-
-                  {/* Discuss Tracker Event */}
-                  <IconButton
-                    size="small"
-                    color="primary"
-                    onClick={() => setDiscussRow(row)}
-                    title="Discuss Tracker Event"
-                  >
-                    <CommentIcon fontSize="small" />
-                  </IconButton>
-                </Box>
-              </Box>
-            );
-          })
-        )}
+        
+        {/* DESKTOP GRID VIEW (md & up) */}
+        <Box sx={{ display: { xs: 'none', md: 'block' } }}>
+          {/* Table Header */}
+          <Box sx={{
+            display: 'grid',
+            gridTemplateColumns: '110px 1.2fr 130px 90px 180px 90px 190px',
+            px: 2, py: 1.2, bgcolor: '#F8FAFC',
+            borderBottom: '1px solid', borderColor: 'divider'
+          }}>
+            {['PNR', 'Customer', 'Route', 'Date', 'Status', 'Last Updated', 'Actions'].map(h => (
+              <Typography key={h} variant="caption" sx={{ fontWeight: 800, color: 'text.secondary', textTransform: 'uppercase', fontSize: '0.68rem' }}>
+                {h}
+              </Typography>
+            ))}
           </Box>
+
+          {/* Table Rows */}
+          {filtered.length === 0 ? (
+            <Box sx={{ py: 5, textAlign: 'center' }}>
+              <Typography variant="body2" color="text.secondary">
+                No PNR records match your search filter.
+              </Typography>
+            </Box>
+          ) : (
+            filtered.map((row) => {
+              const cfg = STATUS_COLOR[row.tone] || STATUS_COLOR['info'];
+              return (
+                <Box
+                  key={row.pnr}
+                  sx={{
+                    display: 'grid',
+                    gridTemplateColumns: '110px 1.2fr 130px 90px 180px 90px 190px',
+                    px: 2, py: 1.5,
+                    bgcolor: row.needsAction ? cfg.rowBg : 'transparent',
+                    borderBottom: '1px solid', borderColor: 'divider',
+                    '&:last-child': { borderBottom: 'none' },
+                    '&:hover': { bgcolor: row.needsAction ? cfg.rowBg : '#F8FAFC' },
+                    transition: 'background 0.15s',
+                    alignItems: 'center'
+                  }}
+                >
+                  <Typography variant="body2" sx={{ fontWeight: 900, fontFamily: 'monospace', color: 'primary.main' }}>
+                    {cfg.icon} {row.pnr}
+                  </Typography>
+
+                  <Typography variant="body2" sx={{ fontWeight: 700 }}>
+                    {row.customer}
+                  </Typography>
+
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                    <FlightIcon sx={{ fontSize: 13, color: 'primary.main' }} />
+                    <Typography variant="caption" sx={{ fontWeight: 700 }}>{row.route}</Typography>
+                  </Box>
+
+                  <Typography variant="caption" color="text.secondary">{row.date}</Typography>
+
+                  <Box>
+                    <Chip
+                      size="small"
+                      label={row.status}
+                      color={cfg.chip}
+                      sx={{ fontSize: '0.68rem', fontWeight: 800, height: 22 }}
+                    />
+                  </Box>
+
+                  <Typography variant="caption" color="text.secondary">{row.ago}</Typography>
+
+                  <Box sx={{ display: 'flex', gap: 0.6, flexWrap: 'wrap', alignItems: 'center' }}>
+                    {row.needsAction ? (
+                      <Button
+                        size="small"
+                        variant="contained"
+                        color={row.tone === 'error' ? 'error' : 'warning'}
+                        startIcon={<EditNotificationsIcon sx={{ fontSize: 13 }} />}
+                        sx={{ fontSize: '0.68rem', fontWeight: 800, py: 0.3, px: 1 }}
+                        onClick={() => setSchedEvent(row)}
+                      >
+                        Action
+                      </Button>
+                    ) : (
+                      <Button
+                        size="small"
+                        variant="outlined"
+                        color="inherit"
+                        startIcon={<VisibilityIcon sx={{ fontSize: 13 }} />}
+                        sx={{ fontSize: '0.68rem', fontWeight: 700, py: 0.3, px: 1 }}
+                        onClick={() => setDetailRow(row)}
+                      >
+                        View
+                      </Button>
+                    )}
+
+                    {(row.status === 'Dispatched' || row.status === 'Ticketed') && (
+                      <Button
+                        size="small"
+                        variant="contained"
+                        color="success"
+                        startIcon={<SendIcon sx={{ fontSize: 12 }} />}
+                        sx={{ fontSize: '0.65rem', fontWeight: 700, py: 0.3, px: 0.8 }}
+                        onClick={() => handleDispatchOfficialItinerary(row)}
+                      >
+                        Dispatch
+                      </Button>
+                    )}
+
+                    <IconButton
+                      size="small"
+                      color="primary"
+                      onClick={() => setDiscussRow(row)}
+                      title="Discuss Tracker Event"
+                    >
+                      <CommentIcon fontSize="small" />
+                    </IconButton>
+                  </Box>
+                </Box>
+              );
+            })
+          )}
         </Box>
+
+        {/* MOBILE CARD VIEW (xs & sm) */}
+        <Box sx={{ display: { xs: 'flex', md: 'none' }, flexDirection: 'column', gap: 1.5, p: 1.5 }}>
+          {filtered.length === 0 ? (
+            <Box sx={{ py: 4, textAlign: 'center' }}>
+              <Typography variant="body2" color="text.secondary">
+                No PNR records match your search filter.
+              </Typography>
+            </Box>
+          ) : (
+            filtered.map((row) => {
+              const cfg = STATUS_COLOR[row.tone] || STATUS_COLOR['info'];
+              return (
+                <Paper
+                  key={row.pnr}
+                  variant="outlined"
+                  sx={{
+                    p: 2,
+                    borderRadius: 2.5,
+                    bgcolor: row.needsAction ? cfg.rowBg : '#FFFFFF',
+                    borderColor: row.needsAction ? cfg.border : 'divider'
+                  }}
+                >
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+                    <Typography variant="subtitle2" sx={{ fontWeight: 900, fontFamily: 'monospace', color: 'primary.main' }}>
+                      {cfg.icon} {row.pnr}
+                    </Typography>
+                    <Chip
+                      size="small"
+                      label={row.status}
+                      color={cfg.chip}
+                      sx={{ fontSize: '0.65rem', fontWeight: 800, height: 22 }}
+                    />
+                  </Box>
+
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+                    <Typography variant="body2" sx={{ fontWeight: 800, color: 'text.primary' }}>
+                      {row.customer}
+                    </Typography>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                      <FlightIcon sx={{ fontSize: 13, color: 'primary.main' }} />
+                      <Typography variant="caption" sx={{ fontWeight: 800 }}>{row.route}</Typography>
+                    </Box>
+                  </Box>
+
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1.5 }}>
+                    <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 700 }}>
+                      Travel Date: <b>{row.date}</b>
+                    </Typography>
+                    <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 700 }}>
+                      Updated: <b>{row.ago}</b>
+                    </Typography>
+                  </Box>
+
+                  <Divider sx={{ my: 1 }} />
+
+                  <Box sx={{ display: 'flex', gap: 1, justifyContent: 'flex-end', flexWrap: 'wrap', alignItems: 'center' }}>
+                    {row.needsAction ? (
+                      <Button
+                        size="small"
+                        variant="contained"
+                        color={row.tone === 'error' ? 'error' : 'warning'}
+                        startIcon={<EditNotificationsIcon sx={{ fontSize: 13 }} />}
+                        sx={{ fontSize: '0.7rem', fontWeight: 800, py: 0.4, px: 1.2 }}
+                        onClick={() => setSchedEvent(row)}
+                      >
+                        Action
+                      </Button>
+                    ) : (
+                      <Button
+                        size="small"
+                        variant="outlined"
+                        color="inherit"
+                        startIcon={<VisibilityIcon sx={{ fontSize: 13 }} />}
+                        sx={{ fontSize: '0.7rem', fontWeight: 700, py: 0.4, px: 1.2 }}
+                        onClick={() => setDetailRow(row)}
+                      >
+                        View Details
+                      </Button>
+                    )}
+
+                    {(row.status === 'Dispatched' || row.status === 'Ticketed') && (
+                      <Button
+                        size="small"
+                        variant="contained"
+                        color="success"
+                        startIcon={<SendIcon sx={{ fontSize: 12 }} />}
+                        sx={{ fontSize: '0.7rem', fontWeight: 700, py: 0.4, px: 1 }}
+                        onClick={() => handleDispatchOfficialItinerary(row)}
+                      >
+                        Dispatch
+                      </Button>
+                    )}
+
+                    <IconButton
+                      size="small"
+                      color="primary"
+                      onClick={() => setDiscussRow(row)}
+                      title="Discuss Tracker Event"
+                    >
+                      <CommentIcon fontSize="small" />
+                    </IconButton>
+                  </Box>
+                </Paper>
+              );
+            })
+          )}
+        </Box>
+
       </Paper>
 
       {/* ─── 4. PNR DETAIL MODAL/DRAWER ─── */}
