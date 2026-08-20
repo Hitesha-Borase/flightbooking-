@@ -18,6 +18,10 @@ export default function TicketingIssuance() {
   const [selectedItem, setSelectedItem] = useState(DEMO_ISSUANCE_QUEUE[0]);
   const [pnrFeed, setPnrFeed] = useState(DEMO_PNR_FEED);
 
+  const handleSelectForIssue = (item) => {
+    setSelectedItem(item);
+  };
+
   const handleUpdateStatus = (bookingId, newStatus) => {
     setQueueItems(prev =>
       prev.map(item =>

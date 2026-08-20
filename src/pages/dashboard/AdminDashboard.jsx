@@ -96,80 +96,82 @@ export const AdminDashboard = () => {
       />
 
       {/* ─── TOP ROW: STAT CARDS ─── */}
-      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', md: 'repeat(3, 1fr)', lg: 'repeat(6, 1fr)' }, gap: 2, mb: 3 }}>
-        <Paper elevation={0} sx={{ p: 2, border: '1px solid', borderColor: 'divider', borderRadius: 2.5, bgcolor: '#EFF6FF' }}>
+      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: 'repeat(2, 1fr)', sm: '1fr 1fr', md: 'repeat(3, 1fr)', lg: 'repeat(6, 1fr)' }, gap: 1.5, mb: 3 }}>
+        <Paper elevation={0} sx={{ p: { xs: 1.5, sm: 2 }, border: '1px solid', borderColor: 'divider', borderRadius: 2.5, bgcolor: '#EFF6FF' }}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-            <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 700 }}>TODAY'S NEW LEADS</Typography>
-            <PeopleIcon sx={{ color: '#2563EB', fontSize: 20 }} />
+            <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 700, fontSize: { xs: '0.62rem', sm: '0.7rem' } }}>TODAY'S LEADS</Typography>
+            <PeopleIcon sx={{ color: '#2563EB', fontSize: 18 }} />
           </Box>
-          <Typography variant="h4" sx={{ fontWeight: 900, color: '#1E3A8A' }}>18</Typography>
-          <Typography variant="caption" sx={{ color: '#16A34A', fontWeight: 700 }}>↑ +12% vs yesterday</Typography>
+          <Typography variant="h5" sx={{ fontWeight: 900, color: '#1E3A8A' }}>18</Typography>
+          <Typography variant="caption" sx={{ color: '#16A34A', fontWeight: 700, fontSize: '0.65rem' }}>↑ +12% vs yesterday</Typography>
         </Paper>
 
-        <Paper elevation={0} sx={{ p: 2, border: '1px solid', borderColor: 'divider', borderRadius: 2.5, bgcolor: '#ECFDF5' }}>
+        <Paper elevation={0} sx={{ p: { xs: 1.5, sm: 2 }, border: '1px solid', borderColor: 'divider', borderRadius: 2.5, bgcolor: '#ECFDF5' }}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-            <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 700 }}>BOOKINGS THIS MONTH</Typography>
-            <AirplaneTicketIcon sx={{ color: '#059669', fontSize: 20 }} />
+            <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 700, fontSize: { xs: '0.62rem', sm: '0.7rem' } }}>BOOKINGS MONTH</Typography>
+            <AirplaneTicketIcon sx={{ color: '#059669', fontSize: 18 }} />
           </Box>
-          <Typography variant="h4" sx={{ fontWeight: 900, color: '#064E3B' }}>42</Typography>
-          <Typography variant="caption" sx={{ color: 'text.secondary', fontWeight: 600 }}>Target: 50 bookings</Typography>
+          <Typography variant="h5" sx={{ fontWeight: 900, color: '#064E3B' }}>42</Typography>
+          <Typography variant="caption" sx={{ color: 'text.secondary', fontWeight: 600, fontSize: '0.65rem' }}>Target: 50</Typography>
         </Paper>
 
-        <Paper elevation={0} sx={{ p: 2, border: '1px solid', borderColor: 'divider', borderRadius: 2.5, bgcolor: '#EEF2FF' }}>
+        <Paper elevation={0} sx={{ p: { xs: 1.5, sm: 2 }, border: '1px solid', borderColor: 'divider', borderRadius: 2.5, bgcolor: '#EEF2FF' }}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-            <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 700 }}>REVENUE THIS MONTH</Typography>
-            <MonetizationOnIcon sx={{ color: '#4F46E5', fontSize: 20 }} />
+            <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 700, fontSize: { xs: '0.62rem', sm: '0.7rem' } }}>REVENUE MONTH</Typography>
+            <MonetizationOnIcon sx={{ color: '#4F46E5', fontSize: 18 }} />
           </Box>
-          <Typography variant="h4" sx={{ fontWeight: 900, color: '#312E81' }}>$88,200</Typography>
-          <Typography variant="caption" sx={{ color: '#16A34A', fontWeight: 700 }}>↑ +8% vs last month</Typography>
+          <Typography variant="h5" sx={{ fontWeight: 900, color: '#312E81' }}>$88,200</Typography>
+          <Typography variant="caption" sx={{ color: '#16A34A', fontWeight: 700, fontSize: '0.65rem' }}>↑ +8% vs last mo</Typography>
         </Paper>
 
-        <Paper elevation={0} sx={{ p: 2, border: '1px solid', borderColor: 'divider', borderRadius: 2.5, bgcolor: '#FEF3C7' }}>
+        <Paper elevation={0} sx={{ p: { xs: 1.5, sm: 2 }, border: '1px solid', borderColor: 'divider', borderRadius: 2.5, bgcolor: '#FEF3C7' }}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-            <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 700 }}>PENDING PAYMENTS</Typography>
-            <HourglassEmptyIcon sx={{ color: '#D97706', fontSize: 20 }} />
+            <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 700, fontSize: { xs: '0.62rem', sm: '0.7rem' } }}>PENDING PAYMENTS</Typography>
+            <HourglassEmptyIcon sx={{ color: '#D97706', fontSize: 18 }} />
           </Box>
-          <Typography variant="h4" sx={{ fontWeight: 900, color: '#78350F' }}>5</Typography>
-          <Typography variant="caption" sx={{ color: '#D97706', fontWeight: 800 }}>$14,500 pending</Typography>
+          <Typography variant="h5" sx={{ fontWeight: 900, color: '#78350F' }}>5</Typography>
+          <Typography variant="caption" sx={{ color: '#D97706', fontWeight: 800, fontSize: '0.65rem' }}>$14,500 pending</Typography>
         </Paper>
 
-        <Paper elevation={0} sx={{ p: 2, border: '1px solid', borderColor: 'divider', borderRadius: 2.5, bgcolor: '#FFF1F2' }}>
+        <Paper elevation={0} sx={{ p: { xs: 1.5, sm: 2 }, border: '1px solid', borderColor: 'divider', borderRadius: 2.5, bgcolor: '#FFF1F2' }}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-            <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 700 }}>OPEN QUOTES</Typography>
-            <RequestQuoteIcon sx={{ color: '#E11D48', fontSize: 20 }} />
+            <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 700, fontSize: { xs: '0.62rem', sm: '0.7rem' } }}>OPEN QUOTES</Typography>
+            <RequestQuoteIcon sx={{ color: '#E11D48', fontSize: 18 }} />
           </Box>
-          <Typography variant="h4" sx={{ fontWeight: 900, color: '#9F1239' }}>14</Typography>
-          <Typography variant="caption" sx={{ color: '#E11D48', fontWeight: 900 }}>⚠️ 3 expiring soon</Typography>
+          <Typography variant="h5" sx={{ fontWeight: 900, color: '#9F1239' }}>14</Typography>
+          <Typography variant="caption" sx={{ color: '#E11D48', fontWeight: 900, fontSize: '0.65rem' }}>⚠️ 3 expiring</Typography>
         </Paper>
 
-        <Paper elevation={0} sx={{ p: 2, border: '1px solid', borderColor: 'divider', borderRadius: 2.5, bgcolor: '#F5F3FF' }}>
+        <Paper elevation={0} sx={{ p: { xs: 1.5, sm: 2 }, border: '1px solid', borderColor: 'divider', borderRadius: 2.5, bgcolor: '#F5F3FF' }}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-            <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 700 }}>TEAM ACTIVE NOW</Typography>
-            <BadgeIcon sx={{ color: '#7C3AED', fontSize: 20 }} />
+            <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 700, fontSize: { xs: '0.62rem', sm: '0.7rem' } }}>TEAM ACTIVE</Typography>
+            <BadgeIcon sx={{ color: '#7C3AED', fontSize: 18 }} />
           </Box>
-          <Typography variant="h4" sx={{ fontWeight: 900, color: '#5B21B6' }}>8</Typography>
-          <Typography variant="caption" sx={{ color: '#7C3AED', fontWeight: 700 }}>Agents online</Typography>
+          <Typography variant="h5" sx={{ fontWeight: 900, color: '#5B21B6' }}>8</Typography>
+          <Typography variant="caption" sx={{ color: '#7C3AED', fontWeight: 700, fontSize: '0.65rem' }}>Agents online</Typography>
         </Paper>
       </Box>
 
       {/* ─── MIDDLE ROW: PIPELINE & CHARTS ─── */}
       <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', lg: '4fr 5fr 3fr' }, gap: 2.5, mb: 3 }}>
         {/* Left Card: Booking Pipeline */}
-        <Box>
-          <Paper elevation={0} sx={{ p: 2.5, border: '1px solid', borderColor: 'divider', borderRadius: 2.5, height: '100%' }}>
-            <Typography variant="subtitle1" sx={{ fontWeight: 900, mb: 2 }}>
+        <Box sx={{ width: '100%', overflow: 'hidden' }}>
+          <Paper elevation={0} sx={{ p: { xs: 1.5, sm: 2.5 }, border: '1px solid', borderColor: 'divider', borderRadius: 2.5, height: '100%' }}>
+            <Typography variant="subtitle1" sx={{ fontWeight: 900, mb: 1.5, fontSize: { xs: '0.85rem', sm: '1rem' } }}>
               ⚡ FLIGHT BOOKING PIPELINE
             </Typography>
-            <AppTable
-              columns={pipelineColumns}
-              data={PIPELINE_DATA}
-              count={PIPELINE_DATA.length}
-              page={0}
-              rowsPerPage={6}
-              onPageChange={() => {}}
-              onRowsPerPageChange={() => {}}
-              hidePagination
-            />
+            <Box sx={{ overflowX: 'auto', width: '100%' }}>
+              <AppTable
+                columns={pipelineColumns}
+                data={PIPELINE_DATA}
+                count={PIPELINE_DATA.length}
+                page={0}
+                rowsPerPage={6}
+                onPageChange={() => {}}
+                onRowsPerPageChange={() => {}}
+                hidePagination
+              />
+            </Box>
           </Paper>
         </Box>
 
