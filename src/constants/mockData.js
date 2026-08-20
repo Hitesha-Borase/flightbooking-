@@ -67,6 +67,30 @@ export const BOOKING_STATUSES = [
   'Completed', 'Cancelled', 'Refunded'
 ];
 
+export const TICKETING_STATUSES = [
+  'Pending Ticketing',
+  'Pending Payment',
+  'Payment Confirmed',
+  'Ready to Issue',
+  'Ticketing in Progress',
+  'Ticketed',
+  'Failed',
+  'Manual Review'
+];
+
+export const PAYMENT_STATUSES = [
+  'Payment Pending',
+  'Payment Processing',
+  'Payment Successful',
+  'Payment Failed',
+  'Payment Cancelled',
+  'Partially Paid',
+  'Refund Pending',
+  'Refunded',
+  'Partially Refunded',
+  'Chargeback'
+];
+
 export const LEAD_STATUSES = [
   'New', 'Contacted', 'Qualified',
   'Quote Sent', 'Negotiating', 'Won',

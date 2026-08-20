@@ -38,6 +38,8 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
+import SupportAgentIcon from '@mui/icons-material/SupportAgent';
+import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
 import LogoutIcon from '@mui/icons-material/Logout';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
@@ -271,6 +273,8 @@ export const DashboardLayout = () => {
     if (currentUser.role === 'flight_expert' && ['/quotes', '/flights', '/bookings'].includes(item.path)) return item.path;
     if (currentUser.role === 'ticketing_agent' && ['/bookings', '/flight-alerts', '/ticketing'].includes(item.path)) return item.path;
     if (currentUser.role === 'finance' && item.path === '/agents/performance') return item.path;
+    if (item.path === '/after-sales') return '/after-sales';
+    if (item.path === '/qa-audits') return '/qa-audits';
     if (item.path === '/integrations') return '/integrations';
 
     if (item.path.startsWith(`/${prefix}`)) return item.path;
@@ -306,6 +310,7 @@ export const DashboardLayout = () => {
     { section: 'TRAVEL OPERATIONS', label: 'Flight Requests', icon: <FlightIcon />, path: '/flights', roles: ['super_admin', 'flight_expert'] },
     { section: 'TRAVEL OPERATIONS', label: 'Quotes', icon: <RequestQuoteIcon />, path: '/quotes', roles: ['admin', 'super_admin', 'team_leader', 'sales_agent', 'consultant', 'flight_expert'] },
     { section: 'TRAVEL OPERATIONS', label: 'Bookings', icon: <AirplaneTicketIcon />, path: '/bookings', roles: ['admin', 'super_admin', 'team_leader', 'sales_agent', 'consultant', 'flight_expert', 'ticketing_agent'] },
+    { section: 'TRAVEL OPERATIONS', label: 'After-Sales', icon: <SupportAgentIcon />, path: '/after-sales', roles: ['admin', 'consultant', 'sales_agent', 'operations', 'finance', 'super_admin', 'marketing', 'team_leader', 'flight_expert', 'ticketing_agent'] },
     { section: 'TRAVEL OPERATIONS', label: 'PNR / Tracking', icon: <ConnectingAirportsIcon />, path: '/flight-alerts', roles: ['super_admin', 'ticketing_agent'] },
     { section: 'TRAVEL OPERATIONS', label: 'Ticketing', icon: <ConfirmationNumberIcon />, path: '/ticketing', roles: ['super_admin', 'ticketing_agent'] },
 
@@ -318,6 +323,7 @@ export const DashboardLayout = () => {
     { section: 'MANAGEMENT', label: 'Team', icon: <GroupsIcon />, path: '/agents', roles: ['admin', 'operations', 'super_admin', 'team_leader'] },
     { section: 'MANAGEMENT', label: 'Suppliers', icon: <StorefrontIcon />, path: '/suppliers', roles: ['super_admin'] },
     { section: 'MANAGEMENT', label: 'Reports', icon: <AssessmentIcon />, path: '/agents/performance', roles: ['admin', 'operations', 'super_admin', 'team_leader', 'finance'] },
+    { section: 'MANAGEMENT', label: 'QA Audits', icon: <VerifiedUserIcon />, path: '/qa-audits', roles: ['admin', 'consultant', 'sales_agent', 'operations', 'finance', 'super_admin', 'marketing', 'team_leader', 'flight_expert', 'ticketing_agent'] },
 
     // COMMUNICATION
     { section: 'COMMUNICATION', label: 'Social Inbox', icon: <ForumIcon />, path: '/social-inbox', roles: ['admin', 'consultant', 'sales_agent', 'operations', 'super_admin', 'team_leader'] },
@@ -587,23 +593,26 @@ export const DashboardLayout = () => {
 
   // Render navigation item
   const renderNavItem = (item) => {
-    // 1. If user has custom permissions enabled, check against their custom list
-    if (currentUser?.customPermissions?.enabled) {
-      const allowedMenus = currentUser.customPermissions.menus || [];
-      if (!allowedMenus.includes(item.label)) return null;
-    } else {
-      // 2. Otherwise fall back to role-based settings (or static fallback)
-      if (currentUser?.role !== 'super_admin') {
-        if (customizationSettings && customizationSettings[currentUser?.role]) {
-          const allowedMenus = customizationSettings[currentUser?.role].menus || [];
-          if (!allowedMenus.includes(item.label)) return null;
+    // Core operational items (Dashboard, QA Audits, After-Sales) always render for all users
+    if (!['Dashboard', 'QA Audits', 'After-Sales'].includes(item.label)) {
+      // 1. If user has custom permissions enabled, check against their custom list
+      if (currentUser?.customPermissions?.enabled) {
+        const allowedMenus = currentUser.customPermissions.menus || [];
+        if (!allowedMenus.includes(item.label)) return null;
+      } else {
+        // 2. Otherwise fall back to role-based settings (or static fallback)
+        if (currentUser?.role !== 'super_admin') {
+          if (customizationSettings && customizationSettings[currentUser?.role]) {
+            const allowedMenus = customizationSettings[currentUser?.role].menus || [];
+            if (!allowedMenus.includes(item.label)) return null;
+          } else {
+            // Fallback to static check if settings are not loaded yet
+            if (!item.roles.includes(currentUser?.role)) return null;
+          }
         } else {
-          // Fallback to static check if settings are not loaded yet
+          // Super admin can see all options they are allowed statically
           if (!item.roles.includes(currentUser?.role)) return null;
         }
-      } else {
-        // Super admin can see all options they are allowed statically
-        if (!item.roles.includes(currentUser?.role)) return null;
       }
     }
 

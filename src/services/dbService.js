@@ -1288,23 +1288,23 @@ export const dbService = {
     await delay();
     const DEFAULT_CUSTOMIZATION = {
       admin: {
-        menus: ['Dashboard', 'Leads', 'Customers', 'Quotes', 'Bookings', 'Payments', 'Invoices', 'Refunds', 'Team', 'Reports', 'Social Inbox', 'Users', 'Documents'],
+        menus: ['Dashboard', 'Leads', 'Customers', 'Quotes', 'Bookings', 'After-Sales', 'QA Audits', 'Payments', 'Invoices', 'Refunds', 'Team', 'Reports', 'Social Inbox', 'Users', 'Documents'],
         cards: ['Total Gross Sales', 'Net Revenue', 'Lead-to-Sale Conversion', 'Net Profit Margin', 'Avg Order Value (AOV)', 'Lead Waste %', 'Avg Reaction Time']
       },
       operations: {
-        menus: ['Dashboard', 'Leads', 'Customers', 'Social Inbox', 'Documents'],
+        menus: ['Dashboard', 'Leads', 'Customers', 'Bookings', 'After-Sales', 'QA Audits', 'Social Inbox', 'Documents'],
         cards: ['Total Leads', 'Converted', 'Wasted']
       },
       finance: {
-        menus: ['Dashboard', 'Payments', 'Invoices', 'Refunds'],
+        menus: ['Dashboard', 'Payments', 'Invoices', 'Refunds', 'After-Sales', 'QA Audits'],
         cards: ['Total Revenue', 'Pending Payments']
       },
       consultant: {
-        menus: ['Dashboard', 'Leads', 'Customers', 'Quotes', 'Bookings', 'Social Inbox'],
+        menus: ['Dashboard', 'Leads', 'Customers', 'Quotes', 'Bookings', 'After-Sales', 'QA Audits', 'Social Inbox'],
         cards: ['Active Cases']
       },
       marketing: {
-        menus: ['Dashboard', 'Leads', 'Reports'],
+        menus: ['Dashboard', 'Leads', 'Reports', 'QA Audits'],
         cards: ['Total Leads', 'Converted']
       }
     };
@@ -1312,8 +1312,8 @@ export const dbService = {
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        // If it contains old menu names like 'Doc Verification' or doesn't have 'Customers', clear and force reset to new travel defaults
-        if (parsed && parsed.admin && (parsed.admin.menus?.includes('Doc Verification') || !parsed.admin.menus?.includes('Customers'))) {
+        // If missing new modules like 'QA Audits' or 'After-Sales' or 'Customers', clear and force reset
+        if (parsed && parsed.admin && (!parsed.admin.menus?.includes('QA Audits') || !parsed.admin.menus?.includes('After-Sales') || !parsed.admin.menus?.includes('Customers'))) {
           localStorage.setItem('crm-customization-settings', JSON.stringify(DEFAULT_CUSTOMIZATION));
           return DEFAULT_CUSTOMIZATION;
         }
