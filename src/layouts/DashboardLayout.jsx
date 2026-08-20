@@ -43,6 +43,7 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import SearchIcon from '@mui/icons-material/Search';
 import ReceiptIcon from '@mui/icons-material/Receipt';
+import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import ForumIcon from '@mui/icons-material/Forum';
@@ -248,6 +249,7 @@ export const DashboardLayout = () => {
     if (currentUser.role === 'super_admin') return 'super_admin';
     if (currentUser.role === 'marketing') return 'marketing-manager';
     if (currentUser.role === 'team_leader') return 'team_leader';
+    if (currentUser.role === 'expert_team_leader') return 'expert_team_leader';
     if (currentUser.role === 'flight_expert') return 'flight_expert';
     if (currentUser.role === 'ticketing_agent') return 'ticketing_agent';
     return currentUser.role;
@@ -262,12 +264,13 @@ export const DashboardLayout = () => {
       if (currentUser.role === 'super_admin') return '/super_admin/dashboard';
       if (currentUser.role === 'marketing') return '/marketing-manager/dashboard';
       if (currentUser.role === 'team_leader') return '/team_leader/dashboard';
+      if (currentUser.role === 'expert_team_leader') return '/expert_team_leader/dashboard';
       if (currentUser.role === 'flight_expert') return '/flight_expert/dashboard';
       if (currentUser.role === 'ticketing_agent') return '/ticketing_agent/dashboard';
     }
 
     // Special override: Integrations is a shared page — do not prefix it
-    if (currentUser.role === 'team_leader' && ['/quotes', '/bookings', '/agents', '/agents/performance'].includes(item.path)) return item.path;
+    if (['team_leader', 'expert_team_leader'].includes(currentUser.role) && ['/quotes', '/bookings', '/agents', '/agents/performance'].includes(item.path)) return item.path;
     if (currentUser.role === 'flight_expert' && ['/quotes', '/flights', '/bookings'].includes(item.path)) return item.path;
     if (currentUser.role === 'ticketing_agent' && ['/bookings', '/flight-alerts', '/ticketing'].includes(item.path)) return item.path;
     if (currentUser.role === 'finance' && item.path === '/agents/performance') return item.path;
@@ -296,36 +299,42 @@ export const DashboardLayout = () => {
   };
 
   const menuItems = [
-    // WORKSPACE
-    { section: 'WORKSPACE', label: 'Dashboard', icon: <DashboardIcon />, path: '/dashboard', roles: ['admin', 'consultant', 'sales_agent', 'operations', 'finance', 'super_admin', 'marketing', 'team_leader', 'flight_expert', 'ticketing_agent'] },
-    { section: 'WORKSPACE', label: 'Leads', icon: <PeopleIcon />, path: '/leads', roles: ['admin', 'consultant', 'sales_agent', 'operations', 'super_admin', 'marketing', 'team_leader'] },
-    { section: 'WORKSPACE', label: 'Customers', icon: <BusinessCenterIcon />, path: '/customers', roles: ['admin', 'consultant', 'sales_agent', 'operations', 'super_admin', 'team_leader'] },
-    { section: 'WORKSPACE', label: 'Flight Requests', icon: <CalendarMonthIcon />, path: '/consultations/calendar', roles: ['operations', 'super_admin'] },
+    // ROADMAP STRATEGY
+    { section: 'ROADMAP STRATEGY', label: 'Priority Roadmap', icon: <MapIcon />, path: '/roadmap', roles: ['admin', 'consultant', 'sales_agent', 'operations', 'finance', 'super_admin', 'marketing', 'team_leader', 'expert_team_leader'] },
 
-    // TRAVEL OPERATIONS
-    { section: 'TRAVEL OPERATIONS', label: 'Flight Requests', icon: <FlightIcon />, path: '/flights', roles: ['super_admin', 'flight_expert'] },
-    { section: 'TRAVEL OPERATIONS', label: 'Quotes', icon: <RequestQuoteIcon />, path: '/quotes', roles: ['admin', 'super_admin', 'team_leader', 'sales_agent', 'consultant', 'flight_expert'] },
-    { section: 'TRAVEL OPERATIONS', label: 'Bookings', icon: <AirplaneTicketIcon />, path: '/bookings', roles: ['admin', 'super_admin', 'team_leader', 'sales_agent', 'consultant', 'flight_expert', 'ticketing_agent'] },
-    { section: 'TRAVEL OPERATIONS', label: 'PNR / Tracking', icon: <ConnectingAirportsIcon />, path: '/flight-alerts', roles: ['super_admin', 'ticketing_agent'] },
-    { section: 'TRAVEL OPERATIONS', label: 'Ticketing', icon: <ConfirmationNumberIcon />, path: '/ticketing', roles: ['super_admin', 'ticketing_agent'] },
+    // PHASE 1 – SALES
+    { section: 'PHASE 1 – SALES', label: 'Dashboard', icon: <DashboardIcon />, path: '/dashboard', roles: ['admin', 'consultant', 'sales_agent', 'operations', 'finance', 'super_admin', 'marketing', 'team_leader', 'expert_team_leader', 'flight_expert', 'ticketing_agent'] },
+    { section: 'PHASE 1 – SALES', label: 'Leads', icon: <PeopleIcon />, path: '/leads', roles: ['admin', 'consultant', 'sales_agent', 'operations', 'super_admin', 'marketing', 'team_leader', 'expert_team_leader'] },
+    { section: 'PHASE 1 – SALES', label: 'Customer 360', icon: <BusinessCenterIcon />, path: '/customers', roles: ['admin', 'consultant', 'sales_agent', 'operations', 'super_admin', 'team_leader', 'expert_team_leader'] },
+    { section: 'PHASE 1 – SALES', label: 'Calling System', icon: <PhoneInTalkIcon />, path: '/agents', roles: ['admin', 'consultant', 'sales_agent', 'operations', 'super_admin', 'team_leader', 'expert_team_leader'] },
+    { section: 'PHASE 1 – SALES', label: 'Follow-ups', icon: <CalendarMonthIcon />, path: '/consultations/calendar', roles: ['admin', 'consultant', 'sales_agent', 'operations', 'super_admin', 'team_leader', 'expert_team_leader'] },
+    { section: 'PHASE 1 – SALES', label: 'Quotes', icon: <RequestQuoteIcon />, path: '/quotes', roles: ['admin', 'super_admin', 'team_leader', 'expert_team_leader', 'sales_agent', 'consultant', 'flight_expert'] },
+    { section: 'PHASE 1 – SALES', label: 'Sales Dashboard', icon: <AssessmentIcon />, path: '/agents/performance', roles: ['admin', 'super_admin', 'team_leader', 'expert_team_leader', 'sales_agent', 'consultant'] },
 
-    // FINANCE
-    { section: 'FINANCE', label: 'Payments', icon: <MonetizationOnIcon />, path: '/payments', roles: ['admin', 'finance', 'super_admin'] },
-    { section: 'FINANCE', label: 'Invoices', icon: <ReceiptIcon />, path: '/payments/invoices', roles: ['admin', 'finance', 'super_admin'] },
-    { section: 'FINANCE', label: 'Refunds', icon: <CurrencyExchangeIcon />, path: '/payments/refund-commission', roles: ['admin', 'super_admin', 'finance'] },
+    // PHASE 2 – BOOKING OPERATIONS
+    { section: 'PHASE 2 – BOOKING OPERATIONS', label: 'Flight Search', icon: <FlightIcon />, path: '/flights', roles: ['super_admin', 'flight_expert'] },
+    { section: 'PHASE 2 – BOOKING OPERATIONS', label: 'Bookings', icon: <AirplaneTicketIcon />, path: '/bookings', roles: ['admin', 'super_admin', 'team_leader', 'expert_team_leader', 'sales_agent', 'consultant', 'flight_expert', 'ticketing_agent'] },
+    { section: 'PHASE 2 – BOOKING OPERATIONS', label: 'Ticketing', icon: <ConfirmationNumberIcon />, path: '/ticketing', roles: ['super_admin', 'ticketing_agent'] },
+    { section: 'PHASE 2 – BOOKING OPERATIONS', label: 'Payments', icon: <MonetizationOnIcon />, path: '/payments', roles: ['admin', 'finance', 'super_admin'] },
+    { section: 'PHASE 2 – BOOKING OPERATIONS', label: 'After-Sales', icon: <ConnectingAirportsIcon />, path: '/flight-alerts', roles: ['admin', 'super_admin', 'team_leader', 'expert_team_leader', 'ticketing_agent', 'operations'] },
+    { section: 'PHASE 2 – BOOKING OPERATIONS', label: 'Suppliers / GDS', icon: <StorefrontIcon />, path: '/suppliers', roles: ['super_admin'] },
 
-    // MANAGEMENT
-    { section: 'MANAGEMENT', label: 'Team', icon: <GroupsIcon />, path: '/agents', roles: ['admin', 'operations', 'super_admin', 'team_leader'] },
-    { section: 'MANAGEMENT', label: 'Suppliers', icon: <StorefrontIcon />, path: '/suppliers', roles: ['super_admin'] },
-    { section: 'MANAGEMENT', label: 'Reports', icon: <AssessmentIcon />, path: '/agents/performance', roles: ['admin', 'operations', 'super_admin', 'team_leader', 'finance'] },
+    // PHASE 3 – MANAGEMENT
+    { section: 'PHASE 3 – MANAGEMENT', label: 'Team Leader Dashboard', icon: <GroupsIcon />, path: '/team_leader/dashboard', roles: ['admin', 'operations', 'super_admin', 'team_leader', 'expert_team_leader'] },
+    { section: 'PHASE 3 – MANAGEMENT', label: 'QA', icon: <AssignmentTurnedInIcon />, path: '/documents/verify', roles: ['admin', 'operations', 'super_admin', 'team_leader', 'expert_team_leader'] },
+    { section: 'PHASE 3 – MANAGEMENT', label: 'SLA Management', icon: <AssessmentIcon />, path: '/sla-management', roles: ['admin', 'consultant', 'sales_agent', 'operations', 'finance', 'super_admin', 'marketing', 'team_leader', 'expert_team_leader'] },
+    { section: 'PHASE 3 – MANAGEMENT', label: 'Automation', icon: <AutoFixHighIcon />, path: '/automation', roles: ['admin', 'consultant', 'sales_agent', 'operations', 'finance', 'super_admin', 'marketing', 'team_leader', 'expert_team_leader'] },
+    { section: 'PHASE 3 – MANAGEMENT', label: 'Finance', icon: <CurrencyExchangeIcon />, path: '/payments/refund-commission', roles: ['admin', 'super_admin', 'finance'] },
+    { section: 'PHASE 3 – MANAGEMENT', label: 'Management Reports', icon: <AssessmentIcon />, path: '/management-reports', roles: ['admin', 'consultant', 'sales_agent', 'operations', 'finance', 'super_admin', 'marketing', 'team_leader', 'expert_team_leader'] },
+    { section: 'PHASE 3 – MANAGEMENT', label: 'Audit Trail', icon: <HistoryIcon />, path: '/audit-trail', roles: ['admin', 'consultant', 'sales_agent', 'operations', 'finance', 'super_admin', 'marketing', 'team_leader', 'expert_team_leader'] },
 
-    // COMMUNICATION
-    { section: 'COMMUNICATION', label: 'Social Inbox', icon: <ForumIcon />, path: '/social-inbox', roles: ['admin', 'consultant', 'sales_agent', 'operations', 'super_admin', 'team_leader'] },
-
-    // ADMINISTRATION
-    { section: 'ADMINISTRATION', label: 'Users', icon: <SecurityIcon />, path: '/active-cases', roles: ['admin', 'operations', 'super_admin'] },
-    { section: 'ADMINISTRATION', label: 'Documents', icon: <AssignmentTurnedInIcon />, path: '/documents/verify', roles: ['admin', 'operations', 'super_admin'] },
-    { section: 'ADMINISTRATION', label: 'Settings', icon: <SettingsIcon />, path: '/super_admin/customization', roles: ['super_admin'] },
+    // PHASE 4 – SCALE
+    { section: 'PHASE 4 – SCALE', label: 'Marketing Dashboard', icon: <TrendingUpIcon />, path: '/marketing-manager/dashboard', roles: ['admin', 'super_admin', 'marketing'] },
+    { section: 'PHASE 4 – SCALE', label: 'Marketing Automation', icon: <AutoFixHighIcon />, path: '/automation', roles: ['admin', 'super_admin', 'marketing'] },
+    { section: 'PHASE 4 – SCALE', label: 'AI Automation', icon: <SecurityIcon />, path: '/automation', roles: ['admin', 'super_admin', 'marketing'] },
+    { section: 'PHASE 4 – SCALE', label: 'Advanced Analytics', icon: <AssessmentIcon />, path: '/management-reports', roles: ['admin', 'super_admin', 'marketing'] },
+    { section: 'PHASE 4 – SCALE', label: 'Supplier Integrations', icon: <StorefrontIcon />, path: '/suppliers', roles: ['super_admin'] },
+    { section: 'PHASE 4 – SCALE', label: 'Communication Channels', icon: <ForumIcon />, path: '/social-inbox', roles: ['admin', 'consultant', 'sales_agent', 'operations', 'super_admin', 'team_leader', 'expert_team_leader'] },
   ];
 
   const ALL_SUB_ITEMS = [
@@ -932,17 +941,17 @@ export const DashboardLayout = () => {
               }}
             >
               <Box sx={{ p: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
-                  Recent Notifications
+                <Typography variant="subtitle1" sx={{ fontWeight: 800 }}>
+                  Central Real-Time Alerts
                 </Typography>
                 {unreadCount > 0 && (
-                  <Button size="small" onClick={handleMarkAllRead} sx={{ fontSize: '0.75rem' }}>
+                  <Button size="small" onClick={handleMarkAllRead} sx={{ fontSize: '0.72rem', fontWeight: 800 }}>
                     Mark all read
                   </Button>
                 )}
               </Box>
               <Divider />
-              <List sx={{ p: 0 }}>
+              <List sx={{ p: 0, maxHeight: 300, overflowY: 'auto' }}>
                 {notifications.length === 0 ? (
                   <Box sx={{ p: 3, textAlign: 'center', color: 'text.secondary' }}>
                     <Typography variant="body2">No notifications found</Typography>
@@ -961,21 +970,29 @@ export const DashboardLayout = () => {
                         '&:last-child': { border: 0 },
                       }}
                     >
-                      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
-                        <Typography variant="subtitle2" sx={{ fontWeight: notif.read ? 500 : 700 }}>
-                          {notif.title}
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
+                      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5, width: '100%' }}>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                          <Typography variant="subtitle2" sx={{ fontWeight: notif.read ? 600 : 900 }}>
+                            {notif.title}
+                          </Typography>
+                          <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.65rem', fontWeight: 700 }}>
+                            {notif.time}
+                          </Typography>
+                        </Box>
+                        <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.8rem' }}>
                           {notif.message}
-                        </Typography>
-                        <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.65rem' }}>
-                          {notif.time}
                         </Typography>
                       </Box>
                     </ListItemButton>
                   ))
                 )}
               </List>
+              <Divider />
+              <Box sx={{ p: 1.5, textAlign: 'center', bgcolor: '#F8FAFC' }}>
+                <Button size="small" variant="contained" color="primary" fullWidth onClick={() => { handleNotifMenuClose(); navigate('/notifications/all'); }} sx={{ fontWeight: 800 }}>
+                  View All Central Notifications & History
+                </Button>
+              </Box>
             </Popover>
 
             {/* Profile Dropdown */}

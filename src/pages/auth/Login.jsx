@@ -26,6 +26,7 @@ import CampaignIcon from '@mui/icons-material/Campaign';
 import GroupsIcon from '@mui/icons-material/Groups';
 import FlightTakeoffIcon from '@mui/icons-material/FlightTakeoff';
 import ConfirmationNumberIcon from '@mui/icons-material/ConfirmationNumber';
+import DiamondIcon from '@mui/icons-material/Diamond';
 
 const schema = yup.object().shape({
   email: yup.string().email('Enter a valid email').required('Email is required'),
@@ -121,12 +122,12 @@ export const Login = () => {
         role: 'team_leader',
         avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150',
       };
-    } else if (role === 'expert_tl') {
+    } else if (role === 'expert_team_leader' || role === 'expert_tl') {
       mockUser = {
         id: 'etl-1',
-        name: 'Michael Expert TL',
+        name: 'Michael Senior Expert TL',
         email: 'michael.etl@wowmyflight.com',
-        role: 'team_leader',
+        role: 'expert_team_leader',
         avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150',
       };
     } else if (role === 'flight_expert') {
@@ -209,7 +210,8 @@ export const Login = () => {
     if (role === 'super_admin') navigate('/super_admin/dashboard');
     else if (role === 'api_manager') navigate('/integrations');
     else if (role === 'admin') navigate('/admin/dashboard');
-    else if (role === 'team_leader' || role === 'expert_tl' || role === 'qa') navigate('/team_leader/dashboard');
+    else if (role === 'team_leader' || role === 'qa') navigate('/team_leader/dashboard');
+    else if (role === 'expert_team_leader' || role === 'expert_tl') navigate('/expert_team_leader/dashboard');
     else if (role === 'flight_expert') navigate('/flight_expert/dashboard');
     else if (role === 'ticketing_agent') navigate('/ticketing_agent/dashboard');
     else if (role === 'finance' || role === 'accountant') navigate('/finance/dashboard');
@@ -232,6 +234,7 @@ export const Login = () => {
       roles: [
         { role: 'consultant', label: 'Sales Exec', icon: <SupportAgentIcon sx={{ fontSize: 15 }} /> },
         { role: 'team_leader', label: 'Team Leader', icon: <GroupsIcon sx={{ fontSize: 15 }} /> },
+        { role: 'expert_team_leader', label: 'Expert TL (Escalations)', icon: <DiamondIcon sx={{ fontSize: 15 }} /> },
         { role: 'flight_expert', label: 'Flight Expert (GDS)', icon: <FlightTakeoffIcon sx={{ fontSize: 15 }} /> },
       ]
     },

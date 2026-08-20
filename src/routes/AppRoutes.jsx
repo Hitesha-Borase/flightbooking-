@@ -21,6 +21,13 @@ import FinanceDashboard from '../pages/dashboard/FinanceDashboard';
 import SuperAdminDashboard from '../pages/dashboard/SuperAdminDashboard';
 import MarketingDashboard from '../pages/dashboard/MarketingDashboard';
 import TeamLeaderDashboard from '../pages/dashboard/TeamLeaderDashboard';
+import ExpertTeamLeaderDashboard from '../pages/dashboard/ExpertTeamLeaderDashboard';
+import AutomationEngine from '../pages/automation/AutomationEngine';
+import SlaManagement from '../pages/sla/SlaManagement';
+import CentralNotificationCenter from '../pages/notifications/CentralNotificationCenter';
+import AuditTrail from '../pages/audit/AuditTrail';
+import ManagementReportingDashboard from '../pages/reports/ManagementReportingDashboard';
+import DevelopmentRoadmap from '../pages/roadmap/DevelopmentRoadmap';
 import FlightExpertDesk from '../pages/dashboard/FlightExpertDesk';
 import TicketingIssuance from '../pages/dashboard/TicketingIssuance';
 import TicketingAgentDashboard from '../pages/dashboard/TicketingAgentDashboard';
@@ -131,6 +138,7 @@ const getDynamicRedirectPath = (label, role) => {
   else if (role === 'marketing') prefix = 'marketing-manager';
   else if (role === 'finance') prefix = 'finance';
   else if (role === 'team_leader') prefix = 'team_leader';
+  else if (role === 'expert_team_leader') prefix = 'expert_team_leader';
   else if (role === 'flight_expert') prefix = 'flight_expert';
   else if (role === 'ticketing_agent') prefix = 'ticketing_agent';
 
@@ -367,6 +375,62 @@ export const AppRoutes = () => {
           element={
             <ProtectedRoute allowedRoles={['team_leader', 'super_admin']}>
               <TeamLeaderDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/expert_team_leader/dashboard"
+          element={
+            <ProtectedRoute allowedRoles={['expert_team_leader', 'super_admin']}>
+              <ExpertTeamLeaderDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/automation"
+          element={
+            <ProtectedRoute allowedRoles={['admin', 'super_admin', 'team_leader', 'expert_team_leader', 'consultant', 'sales_agent', 'operations', 'marketing', 'finance']}>
+              <AutomationEngine />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/sla-management"
+          element={
+            <ProtectedRoute allowedRoles={['admin', 'super_admin', 'team_leader', 'expert_team_leader', 'consultant', 'sales_agent', 'operations', 'marketing', 'finance']}>
+              <SlaManagement />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/notifications/all"
+          element={
+            <ProtectedRoute allowedRoles={['admin', 'super_admin', 'team_leader', 'expert_team_leader', 'consultant', 'sales_agent', 'operations', 'marketing', 'finance']}>
+              <CentralNotificationCenter />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/audit-trail"
+          element={
+            <ProtectedRoute allowedRoles={['admin', 'super_admin', 'team_leader', 'expert_team_leader', 'consultant', 'sales_agent', 'operations', 'marketing', 'finance']}>
+              <AuditTrail />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/management-reports"
+          element={
+            <ProtectedRoute allowedRoles={['admin', 'super_admin', 'team_leader', 'expert_team_leader', 'consultant', 'sales_agent', 'operations', 'marketing', 'finance']}>
+              <ManagementReportingDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/roadmap"
+          element={
+            <ProtectedRoute allowedRoles={['admin', 'super_admin', 'team_leader', 'expert_team_leader', 'consultant', 'sales_agent', 'operations', 'marketing', 'finance']}>
+              <DevelopmentRoadmap />
             </ProtectedRoute>
           }
         />
