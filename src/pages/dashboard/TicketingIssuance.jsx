@@ -18,13 +18,34 @@ export default function TicketingIssuance() {
   const [selectedItem, setSelectedItem] = useState(DEMO_ISSUANCE_QUEUE[0]);
   const [pnrFeed, setPnrFeed] = useState(DEMO_PNR_FEED);
 
-  const handleSelectForIssue = (item) => {
-    setSelectedItem(item);
+  const handleUpdateStatus = (bookingId, newStatus) => {
+    setQueueItems(prev =>
+      prev.map(item =>
+        item.id === bookingId || item.bookingId === bookingId
+          ? {
+              ...item,
+              ticketStatus: newStatus,
+              issueDateTime: newStatus === 'Ticketed' ? new Date().toLocaleString() : item.issueDateTime
+            }
+          : item
+      )
+    );
   };
 
   const handleIssueTicketSuccess = (successData) => {
-    // 1. Visually remove/move item from queue in frontend state
-    setQueueItems(prev => prev.filter(i => i.id !== successData.bookingRef));
+    // Visually mark item as Ticketed in queue
+    setQueueItems(prev =>
+      prev.map(item =>
+        item.id === successData.bookingRef || item.bookingId === successData.bookingRef
+          ? {
+              ...item,
+              ticketStatus: 'Ticketed',
+              ticketNumber: successData.eTickets?.join(', ') || '0172345678901',
+              issueDateTime: new Date().toLocaleString()
+            }
+          : item
+      )
+    );
     setSelectedItem(null);
 
     // 2. Add ticketed item to PNR Auto-Tracker feed
@@ -86,7 +107,7 @@ export default function TicketingIssuance() {
               <Chip size="small" label="Ticketing Operations" color="success" sx={{ fontWeight: 800, fontSize: '0.65rem', height: 20 }} />
             </Box>
             <Typography variant="caption" color="text.secondary">
-              E-Ticket issuance queue, GDS 13-digit code validation & active PNR monitoring
+              Ticketing Department Queue (PNR, Supplier, Ticket Number, Fare, Taxes, Commission, TTL, Agents) & GDS validation
             </Typography>
           </Box>
         </Box>
@@ -103,6 +124,7 @@ export default function TicketingIssuance() {
             items={queueItems}
             selectedId={selectedItem?.id}
             onSelectIssue={handleSelectForIssue}
+            onUpdateStatus={handleUpdateStatus}
           />
         </Box>
 

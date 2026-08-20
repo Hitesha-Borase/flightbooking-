@@ -316,46 +316,47 @@ export default function PNRTracking() {
 
       {/* ─── 3. PNR TRACKER TABLE ─── */}
       <Paper elevation={0} sx={{ border: '1px solid', borderColor: 'divider', borderRadius: 2.5, overflow: 'hidden' }}>
-        {/* Table Header */}
-        <Box sx={{
-          display: 'grid',
-          gridTemplateColumns: { xs: '1fr', md: '110px 1.2fr 130px 90px 180px 90px 190px' },
-          px: 2, py: 1.2, bgcolor: '#F8FAFC',
-          borderBottom: '1px solid', borderColor: 'divider'
-        }}>
-          {['PNR', 'Customer', 'Route', 'Date', 'Status', 'Last Updated', 'Actions'].map(h => (
-            <Typography key={h} variant="caption" sx={{ fontWeight: 800, color: 'text.secondary', textTransform: 'uppercase', fontSize: '0.68rem' }}>
-              {h}
-            </Typography>
-          ))}
-        </Box>
+        <Box sx={{ overflowX: 'auto', width: '100%' }}>
+          <Box sx={{ minWidth: { xs: 750, md: 'auto' } }}>
+            {/* Table Header */}
+            <Box sx={{
+              display: 'grid',
+              gridTemplateColumns: '110px 1.2fr 130px 90px 180px 90px 190px',
+              px: 2, py: 1.2, bgcolor: '#F8FAFC',
+              borderBottom: '1px solid', borderColor: 'divider'
+            }}>
+              {['PNR', 'Customer', 'Route', 'Date', 'Status', 'Last Updated', 'Actions'].map(h => (
+                <Typography key={h} variant="caption" sx={{ fontWeight: 800, color: 'text.secondary', textTransform: 'uppercase', fontSize: '0.68rem' }}>
+                  {h}
+                </Typography>
+              ))}
+            </Box>
 
-        {/* Table Rows */}
-        {filtered.length === 0 ? (
-          <Box sx={{ py: 5, textAlign: 'center' }}>
-            <Typography variant="body2" color="text.secondary">
-              No PNR records match your search filter.
-            </Typography>
-          </Box>
-        ) : (
-          filtered.map((row) => {
-            const cfg = STATUS_COLOR[row.tone] || STATUS_COLOR['info'];
-            return (
-              <Box
-                key={row.pnr}
-                sx={{
-                  display: 'grid',
-                  gridTemplateColumns: { xs: '1fr', md: '110px 1.2fr 130px 90px 180px 90px 190px' },
-                  px: 2, py: 1.5,
-                  bgcolor: row.needsAction ? cfg.rowBg : 'transparent',
-                  borderBottom: '1px solid', borderColor: 'divider',
-                  '&:last-child': { borderBottom: 'none' },
-                  '&:hover': { bgcolor: row.needsAction ? cfg.rowBg : '#F8FAFC' },
-                  transition: 'background 0.15s',
-                  alignItems: 'center',
-                  gap: { xs: 1, md: 0 }
-                }}
-              >
+            {/* Table Rows */}
+            {filtered.length === 0 ? (
+              <Box sx={{ py: 5, textAlign: 'center' }}>
+                <Typography variant="body2" color="text.secondary">
+                  No PNR records match your search filter.
+                </Typography>
+              </Box>
+            ) : (
+              filtered.map((row) => {
+                const cfg = STATUS_COLOR[row.tone] || STATUS_COLOR['info'];
+                return (
+                  <Box
+                    key={row.pnr}
+                    sx={{
+                      display: 'grid',
+                      gridTemplateColumns: '110px 1.2fr 130px 90px 180px 90px 190px',
+                      px: 2, py: 1.5,
+                      bgcolor: row.needsAction ? cfg.rowBg : 'transparent',
+                      borderBottom: '1px solid', borderColor: 'divider',
+                      '&:last-child': { borderBottom: 'none' },
+                      '&:hover': { bgcolor: row.needsAction ? cfg.rowBg : '#F8FAFC' },
+                      transition: 'background 0.15s',
+                      alignItems: 'center'
+                    }}
+                  >
                 {/* PNR Code */}
                 <Typography variant="body2" sx={{ fontWeight: 900, fontFamily: 'monospace', color: 'primary.main' }}>
                   {cfg.icon} {row.pnr}
@@ -443,6 +444,8 @@ export default function PNRTracking() {
             );
           })
         )}
+          </Box>
+        </Box>
       </Paper>
 
       {/* ─── 4. PNR DETAIL MODAL/DRAWER ─── */}

@@ -96,8 +96,8 @@ export const AuthLayout = () => {
           display: 'flex',
           justify: 'center',
           alignItems: 'center',
-          px: { xs: 2, sm: 4, md: 5 },
-          py: 4,
+          px: { xs: 1.5, sm: 4, md: 5 },
+          py: { xs: 2, sm: 4 },
           position: 'relative',
           overflowY: 'auto',
           background:
@@ -111,7 +111,7 @@ export const AuthLayout = () => {
           sx={{
             width: '100%',
             maxWidth: 500,
-            borderRadius: 4,
+            borderRadius: { xs: 3, sm: 4 },
             border: '1px solid',
             borderColor: theme.palette.mode === 'light' ? 'rgba(226, 232, 240, 0.9)' : 'rgba(255, 255, 255, 0.05)',
             background:
@@ -123,7 +123,7 @@ export const AuthLayout = () => {
               theme.palette.mode === 'light'
                 ? '0px 20px 40px -15px rgba(15, 23, 42, 0.08)'
                 : '0px 25px 50px -12px rgba(0, 0, 0, 0.5)',
-            p: { xs: 3, sm: 4.5 },
+            p: { xs: 2.2, sm: 4.5 },
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'stretch',

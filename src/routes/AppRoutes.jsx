@@ -38,6 +38,8 @@ import MandatoryCallDispositionEngine from '../pages/social/MandatoryCallDisposi
 import FlightExpertDesk from '../pages/dashboard/FlightExpertDesk';
 import TicketingIssuance from '../pages/dashboard/TicketingIssuance';
 import TicketingAgentDashboard from '../pages/dashboard/TicketingAgentDashboard';
+import AfterSalesWorkflow from '../pages/after-sales/AfterSalesWorkflow';
+import QAAudits from '../pages/qa/QAAudits';
 import { QuotesPage, BookingsPage, BookingDetailsPage, FlightAlertsPage, FlightRequestsPage, PaymentsPage, PaymentDetailsPage } from '../pages/dashboard/PlaceholderPages';
 
 
@@ -125,6 +127,8 @@ const getMenuLabelForPath = (path) => {
   if (p.includes('/agents') || p.includes('/team')) return 'Team';
   if (p.includes('/active-cases') || p.includes('/users')) return 'Users';
   if (p.includes('/documents/verify') || p.includes('/documents')) return 'Documents';
+  if (p.includes('/qa-audits')) return 'QA Audits';
+  if (p.includes('/after-sales')) return 'After-Sales';
   if (p.includes('/payments/refund-commission') || p.includes('/payments/refunds')) return 'Refunds';
   if (p.includes('/payments/invoices') || p.includes('/invoices')) return 'Invoices';
   if (p.includes('/payments')) return 'Payments';
@@ -158,6 +162,8 @@ const getDynamicRedirectPath = (label, role) => {
   if (label === 'Leads') path = '/leads';
   if (label === 'Quotes') path = '/quotes';
   if (label === 'Bookings') path = '/bookings';
+  if (label === 'After-Sales') path = '/after-sales';
+  if (label === 'QA Audits') path = '/qa-audits';
   if (label === 'Payments') path = '/payments';
   if (label === 'Invoices') path = '/payments/invoices';
   if (label === 'Refunds') path = '/payments/refund-commission';
@@ -209,29 +215,32 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
     try {
       const currentMenuLabel = getMenuLabelForPath(location.pathname);
 
-      // 1. Check individual custom permissions first (highest priority)
-      if (currentUser.customPermissions?.enabled) {
-        const allowedMenus = currentUser.customPermissions.menus || [];
-        if (currentMenuLabel && !allowedMenus.includes(currentMenuLabel)) {
-          if (allowedMenus.length > 0) {
-            const firstAllowedLabel = allowedMenus[0];
-            const redirectPath = getDynamicRedirectPath(firstAllowedLabel, currentUser.role);
-            if (location.pathname !== redirectPath) {
-              return <Navigate to={redirectPath} replace />;
-            }
-          }
-        }
-      } else if (customizationSettings) {
-        // 2. Fall back to role-level customization settings
-        const roleSettings = customizationSettings[currentUser.role];
-        if (roleSettings && roleSettings.menus) {
-          const allowedMenus = roleSettings.menus;
-          if (currentMenuLabel && !allowedMenus.includes(currentMenuLabel)) {
+      // Core operational routes (Dashboard, QA Audits, After-Sales) are always accessible for authenticated users
+      if (currentMenuLabel && !['Dashboard', 'QA Audits', 'After-Sales'].includes(currentMenuLabel)) {
+        // 1. Check individual custom permissions first (highest priority)
+        if (currentUser.customPermissions?.enabled) {
+          const allowedMenus = currentUser.customPermissions.menus || [];
+          if (!allowedMenus.includes(currentMenuLabel)) {
             if (allowedMenus.length > 0) {
               const firstAllowedLabel = allowedMenus[0];
               const redirectPath = getDynamicRedirectPath(firstAllowedLabel, currentUser.role);
               if (location.pathname !== redirectPath) {
                 return <Navigate to={redirectPath} replace />;
+              }
+            }
+          }
+        } else if (customizationSettings) {
+          // 2. Fall back to role-level customization settings
+          const roleSettings = customizationSettings[currentUser.role];
+          if (roleSettings && roleSettings.menus) {
+            const allowedMenus = roleSettings.menus;
+            if (!allowedMenus.includes(currentMenuLabel)) {
+              if (allowedMenus.length > 0) {
+                const firstAllowedLabel = allowedMenus[0];
+                const redirectPath = getDynamicRedirectPath(firstAllowedLabel, currentUser.role);
+                if (location.pathname !== redirectPath) {
+                  return <Navigate to={redirectPath} replace />;
+                }
               }
             }
           }
@@ -522,6 +531,10 @@ export const AppRoutes = () => {
         <Route path="/:role/bookings/:id" element={<ProtectedRoute><BookingDetailsPage /></ProtectedRoute>} />
         <Route path="/:role/suppliers" element={<ProtectedRoute><Suppliers /></ProtectedRoute>} />
         <Route path="/:role/flights" element={<ProtectedRoute><FlightRequestsPage /></ProtectedRoute>} />
+        <Route path="/:role/after-sales" element={<ProtectedRoute><AfterSalesWorkflow /></ProtectedRoute>} />
+        <Route path="/after-sales" element={<ProtectedRoute><AfterSalesWorkflow /></ProtectedRoute>} />
+        <Route path="/:role/qa-audits" element={<ProtectedRoute><QAAudits /></ProtectedRoute>} />
+        <Route path="/qa-audits" element={<ProtectedRoute><QAAudits /></ProtectedRoute>} />
         <Route path="/:role/ticketing" element={<ProtectedRoute><TicketingIssuance /></ProtectedRoute>} />
         <Route path="/ticketing" element={<ProtectedRoute><TicketingIssuance /></ProtectedRoute>} />
         <Route path="/:role/flight-alerts" element={<ProtectedRoute><FlightAlertsPage /></ProtectedRoute>} />

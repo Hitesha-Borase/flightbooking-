@@ -27,6 +27,7 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 // Icons
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import MapIcon from '@mui/icons-material/Map';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import PeopleIcon from '@mui/icons-material/People';
 import WorkIcon from '@mui/icons-material/Work';
@@ -38,6 +39,8 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
+import SupportAgentIcon from '@mui/icons-material/SupportAgent';
+import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
 import LogoutIcon from '@mui/icons-material/Logout';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
@@ -67,6 +70,11 @@ import ConfirmationNumberIcon from '@mui/icons-material/ConfirmationNumber';
 import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange';
 import StorefrontIcon from '@mui/icons-material/Storefront';
 import SecurityIcon from '@mui/icons-material/Security';
+import PhoneInTalkIcon from '@mui/icons-material/PhoneInTalk';
+import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
+import NoteAltIcon from '@mui/icons-material/NoteAlt';
+import HistoryIcon from '@mui/icons-material/History';
+import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 // Contexts & Hooks
 import { useThemeMode } from '../contexts/ThemeContext';
 import { useAlert } from '../contexts/AlertContext';
@@ -274,6 +282,8 @@ export const DashboardLayout = () => {
     if (currentUser.role === 'flight_expert' && ['/quotes', '/flights', '/bookings'].includes(item.path)) return item.path;
     if (currentUser.role === 'ticketing_agent' && ['/bookings', '/flight-alerts', '/ticketing'].includes(item.path)) return item.path;
     if (currentUser.role === 'finance' && item.path === '/agents/performance') return item.path;
+    if (item.path === '/after-sales') return '/after-sales';
+    if (item.path === '/qa-audits') return '/qa-audits';
     if (item.path === '/integrations') return '/integrations';
 
     if (item.path.startsWith(`/${prefix}`)) return item.path;
@@ -603,23 +613,26 @@ export const DashboardLayout = () => {
 
   // Render navigation item
   const renderNavItem = (item) => {
-    // 1. If user has custom permissions enabled, check against their custom list
-    if (currentUser?.customPermissions?.enabled) {
-      const allowedMenus = currentUser.customPermissions.menus || [];
-      if (!allowedMenus.includes(item.label)) return null;
-    } else {
-      // 2. Otherwise fall back to role-based settings (or static fallback)
-      if (currentUser?.role !== 'super_admin') {
-        if (customizationSettings && customizationSettings[currentUser?.role]) {
-          const allowedMenus = customizationSettings[currentUser?.role].menus || [];
-          if (!allowedMenus.includes(item.label)) return null;
+    // Core operational items (Dashboard, QA Audits, After-Sales) always render for all users
+    if (!['Dashboard', 'QA Audits', 'After-Sales'].includes(item.label)) {
+      // 1. If user has custom permissions enabled, check against their custom list
+      if (currentUser?.customPermissions?.enabled) {
+        const allowedMenus = currentUser.customPermissions.menus || [];
+        if (!allowedMenus.includes(item.label)) return null;
+      } else {
+        // 2. Otherwise fall back to role-based settings (or static fallback)
+        if (currentUser?.role !== 'super_admin') {
+          if (customizationSettings && customizationSettings[currentUser?.role]) {
+            const allowedMenus = customizationSettings[currentUser?.role].menus || [];
+            if (!allowedMenus.includes(item.label)) return null;
+          } else {
+            // Fallback to static check if settings are not loaded yet
+            if (!item.roles.includes(currentUser?.role)) return null;
+          }
         } else {
-          // Fallback to static check if settings are not loaded yet
+          // Super admin can see all options they are allowed statically
           if (!item.roles.includes(currentUser?.role)) return null;
         }
-      } else {
-        // Super admin can see all options they are allowed statically
-        if (!item.roles.includes(currentUser?.role)) return null;
       }
     }
 
@@ -1015,8 +1028,6 @@ export const DashboardLayout = () => {
             <IconButton onClick={handleProfileMenuOpen} size="small" sx={{ p: 0.5 }}>
               <Avatar src={currentUser?.avatar} sx={{ width: 32, height: 32 }} />
             </IconButton>
-
-
 
             <Menu
               anchorEl={profileAnchorEl}

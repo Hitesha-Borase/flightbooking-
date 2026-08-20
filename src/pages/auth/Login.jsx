@@ -306,7 +306,7 @@ export const Login = () => {
             <Typography variant="caption" sx={{ fontWeight: 800, color: 'text.secondary', display: 'block', mb: 0.8, textTransform: 'uppercase', fontSize: '0.66rem' }}>
               {cat.title}
             </Typography>
-            <Box sx={{ display: 'grid', gridTemplateColumns: cat.roles.length === 4 ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)', gap: 0.8 }}>
+            <Box sx={{ display: 'grid', gridTemplateColumns: { xs: 'repeat(2, 1fr)', sm: cat.roles.length === 4 ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)' }, gap: 1 }}>
               {cat.roles.map((r) => (
                 <Button
                   key={r.role}
@@ -316,25 +316,30 @@ export const Login = () => {
                   fullWidth
                   onClick={() => handleQuickLogin(r.role)}
                   sx={{
-                    height: 36,
-                    py: 0,
-                    px: 0.8,
-                    fontSize: '0.66rem',
+                    minHeight: 38,
+                    py: 0.5,
+                    px: 1,
+                    fontSize: { xs: '0.7rem', sm: '0.66rem' },
                     fontWeight: 800,
-                    whiteSpace: 'nowrap',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
                     justifyContent: 'center',
-                    borderRadius: 1.8,
+                    borderRadius: 2,
                     borderColor: 'divider',
                     color: 'text.primary',
+                    textAlign: 'center',
+                    lineHeight: 1.2,
+                    '& .MuiButton-startIcon': {
+                      mr: 0.6,
+                      ml: 0,
+                    },
                     '&:hover': {
                       borderColor: 'secondary.main',
                       bgcolor: '#FFFBEB',
                     },
                   }}
                 >
-                  {r.label}
+                  <Box component="span" sx={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                    {r.label}
+                  </Box>
                 </Button>
               ))}
             </Box>
