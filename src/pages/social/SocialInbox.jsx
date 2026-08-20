@@ -141,15 +141,21 @@ export const SocialInbox = () => {
   const [replyText, setReplyText] = useState('');
   const [selectedTemplate, setSelectedTemplate] = useState('');
   const messageEndRef = useRef(null);
+  const processedClientsRef = useRef(new Set());
+  const readMarkedRef = useRef(new Set());
 
   useEffect(() => {
+    if (!clients?.length) return;
     clients.forEach((client) => {
+      if (processedClientsRef.current.has(client.id)) return;
+      processedClientsRef.current.add(client.id);
+
       const hasConv = conversations.some(
         (c) =>
           c.leadId === client.leadId ||
           c.email === client.email ||
           c.phone === client.phone ||
-          c.name.toLowerCase() === `${client.firstName} ${client.lastName}`.toLowerCase()
+          (c.name && client.firstName && c.name.toLowerCase() === `${client.firstName} ${client.lastName}`.toLowerCase())
       );
 
       if (!hasConv) {
@@ -243,12 +249,12 @@ export const SocialInbox = () => {
         if (selectedPlatform === 'comments') return c.messages && c.messages.some(m => m.isComment);
         return c.platform === selectedPlatform;
       });
-      const activeIsMatched = activeConv && filtered.some(f => f.id === activeConv.id);
+      const activeIsMatched = filtered.some(f => f.id === activeConvId);
       if (!activeIsMatched && filtered.length > 0) {
         setActiveConvId(filtered[0].id);
       }
     }
-  }, [activeTab, conversations, activeConvId, activeConv]);
+  }, [activeTab, conversations, activeConvId]);
 
   // Scroll to bottom of chat
   useEffect(() => {
@@ -259,7 +265,8 @@ export const SocialInbox = () => {
 
   // Mark active chat as read
   useEffect(() => {
-    if (activeConv && activeConv.unreadCount > 0) {
+    if (activeConvId && activeConv && activeConv.unreadCount > 0 && !readMarkedRef.current.has(activeConvId)) {
+      readMarkedRef.current.add(activeConvId);
       markConversationReadMutation.mutate(activeConvId);
     }
   }, [activeConvId, activeConv?.unreadCount]);
