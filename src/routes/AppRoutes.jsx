@@ -117,6 +117,8 @@ import SuperAdminPaymentDashboard from '../pages/payments/SuperAdminPaymentDashb
 import SuperAdminRefundCommissionHub from '../pages/payments/SuperAdminRefundCommissionHub';
 import SuperAdminStorageBackup from '../pages/documents/SuperAdminStorageBackup';
 import SuperAdminCustomization from '../pages/settings/SuperAdminCustomization';
+import FlexiblePermissionSystem from '../pages/settings/FlexiblePermissionSystem';
+import { PermissionGate } from '../components/PermissionGate';
 import Integrations from '../pages/integrations/Integrations';
 
 const getMenuLabelForPath = (path) => {
@@ -503,6 +505,26 @@ export const AppRoutes = () => {
           element={
             <ProtectedRoute allowedRoles={['admin', 'super_admin', 'team_leader', 'expert_team_leader', 'consultant', 'sales_agent', 'operations', 'marketing', 'finance']}>
               <MandatoryCallDispositionEngine />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/permission-management"
+          element={
+            <ProtectedRoute>
+              <PermissionGate permission="users_configure_permissions" showAccessDenied>
+                <FlexiblePermissionSystem />
+              </PermissionGate>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/:role/permission-management"
+          element={
+            <ProtectedRoute>
+              <PermissionGate permission="users_configure_permissions" showAccessDenied>
+                <FlexiblePermissionSystem />
+              </PermissionGate>
             </ProtectedRoute>
           }
         />

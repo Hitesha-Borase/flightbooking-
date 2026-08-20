@@ -342,6 +342,7 @@ export const DashboardLayout = () => {
     { section: 'PHASE 3 – MANAGEMENT', label: 'Automation', icon: <AutoFixHighIcon />, path: '/automation', roles: ['admin', 'consultant', 'sales_agent', 'operations', 'finance', 'super_admin', 'marketing', 'team_leader', 'expert_team_leader'] },
     { section: 'PHASE 3 – MANAGEMENT', label: 'Finance', icon: <CurrencyExchangeIcon />, path: '/payments/refund-commission', roles: ['admin', 'super_admin', 'finance'] },
     { section: 'PHASE 3 – MANAGEMENT', label: 'Management Reports', icon: <AssessmentIcon />, path: '/management-reports', roles: ['admin', 'consultant', 'sales_agent', 'operations', 'finance', 'super_admin', 'marketing', 'team_leader', 'expert_team_leader'] },
+    { section: 'PHASE 3 – MANAGEMENT', label: 'Permission Control', icon: <SecurityIcon />, path: '/permission-management', roles: ['admin', 'consultant', 'sales_agent', 'operations', 'finance', 'super_admin', 'marketing', 'team_leader', 'expert_team_leader'] },
     { section: 'PHASE 3 – MANAGEMENT', label: 'Audit Trail', icon: <HistoryIcon />, path: '/audit-trail', roles: ['admin', 'consultant', 'sales_agent', 'operations', 'finance', 'super_admin', 'marketing', 'team_leader', 'expert_team_leader'] },
 
     // PHASE 4 – SCALE
