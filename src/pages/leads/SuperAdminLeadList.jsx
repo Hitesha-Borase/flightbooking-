@@ -114,7 +114,44 @@ export const SuperAdminLeadList = () => {
   const { showAlert } = useAlert();
   const { isAdmin, isSuperAdmin, isOperations, isTeamLeader, currentUser } = useAuth();
 
+  const hasCreateLeadPermission = () => {
+    if (currentUser?.customPermissions?.enabled) {
+      return !!currentUser.customPermissions.granular?.createLead;
+    }
+    return (isAdmin || isSuperAdmin) || isOperations;
+  };
+
+  const hasAssignLeadPermission = () => {
+    if (currentUser?.customPermissions?.enabled) {
+      return !!currentUser.customPermissions.granular?.assignLead;
+    }
+    return (isAdmin || isSuperAdmin) || isOperations || isTeamLeader;
+  };
+
+  const hasDeleteLeadPermission = () => {
+    if (currentUser?.customPermissions?.enabled) {
+      return !!currentUser.customPermissions.granular?.deleteLead;
+    }
+    return (isAdmin || isSuperAdmin) || isOperations;
+  };
+
+  const hasMakeCallPermission = () => {
+    if (currentUser?.customPermissions?.enabled) {
+      return !!currentUser.customPermissions.granular?.makeCall;
+    }
+    return true;
+  };
+
+  const hasSendWhatsAppPermission = () => {
+    if (currentUser?.customPermissions?.enabled) {
+      return !!currentUser.customPermissions.granular?.sendWhatsApp;
+    }
+    return true;
+  };
+
+
   const getRolePrefix = () => {
+
     if (!currentUser) return 'super_admin';
     if (currentUser.role === 'consultant') return 'agent';
     return currentUser.role;
@@ -520,7 +557,7 @@ export const SuperAdminLeadList = () => {
         title={isTeamLeader ? 'Team Lead Center' : (currentUser?.role === 'consultant' ? 'My Flight Leads' : 'Flight Leads Management')}
         subtitle={isTeamLeader ? 'Monitor team flight leads, reassign cases, approve discounts & track conversion.' : 'Incoming passenger flight requests, qualification status & quote dispatch.'}
         action={
-          ((isAdmin || isSuperAdmin) || isOperations) && (
+          hasCreateLeadPermission() && (
             <Button
               variant="contained"
               color="primary"
@@ -532,6 +569,7 @@ export const SuperAdminLeadList = () => {
             </Button>
           )
         }
+
       />
 
       {/* Date Filter & Presets */}
@@ -648,16 +686,20 @@ export const SuperAdminLeadList = () => {
             onRowClick={(row) => handleRowSelect(row)}
             actions={(row) => (
               <Box sx={{ display: 'flex', gap: 0.3, whiteSpace: 'nowrap' }} onClick={(e) => e.stopPropagation()}>
-                <Tooltip title="Call Passenger">
-                  <IconButton size="small" color="success" onClick={() => showAlert(`Calling ${row.firstName} ${row.lastName} via Telnyx WebRTC…`, 'success')}>
-                    <PhoneIcon fontSize="small" />
-                  </IconButton>
-                </Tooltip>
-                <Tooltip title="WhatsApp Message">
-                  <IconButton size="small" color="success" onClick={() => navigate('/social-inbox?channel=whatsapp')}>
-                    <WhatsAppIcon fontSize="small" />
-                  </IconButton>
-                </Tooltip>
+                {hasMakeCallPermission() && (
+                  <Tooltip title="Call Passenger">
+                    <IconButton size="small" color="success" onClick={() => showAlert(`Calling ${row.firstName} ${row.lastName} via Telnyx WebRTC…`, 'success')}>
+                      <PhoneIcon fontSize="small" />
+                    </IconButton>
+                  </Tooltip>
+                )}
+                {hasSendWhatsAppPermission() && (
+                  <Tooltip title="WhatsApp Message">
+                    <IconButton size="small" color="success" onClick={() => navigate('/social-inbox?channel=whatsapp')}>
+                      <WhatsAppIcon fontSize="small" />
+                    </IconButton>
+                  </Tooltip>
+                )}
                 <Tooltip title="Send Email">
                   <IconButton size="small" color="primary" onClick={() => showAlert(`Email composer opened for ${row.email}`, 'info')}>
                     <EmailIcon fontSize="small" />
@@ -668,20 +710,21 @@ export const SuperAdminLeadList = () => {
                     <VisibilityIcon fontSize="small" />
                   </IconButton>
                 </Tooltip>
-                {((isAdmin || isSuperAdmin) || isOperations || isTeamLeader) && (
+                {hasAssignLeadPermission() && (
                   <Tooltip title="Assign Sales Agent">
                     <IconButton size="small" color="secondary" onClick={() => handleOpenAssignModal(row)}>
                       <PersonAddIcon fontSize="small" />
                     </IconButton>
                   </Tooltip>
                 )}
-                {((isAdmin || isSuperAdmin) || isOperations) && (
+                {hasDeleteLeadPermission() && (
                   <Tooltip title="Delete Lead">
                     <IconButton size="small" color="error" onClick={() => handleDeleteLead(row.id)}>
                       <DeleteIcon fontSize="small" />
                     </IconButton>
                   </Tooltip>
                 )}
+
               </Box>
             )}
           />

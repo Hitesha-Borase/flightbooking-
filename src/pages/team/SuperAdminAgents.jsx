@@ -118,6 +118,7 @@ export const SuperAdminAgents = () => {
 
   const [view, setView] = useState('list'); // 'list' or 'details'
 
+
   // State
   const [activeAgentId, setActiveAgentId] = useState(null);
   const [openAddModal, setOpenAddModal] = useState(false);
@@ -153,6 +154,70 @@ export const SuperAdminAgents = () => {
   const [customMenus, setCustomMenus] = useState([]);
   const [customCards, setCustomCards] = useState([]);
   const [customCanManageOverrides, setCustomCanManageOverrides] = useState(false);
+
+  // Granular Permissions & Scope Matrix State
+  const [openPermsModal, setOpenPermsModal] = useState(false);
+  const [permsAgent, setPermsAgent] = useState(null);
+  const [permScope, setPermScope] = useState('Own records');
+  const [granularPerms, setGranularPerms] = useState({
+    viewLead: true, createLead: true, editLead: true, assignLead: false, reassignLead: false, deleteLead: false,
+    viewCustomer: true, editCustomer: true, exportCustomer: false,
+    makeCall: true, viewCallRecording: true, downloadRecording: false, sendWhatsApp: true,
+    createBooking: true, modifyBooking: true, cancelBooking: false, createTicket: false, voidTicket: false, reissueTicket: false,
+    viewPayment: false, createPaymentRequest: true, refundPayment: false, viewFinanceReports: false,
+    createUser: false, disableUser: false, configureApi: false, viewAuditLogs: false
+  });
+
+  const handleOpenPermsModal = (agent) => {
+    setPermsAgent(agent);
+    setPermScope(agent.customPermissions?.scope || (agent.role === 'admin' ? 'All records' : agent.role === 'team_leader' ? 'Own team' : 'Own records'));
+    setGranularPerms(agent.customPermissions?.granular || {
+      viewLead: true,
+      createLead: true,
+      editLead: true,
+      assignLead: agent.role === 'team_leader' || agent.role === 'admin',
+      reassignLead: agent.role === 'team_leader' || agent.role === 'admin',
+      deleteLead: agent.role === 'admin',
+      viewCustomer: true,
+      editCustomer: true,
+      exportCustomer: agent.role === 'admin',
+      makeCall: true,
+      viewCallRecording: true,
+      downloadRecording: agent.role === 'team_leader' || agent.role === 'admin',
+      sendWhatsApp: true,
+      createBooking: true,
+      modifyBooking: true,
+      cancelBooking: agent.role === 'team_leader' || agent.role === 'admin',
+      createTicket: agent.role === 'ticketing_agent' || agent.role === 'admin',
+      voidTicket: agent.role === 'admin',
+      reissueTicket: agent.role === 'ticketing_agent' || agent.role === 'admin',
+      viewPayment: agent.role === 'finance' || agent.role === 'admin',
+      createPaymentRequest: true,
+      refundPayment: agent.role === 'finance' || agent.role === 'admin',
+      viewFinanceReports: agent.role === 'finance' || agent.role === 'admin',
+      createUser: agent.role === 'admin',
+      disableUser: agent.role === 'admin',
+      configureApi: agent.role === 'admin',
+      viewAuditLogs: agent.role === 'admin'
+    });
+    setOpenPermsModal(true);
+  };
+
+  const handleSaveGranularPerms = () => {
+    if (!permsAgent) return;
+    updateAgentMutation.mutate({
+      ...permsAgent,
+      customPermissions: {
+        ...(permsAgent.customPermissions || {}),
+        enabled: true,
+        scope: permScope,
+        granular: granularPerms
+      }
+    });
+    setOpenPermsModal(false);
+    showAlert(`Granular permissions & Scope (${permScope}) saved for ${permsAgent.name}!`, 'success');
+  };
+
 
   useEffect(() => {
     if (customPermissionsEnabled && customMenus.length === 0 && customCards.length === 0) {
@@ -694,18 +759,25 @@ export const SuperAdminAgents = () => {
         title="Agents Management"
         subtitle="Manage agent accounts, review key performance metrics, commissions, and access privileges."
         action={
-          (isAdmin || isSuperAdmin) && (
-            <Button
-              variant="contained"
-              color="secondary"
-              startIcon={<AddIcon />}
-              onClick={handleOpenAddModal}
-              sx={{ borderRadius: 2.5, fontWeight: 700 }}
-            >
-              Add New Team/Agent
-            </Button>
-          )
+          (() => {
+            // Check granular createUser permission
+            if (currentUser?.customPermissions?.enabled) {
+              if (!currentUser.customPermissions.granular?.createUser) return null;
+            }
+            return (isAdmin || isSuperAdmin) ? (
+              <Button
+                variant="contained"
+                color="secondary"
+                startIcon={<AddIcon />}
+                onClick={handleOpenAddModal}
+                sx={{ borderRadius: 2.5, fontWeight: 700 }}
+              >
+                Add New Team/Agent
+              </Button>
+            ) : null;
+          })()
         }
+
       />
 
       <Box className="grid grid-cols-12 gap-2" sx={{ flexGrow: 1, minHeight: 0, width: '100%' }}>
@@ -804,24 +876,32 @@ export const SuperAdminAgents = () => {
                             <TableCell sx={{ fontWeight: 700, color: 'success.main' }}>${revenue.toLocaleString()}</TableCell>
                             <TableCell sx={{ fontWeight: 600 }}>{conversion}%</TableCell>
                             <TableCell align="center">
-                              <Button 
-                                size="small" 
-                                variant="contained" 
-                                color="primary" 
-                                sx={{ mr: 1, borderRadius: 2 }}
-                                onClick={() => {
-                                  setActiveAgentId(agent.id);
-                                  setView('details');
-                                }}
-                              >
-                                View
-                              </Button>
-                              <IconButton size="small" color="secondary" onClick={() => {
-                                setActiveAgentId(agent.id);
-                                setView('details');
-                              }}>
-                                <EditIcon fontSize="small" />
-                              </IconButton>
+                              <Box sx={{ display: 'flex', gap: 0.5, justifyContent: 'center' }}>
+                                <Button 
+                                  size="small" 
+                                  variant="contained" 
+                                  color="primary" 
+                                  sx={{ borderRadius: 1.5, fontSize: '0.72rem', py: 0.2 }}
+                                  onClick={() => {
+                                    setActiveAgentId(agent.id);
+                                    setView('details');
+                                  }}
+                                >
+                                  View
+                                </Button>
+                                {(isAdmin || isSuperAdmin) && (
+                                  <Button
+                                    size="small"
+                                    variant="outlined"
+                                    color="secondary"
+                                    startIcon={<VerifiedUserIcon sx={{ fontSize: 13 }} />}
+                                    sx={{ borderRadius: 1.5, fontSize: '0.7rem', py: 0.2 }}
+                                    onClick={() => handleOpenPermsModal(agent)}
+                                  >
+                                    Permissions
+                                  </Button>
+                                )}
+                              </Box>
                             </TableCell>
                           </TableRow>
                         );
@@ -913,6 +993,16 @@ export const SuperAdminAgents = () => {
 
                     {(isAdmin || isSuperAdmin) && (
                       <Box sx={{ display: 'flex', gap: 1 }}>
+                        <Button
+                          variant="contained"
+                          color="secondary"
+                          size="small"
+                          startIcon={<VerifiedUserIcon />}
+                          onClick={() => handleOpenPermsModal(activeAgent)}
+                          sx={{ borderRadius: 2, fontWeight: 700 }}
+                        >
+                          🛡️ Permissions & Scope
+                        </Button>
                         <Button
                           variant="outlined"
                           color="secondary"
@@ -1657,7 +1747,7 @@ export const SuperAdminAgents = () => {
                         Client: {item.firstName} {item.lastName} (ID: {item.id})
                       </Typography>
                       <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
-                        Nationality: {item.nationality} | Visa: {SERVICES.find(s => s.id === item.serviceId)?.name || item.serviceId}
+                        Nationality: {item.nationality} | Visa: {item.serviceId?.toUpperCase()}
                       </Typography>
                       <Typography variant="body2" sx={{ mt: 0.5, fontWeight: 600 }}>
                         Status: <Chip label={item.status} size="small" color={item.status === 'Completed' ? 'success' : 'secondary'} />
@@ -1689,6 +1779,143 @@ export const SuperAdminAgents = () => {
         <DialogActions>
           <Button onClick={() => setDetailsModalOpen(false)} variant="contained" color="secondary" sx={{ fontWeight: 700 }}>
             Close
+          </Button>
+        </DialogActions>
+      </Dialog>
+      {/* ─── GRANULAR PERMISSION & SCOPE MATRIX DIALOG ─── */}
+      <Dialog
+        open={openPermsModal}
+        onClose={() => setOpenPermsModal(false)}
+        maxWidth="md"
+        fullWidth
+        PaperProps={{ sx: { borderRadius: 3.5, p: 1 } }}
+      >
+        <DialogTitle sx={{ fontWeight: 900, display: 'flex', alignItems: 'center', gap: 1, borderBottom: '1px solid', borderColor: 'divider', pb: 2 }}>
+          <VerifiedUserIcon color="secondary" />
+          Individual Permissions & Data Scope Matrix: {permsAgent?.name} ({permsAgent?.role})
+        </DialogTitle>
+        <DialogContent sx={{ pt: 2.5 }}>
+          {/* Top: Scope Selector */}
+          <Paper variant="outlined" sx={{ p: 2, mb: 3, borderRadius: 2.5, bgcolor: '#F8FAFC' }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2 }}>
+              <Box>
+                <Typography variant="subtitle2" sx={{ fontWeight: 800 }}>
+                  🌐 DATA VISIBILITY & ACCESS SCOPE
+                </Typography>
+                <Typography variant="caption" color="text.secondary">
+                  Controls how far this staff member can view records across the organization
+                </Typography>
+              </Box>
+              <FormControl size="small" sx={{ minWidth: 200 }}>
+                <InputLabel>Data Scope</InputLabel>
+                <Select
+                  value={permScope}
+                  label="Data Scope"
+                  onChange={(e) => setPermScope(e.target.value)}
+                  sx={{ fontWeight: 800, bgcolor: 'background.paper' }}
+                >
+                  <MenuItem value="Own records">🔒 Own Records Only</MenuItem>
+                  <MenuItem value="Own team">👥 Own Team</MenuItem>
+                  <MenuItem value="Own department">🏢 Own Department</MenuItem>
+                  <MenuItem value="Own branch">📍 Own Branch</MenuItem>
+                  <MenuItem value="All records">🌐 All Records (Global)</MenuItem>
+                </Select>
+              </FormControl>
+            </Box>
+          </Paper>
+
+          {/* 6 Permission Action Categories */}
+          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 2 }}>
+            {[
+              {
+                category: '📋 Leads Management',
+                perms: [
+                  { key: 'viewLead', label: 'View Leads' },
+                  { key: 'createLead', label: 'Create New Leads' },
+                  { key: 'editLead', label: 'Edit Lead Details' },
+                  { key: 'assignLead', label: 'Assign Leads to Others' },
+                  { key: 'reassignLead', label: 'Reassign Stalled Leads' },
+                  { key: 'deleteLead', label: 'Delete / Purge Leads' },
+                ]
+              },
+              {
+                category: '👤 Customers & CRM',
+                perms: [
+                  { key: 'viewCustomer', label: 'View Customer 360' },
+                  { key: 'editCustomer', label: 'Edit Customer Data' },
+                  { key: 'exportCustomer', label: 'Export Customer CSV' },
+                ]
+              },
+              {
+                category: '📞 Calls & Communications',
+                perms: [
+                  { key: 'makeCall', label: 'Make Outbound Calls (WebRTC)' },
+                  { key: 'viewCallRecording', label: 'Listen to Call Recordings' },
+                  { key: 'downloadRecording', label: 'Download Recording Audio' },
+                  { key: 'sendWhatsApp', label: 'Send WhatsApp Itinerary' },
+                ]
+              },
+              {
+                category: '✈️ Bookings & Ticketing',
+                perms: [
+                  { key: 'createBooking', label: 'Create PNR Bookings' },
+                  { key: 'modifyBooking', label: 'Modify Travel Dates / PNR' },
+                  { key: 'cancelBooking', label: 'Cancel Bookings' },
+                  { key: 'createTicket', label: 'Issue 13-Digit E-Tickets' },
+                  { key: 'voidTicket', label: 'Void / Cancel E-Tickets' },
+                  { key: 'reissueTicket', label: 'Reissue & Date Change' },
+                ]
+              },
+              {
+                category: '💰 Finance & Settlements',
+                perms: [
+                  { key: 'viewPayment', label: 'View Gateway Payments' },
+                  { key: 'createPaymentRequest', label: 'Generate Payment Links' },
+                  { key: 'refundPayment', label: 'Authorize Refunds' },
+                  { key: 'viewFinanceReports', label: 'View Profit & Margin P&L' },
+                ]
+              },
+              {
+                category: '⚙️ Administration & API',
+                perms: [
+                  { key: 'createUser', label: 'Create Staff Accounts' },
+                  { key: 'disableUser', label: 'Deactivate / Block Users' },
+                  { key: 'configureApi', label: 'Configure GDS / Telnyx API' },
+                  { key: 'viewAuditLogs', label: 'View Full Audit Trail Logs' },
+                ]
+              },
+            ].map((group) => (
+              <Paper key={group.category} variant="outlined" sx={{ p: 2, borderRadius: 2 }}>
+                <Typography variant="subtitle2" sx={{ fontWeight: 800, color: 'primary.main', mb: 1 }}>
+                  {group.category}
+                </Typography>
+                <Divider sx={{ mb: 1 }} />
+                <Box sx={{ display: 'grid', gap: 0.5 }}>
+                  {group.perms.map((p) => (
+                    <FormControlLabel
+                      key={p.key}
+                      control={
+                        <Checkbox
+                          size="small"
+                          checked={!!granularPerms[p.key]}
+                          onChange={(e) => setGranularPerms({ ...granularPerms, [p.key]: e.target.checked })}
+                          color="secondary"
+                        />
+                      }
+                      label={<Typography variant="body2" sx={{ fontSize: '0.82rem', fontWeight: 600 }}>{p.label}</Typography>}
+                    />
+                  ))}
+                </Box>
+              </Paper>
+            ))}
+          </Box>
+        </DialogContent>
+        <DialogActions sx={{ p: 2, borderTop: '1px solid', borderColor: 'divider' }}>
+          <Button onClick={() => setOpenPermsModal(false)} variant="outlined" sx={{ fontWeight: 700 }}>
+            Cancel
+          </Button>
+          <Button onClick={handleSaveGranularPerms} variant="contained" color="secondary" sx={{ fontWeight: 800, px: 3 }}>
+            Save Permissions & Scope
           </Button>
         </DialogActions>
       </Dialog>

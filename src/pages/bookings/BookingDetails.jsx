@@ -24,6 +24,8 @@ import PageHeader from '../../components/PageHeader';
 import PaymentLinkModal from '../../components/PaymentLinkModal';
 import { MOCK_BOOKINGS } from '../../constants/mockData';
 import { useAlert } from '../../contexts/AlertContext';
+import { useAuth } from '../../hooks/useAuth';
+
 
 const STATUS_STEPS = [
   'Quoted',
@@ -39,7 +41,16 @@ export default function BookingDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { showAlert } = useAlert();
+  const { currentUser } = useAuth();
   const [paymentModalOpen, setPaymentModalOpen] = useState(false);
+
+  const hasPermission = (key) => {
+    if (currentUser?.customPermissions?.enabled) {
+      return !!currentUser.customPermissions.granular?.[key];
+    }
+    return true;
+  };
+
 
   const found = (MOCK_BOOKINGS || []).find(b => b.id === id || b.bookingId === id);
   const [booking, setBooking] = useState(() => found || {
@@ -117,23 +128,28 @@ export default function BookingDetails() {
             >
               Print Itinerary
             </Button>
-            <Button
-              variant="contained"
-              color="success"
-              startIcon={<ConfirmationNumberIcon />}
-              onClick={() => handleUpdateStatus('Ticketed')}
-            >
-              Issue E-Tickets
-            </Button>
-            <Button
-              variant="contained"
-              color="secondary"
-              startIcon={<MonetizationOnIcon />}
-              onClick={() => setPaymentModalOpen(true)}
-            >
-              Payment Link
-            </Button>
+            {hasPermission('createTicket') && (
+              <Button
+                variant="contained"
+                color="success"
+                startIcon={<ConfirmationNumberIcon />}
+                onClick={() => handleUpdateStatus('Ticketed')}
+              >
+                Issue E-Tickets
+              </Button>
+            )}
+            {hasPermission('createPaymentRequest') && (
+              <Button
+                variant="contained"
+                color="secondary"
+                startIcon={<MonetizationOnIcon />}
+                onClick={() => setPaymentModalOpen(true)}
+              >
+                Payment Link
+              </Button>
+            )}
           </Box>
+
         </Box>
       </Paper>
 
