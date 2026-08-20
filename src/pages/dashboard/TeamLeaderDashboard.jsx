@@ -661,7 +661,7 @@ export default function TeamLeaderDashboard() {
             </Box>
 
             {/* Filter and Search Bar */}
-            <Box sx={{ display: 'flex', gap: 1.5, alignItems: 'center' }}>
+            <Box sx={{ display: 'flex', gap: 1.5, alignItems: 'center', flexWrap: 'wrap', width: { xs: '100%', md: 'auto' } }}>
               <TextField
                 size="small"
                 placeholder="Search agent name or role..."
@@ -674,9 +674,9 @@ export default function TeamLeaderDashboard() {
                     </InputAdornment>
                   )
                 }}
-                sx={{ width: 240 }}
+                sx={{ width: { xs: '100%', sm: 240 } }}
               />
-              <FormControl size="small" sx={{ width: 160 }}>
+              <FormControl size="small" sx={{ width: { xs: '100%', sm: 160 } }}>
                 <InputLabel>Performance Tier</InputLabel>
                 <Select value={agentBadgeFilter} label="Performance Tier" onChange={e => setAgentBadgeFilter(e.target.value)}>
                   <MenuItem value="ALL">All Tiers</MenuItem>
@@ -688,7 +688,7 @@ export default function TeamLeaderDashboard() {
             </Box>
           </Box>
 
-          <TableContainer>
+          <TableContainer sx={{ overflowX: 'auto', width: '100%' }}>
             <Table sx={{ minWidth: 950 }}>
               <TableHead sx={{ bgcolor: '#F8FAFC' }}>
                 <TableRow>
