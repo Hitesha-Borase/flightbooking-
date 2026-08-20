@@ -49,6 +49,8 @@ import SecurityIcon from '@mui/icons-material/Security';
 
 import DualClock from '../../components/DualClock';
 import { useAlert } from '../../contexts/AlertContext';
+import { useAuth } from '../../hooks/useAuth';
+
 
 // ==========================================
 // CENTRAL BOOKING RECORD DATASET
@@ -282,6 +284,7 @@ export default function BookingDetails() {
             </Box>
             <DualClock client={{ timezone: 'America/New_York', label: 'Client EST' }} />
           </Box>
+
         </Box>
       </Paper>
 

@@ -309,6 +309,12 @@ export const DashboardLayout = () => {
     { section: 'PHASE 1 – SALES', label: 'Calling System', icon: <PhoneInTalkIcon />, path: '/agents', roles: ['admin', 'consultant', 'sales_agent', 'operations', 'super_admin', 'team_leader', 'expert_team_leader'] },
     { section: 'PHASE 1 – SALES', label: 'Follow-ups', icon: <CalendarMonthIcon />, path: '/consultations/calendar', roles: ['admin', 'consultant', 'sales_agent', 'operations', 'super_admin', 'team_leader', 'expert_team_leader'] },
     { section: 'PHASE 1 – SALES', label: 'Quotes', icon: <RequestQuoteIcon />, path: '/quotes', roles: ['admin', 'super_admin', 'team_leader', 'expert_team_leader', 'sales_agent', 'consultant', 'flight_expert'] },
+    { section: 'PHASE 1 – SALES', label: 'Lead Distribution', icon: <SwapHorizIcon />, path: '/lead-distribution', roles: ['admin', 'consultant', 'sales_agent', 'operations', 'super_admin', 'marketing', 'team_leader', 'expert_team_leader'] },
+    { section: 'PHASE 1 – SALES', label: 'Lead Lifecycle', icon: <AutoFixHighIcon />, path: '/lead-lifecycle', roles: ['admin', 'consultant', 'sales_agent', 'operations', 'super_admin', 'marketing', 'team_leader', 'expert_team_leader'] },
+    { section: 'PHASE 1 – SALES', label: 'Duplicate Protection', icon: <SecurityIcon />, path: '/duplicate-leads', roles: ['admin', 'consultant', 'sales_agent', 'operations', 'super_admin', 'marketing', 'team_leader', 'expert_team_leader'] },
+    { section: 'PHASE 1 – SALES', label: 'Communication Hub', icon: <ForumIcon />, path: '/communication-center', roles: ['admin', 'consultant', 'sales_agent', 'operations', 'super_admin', 'marketing', 'team_leader', 'expert_team_leader'] },
+    { section: 'PHASE 1 – SALES', label: 'Calling & Softphone', icon: <PhoneInTalkIcon />, path: '/calling-desk', roles: ['admin', 'consultant', 'sales_agent', 'operations', 'super_admin', 'marketing', 'team_leader', 'expert_team_leader'] },
+    { section: 'PHASE 1 – SALES', label: 'Call Dispositions', icon: <NoteAltIcon />, path: '/call-dispositions', roles: ['admin', 'consultant', 'sales_agent', 'operations', 'super_admin', 'marketing', 'team_leader', 'expert_team_leader'] },
     { section: 'PHASE 1 – SALES', label: 'Sales Dashboard', icon: <AssessmentIcon />, path: '/agents/performance', roles: ['admin', 'super_admin', 'team_leader', 'expert_team_leader', 'sales_agent', 'consultant'] },
 
     // PHASE 2 – BOOKING OPERATIONS
@@ -336,6 +342,7 @@ export const DashboardLayout = () => {
     { section: 'PHASE 4 – SCALE', label: 'Supplier Integrations', icon: <StorefrontIcon />, path: '/suppliers', roles: ['super_admin'] },
     { section: 'PHASE 4 – SCALE', label: 'Communication Channels', icon: <ForumIcon />, path: '/social-inbox', roles: ['admin', 'consultant', 'sales_agent', 'operations', 'super_admin', 'team_leader', 'expert_team_leader'] },
   ];
+
 
   const ALL_SUB_ITEMS = [
     {
@@ -616,9 +623,18 @@ export const DashboardLayout = () => {
       }
     }
 
+    // 3. Granular permission-based menu filtering
+    if (currentUser?.customPermissions?.enabled) {
+      const perms = currentUser.customPermissions.granular || {};
+      // Hide finance section items if viewFinanceReports is disabled
+      if (['Payments', 'Invoices', 'Refunds'].includes(item.label) && !perms.viewPayment) return null;
+      if (item.label === 'Reports' && !perms.viewFinanceReports) return null;
+    }
+
     if (item.label === 'Social Inbox') {
       return renderSocialInboxMenu(item);
     }
+
 
     const active = isActive(item);
     const itemPath = getDynamicPath(item);
@@ -999,6 +1015,8 @@ export const DashboardLayout = () => {
             <IconButton onClick={handleProfileMenuOpen} size="small" sx={{ p: 0.5 }}>
               <Avatar src={currentUser?.avatar} sx={{ width: 32, height: 32 }} />
             </IconButton>
+
+
 
             <Menu
               anchorEl={profileAnchorEl}

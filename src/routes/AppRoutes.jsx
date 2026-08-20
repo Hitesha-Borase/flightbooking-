@@ -28,6 +28,13 @@ import CentralNotificationCenter from '../pages/notifications/CentralNotificatio
 import AuditTrail from '../pages/audit/AuditTrail';
 import ManagementReportingDashboard from '../pages/reports/ManagementReportingDashboard';
 import DevelopmentRoadmap from '../pages/roadmap/DevelopmentRoadmap';
+import LeadManagementSuite from '../pages/leads/LeadManagementSuite';
+import LeadDistributionEngine from '../pages/leads/LeadDistributionEngine';
+import LeadLifecycleSystem from '../pages/leads/LeadLifecycleSystem';
+import DuplicateLeadProtection from '../pages/leads/DuplicateLeadProtection';
+import CommunicationCenter from '../pages/social/CommunicationCenter';
+import CallingSoftphoneWorkspace from '../pages/social/CallingSoftphoneWorkspace';
+import MandatoryCallDispositionEngine from '../pages/social/MandatoryCallDispositionEngine';
 import FlightExpertDesk from '../pages/dashboard/FlightExpertDesk';
 import TicketingIssuance from '../pages/dashboard/TicketingIssuance';
 import TicketingAgentDashboard from '../pages/dashboard/TicketingAgentDashboard';
@@ -431,6 +438,62 @@ export const AppRoutes = () => {
           element={
             <ProtectedRoute allowedRoles={['admin', 'super_admin', 'team_leader', 'expert_team_leader', 'consultant', 'sales_agent', 'operations', 'marketing', 'finance']}>
               <DevelopmentRoadmap />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/leads"
+          element={
+            <ProtectedRoute allowedRoles={['admin', 'super_admin', 'team_leader', 'expert_team_leader', 'consultant', 'sales_agent', 'operations', 'marketing', 'finance']}>
+              <LeadManagementSuite />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/lead-distribution"
+          element={
+            <ProtectedRoute allowedRoles={['admin', 'super_admin', 'team_leader', 'expert_team_leader', 'consultant', 'sales_agent', 'operations', 'marketing', 'finance']}>
+              <LeadDistributionEngine />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/lead-lifecycle"
+          element={
+            <ProtectedRoute allowedRoles={['admin', 'super_admin', 'team_leader', 'expert_team_leader', 'consultant', 'sales_agent', 'operations', 'marketing', 'finance']}>
+              <LeadLifecycleSystem />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/duplicate-leads"
+          element={
+            <ProtectedRoute allowedRoles={['admin', 'super_admin', 'team_leader', 'expert_team_leader', 'consultant', 'sales_agent', 'operations', 'marketing', 'finance']}>
+              <DuplicateLeadProtection />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/communication-center"
+          element={
+            <ProtectedRoute allowedRoles={['admin', 'super_admin', 'team_leader', 'expert_team_leader', 'consultant', 'sales_agent', 'operations', 'marketing', 'finance']}>
+              <CommunicationCenter />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/calling-desk"
+          element={
+            <ProtectedRoute allowedRoles={['admin', 'super_admin', 'team_leader', 'expert_team_leader', 'consultant', 'sales_agent', 'operations', 'marketing', 'finance']}>
+              <CallingSoftphoneWorkspace />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/call-dispositions"
+          element={
+            <ProtectedRoute allowedRoles={['admin', 'super_admin', 'team_leader', 'expert_team_leader', 'consultant', 'sales_agent', 'operations', 'marketing', 'finance']}>
+              <MandatoryCallDispositionEngine />
             </ProtectedRoute>
           }
         />

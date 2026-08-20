@@ -31,11 +31,22 @@ import ListItemText from '@mui/material/ListItemText';
 import PageHeader from '../../components/PageHeader';
 import AppModal from '../../components/AppModal';
 import { useAlert } from '../../contexts/AlertContext';
+import { useAuth } from '../../hooks/useAuth';
+
 
 export const SuperAdminRefundCommissionHub = () => {
   const [tabValue, setTabValue] = useState(0);
   const queryClient = useQueryClient();
   const { showAlert } = useAlert();
+  const { currentUser } = useAuth();
+
+  const hasPermission = (key) => {
+    if (currentUser?.customPermissions?.enabled) {
+      return !!currentUser.customPermissions.granular?.[key];
+    }
+    return true;
+  };
+
 
   // Modals state
   const [refundModalOpen, setRefundModalOpen] = useState(false);
@@ -289,10 +300,13 @@ export const SuperAdminRefundCommissionHub = () => {
       {tabValue === 1 && (
         <Box className="grid grid-cols-12 gap-2">
           <Box className="col-span-12" sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-            <Button variant="contained" color="primary" onClick={() => setRefundModalOpen(true)}>
-              Request Refund
-            </Button>
+            {hasPermission('refundPayment') && (
+              <Button variant="contained" color="primary" onClick={() => setRefundModalOpen(true)}>
+                Request Refund
+              </Button>
+            )}
           </Box>
+
 
           <Box className="col-span-12 md:col-span-8">
             <Paper sx={{ p: 3, borderRadius: 3, border: '1px solid', borderColor: 'divider', boxShadow: 'none' }}>
@@ -336,23 +350,24 @@ export const SuperAdminRefundCommissionHub = () => {
                         </TableCell>
                         <TableCell align="right">
                           <Box sx={{ display: 'flex', gap: 1, justifyContent: 'flex-end' }}>
-                            {ref.status === 'Pending Review' && (
+                            {ref.status === 'Pending Review' && hasPermission('refundPayment') && (
                               <Button size="small" variant="outlined" color="success" onClick={() => handleUpdateRefundStatus(ref.id, 'Approved')}>
                                 Approve
                               </Button>
                             )}
-                            {ref.status === 'Approved' && (
+                            {ref.status === 'Approved' && hasPermission('refundPayment') && (
                               <Button size="small" variant="contained" color="success" onClick={() => handleUpdateRefundStatus(ref.id, 'Processed')}>
                                 Process Refund
                               </Button>
                             )}
-                            {ref.status === 'Pending Review' && (
+                            {ref.status === 'Pending Review' && hasPermission('refundPayment') && (
                               <Button size="small" variant="outlined" color="error" onClick={() => handleUpdateRefundStatus(ref.id, 'Cancelled')}>
                                 Reject
                               </Button>
                             )}
                           </Box>
                         </TableCell>
+
                       </TableRow>
                     ))}
                   </TableBody>
